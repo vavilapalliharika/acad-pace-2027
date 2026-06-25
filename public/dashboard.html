@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · RISE 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gd: #0D3D2E; --gm: #1B5E45; --ga: #2D8C6A; --gl: #4CAF85;
+    --mb: #EEF7F3; --wh: #FFFFFF;
+    --td: #0D1F1A; --tm: #2E5045; --tu: #7A9E90; --bd: #D4EBE0;
+    --am: #F59E0B; --pu: #7C3AED; --rd: #EF4444; --gn: #22C55E;
+  }
+  body { font-family:'Inter',sans-serif; background:var(--mb); color:var(--td); min-height:100vh; display:flex; }
+
+  .sidebar { width:260px; background:var(--gd); min-height:100vh; display:flex; flex-direction:column; flex-shrink:0; position:sticky; top:0; height:100vh; overflow-y:auto; }
+  .sb-brand { padding:28px 24px 20px; font-size:22px; font-weight:800; color:#fff; letter-spacing:-0.5px; }
+  .sb-home-link { margin:0 12px 8px; display:flex; align-items:center; gap:8px; padding:9px 14px; border-radius:9px; color:rgba(255,255,255,0.5); font-size:13px; font-weight:500; text-decoration:none; transition:all 0.2s; }
+  .sb-home-link:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .sb-profile { margin:0 16px 24px; background:var(--gm); border-radius:12px; padding:16px; }
+  .sb-name { font-size:16px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .sb-badge { display:inline-block; background:rgba(255,255,255,0.15); color:#fff; font-size:11px; font-weight:600; padding:4px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.25); }
+  .nav-section { padding:0 12px; flex:1; }
+  .nav-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:rgba(255,255,255,0.65); font-size:14px; font-weight:500; cursor:pointer; transition:all 0.2s; margin-bottom:2px; user-select:none; text-decoration:none; }
+  .nav-item:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .nav-item.active { background:rgba(255,255,255,0.12); color:#fff; }
+  .nav-item .nic { font-size:16px; width:20px; text-align:center; }
+  .sb-footer { padding:16px; border-top:1px solid rgba(255,255,255,0.08); margin-top:auto; font-size:11px; color:rgba(255,255,255,0.35); text-align:center; }
+
+  .main { flex:1; padding:32px; overflow-y:auto; max-width:1280px; }
+
+  .banner { background:var(--gd); border-radius:20px; padding:28px 32px; display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; position:relative; overflow:hidden; opacity:0; transform:translateY(-10px); animation:fadeUp 0.45s 0.05s ease forwards; }
+  .banner::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 50% 80% at 70% 50%, rgba(45,140,106,0.35), transparent 70%); pointer-events:none; }
+  .w-tag { font-size:13px; color:rgba(255,255,255,0.6); margin-bottom:6px; }
+  .b-name { font-size:28px; font-weight:800; color:#fff; letter-spacing:-0.5px; margin-bottom:12px; }
+  .b-tags { display:flex; gap:8px; flex-wrap:wrap; }
+  .bt { padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; }
+  .bt.pu { background:var(--pu); color:#fff; }
+  .bt.ol { background:rgba(255,255,255,0.12); color:#fff; border:1px solid rgba(255,255,255,0.25); }
+  .bt.gr { background:var(--ga); color:#fff; }
+  .profile-strength { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:16px; padding:16px 20px; min-width:160px; position:relative; z-index:1; text-align:center; }
+  .ps-lbl { font-size:11px; font-weight:600; color:rgba(255,255,255,0.7); margin-bottom:6px; letter-spacing:0.4px; }
+  .ps-val { font-size:32px; font-weight:800; color:#fff; line-height:1; }
+  .ps-bar { height:6px; background:rgba(255,255,255,0.15); border-radius:3px; margin-top:10px; overflow:hidden; }
+  .ps-fill { height:100%; background:linear-gradient(90deg,var(--gl),#A855F7); border-radius:3px; transition:width 1s ease; }
+
+  .stats-row { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:24px; }
+  @media(max-width:1100px){ .stats-row { grid-template-columns:repeat(3,1fr); } }
+  @media(max-width:700px){ .stats-row { grid-template-columns:repeat(2,1fr); } }
+  .stat-card { background:var(--wh); border-radius:14px; padding:18px; border:1px solid var(--bd); opacity:0; transform:translateY(14px); transition:box-shadow 0.2s; }
+  .stat-card:hover { box-shadow:0 4px 20px rgba(13,61,46,0.08); }
+  .stat-card.vis { animation:fadeUp 0.45s ease forwards; }
+  .stat-card.highlight { border-color:var(--ga); background:linear-gradient(180deg,#f0faf5,#fff); }
+  .stat-lbl { font-size:12px; font-weight:600; color:var(--tu); margin-bottom:8px; }
+  .stat-val { font-size:28px; font-weight:800; color:var(--gd); line-height:1; }
+  .stat-note { font-size:11px; color:var(--tu); margin-top:4px; }
+
+  .section-title { font-size:20px; font-weight:800; color:var(--td); margin-bottom:16px; letter-spacing:-0.3px; }
+
+  /* ── PLACEMENT JOURNEY (visual stepper) ── */
+  .pj-widget-wrap {
+    background: var(--wh);
+    border: 1px solid var(--bd);
+    border-radius: 18px;
+    padding: 22px 24px;
+    margin-bottom: 24px;
+  }
+  .pj-widget-header {
+    font-size: 20px; font-weight: 800; color: var(--gd);
+    letter-spacing: -0.3px; margin-bottom: 20px;
+  }
+
+  .pj-stepper {
+    display: flex; align-items: flex-start;
+    padding: 8px 4px 20px; overflow-x: auto;
+    margin-bottom: 18px;
+  }
+  .pj-step-node {
+    display: flex; flex-direction: column; align-items: center;
+    min-width: 108px; flex-shrink: 0; text-align: center;
+  }
+  .pj-node-circle {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 10px;
+    border: 3px solid var(--bd); background: #fff;
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  .pj-node-circle.completed {
+    background: #dcfce7; border-color: var(--gn); color: var(--gn);
+  }
+  .pj-node-circle.current {
+    background: #fffbeb; border-color: var(--am);
+    box-shadow: 0 0 0 4px rgba(245,158,11,0.2), 0 0 20px rgba(245,158,11,0.25);
+    animation: pjGlow 2s ease-in-out infinite;
+  }
+  @keyframes pjGlow {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(245,158,11,0.2), 0 0 16px rgba(245,158,11,0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(245,158,11,0.28), 0 0 28px rgba(245,158,11,0.35); }
+  }
+  .pj-node-circle.locked {
+    background: #f3f4f6; border-color: #e5e7eb; opacity: 0.75;
+  }
+  .pj-node-title {
+    font-size: 11px; font-weight: 800; color: var(--gd);
+    line-height: 1.3; margin-bottom: 6px; max-width: 100px;
+  }
+  .pj-step-node.locked .pj-node-title { color: var(--tu); }
+  .pj-node-badge {
+    font-size: 9px; font-weight: 700; padding: 3px 8px;
+    border-radius: 10px; line-height: 1.3; max-width: 104px;
+  }
+  .pj-badge-warning { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+  .pj-badge-locked { background: #f3f4f6; color: #9ca3af; }
+  .pj-badge-done { background: #dcfce7; color: #15803d; }
+  .pj-connector {
+    flex: 1; min-width: 24px; height: 3px;
+    background: var(--bd); margin-top: 24px; border-radius: 2px;
+    align-self: flex-start;
+  }
+  .pj-connector.done { background: var(--gn); }
+
+  .pj-summary {
+    background: linear-gradient(135deg, #f0faf5, var(--mb));
+    border: 1px solid var(--bd); border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 18px;
+  }
+  .pj-summary-title {
+    font-size: 13px; font-weight: 800; color: var(--gd);
+    text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 12px;
+  }
+  .pj-summary-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 700px) { .pj-summary-grid { grid-template-columns: 1fr; } }
+  .pj-summary-item { display: flex; flex-direction: column; gap: 3px; }
+  .pj-sum-lbl { font-size: 10px; font-weight: 700; color: var(--tu); text-transform: uppercase; letter-spacing: 0.4px; }
+  .pj-sum-val { font-size: 13px; font-weight: 800; color: var(--gd); }
+  .pj-sum-warn { color: #c2410c; }
+  .pj-summary-bar-wrap { display: flex; align-items: center; gap: 12px; }
+  .pj-summary-bar { flex: 1; height: 8px; background: var(--bd); border-radius: 4px; overflow: hidden; }
+  .pj-summary-fill {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--ga), var(--am));
+    transition: width 1s ease;
+  }
+  .pj-summary-pct { font-size: 14px; font-weight: 800; color: var(--gd); min-width: 36px; }
+
+  .pj-assess-section {
+    background: linear-gradient(180deg, #fff, var(--mb));
+    border: 1px solid var(--bd); border-radius: 14px; padding: 18px;
+  }
+  .pj-assess-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; gap: 10px; flex-wrap: wrap;
+  }
+  .pj-assess-title { font-size: 16px; font-weight: 800; color: var(--gd); }
+  .pj-assess-badge {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.5px;
+    padding: 5px 12px; border-radius: 20px;
+  }
+  .pj-ab-cleared { background: #dcfce7; color: #15803d; }
+  .pj-ab-review { background: #fffbeb; color: #b45309; }
+  .pj-ab-not-cleared { background: #fee2e2; color: #dc2626; }
+  .pj-metrics-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  }
+  @media (max-width: 700px) { .pj-metrics-grid { grid-template-columns: 1fr; } }
+  .pj-metric-card {
+    background: #fff; border: 1px solid var(--bd); border-radius: 14px;
+    padding: 16px; text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .pj-metric-card:hover {
+    box-shadow: 0 6px 20px rgba(13,61,46,0.08);
+    transform: translateY(-2px);
+  }
+  .pj-metric-label {
+    font-size: 11px; font-weight: 700; color: var(--tu);
+    text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px;
+  }
+  .pj-metric-ring { display: flex; justify-content: center; margin-bottom: 8px; }
+  .pj-ring-fill { transition: stroke-dashoffset 1.2s ease; }
+  .pj-metric-score { font-size: 20px; font-weight: 800; color: var(--gd); }
+  .pj-metric-score span { font-size: 13px; font-weight: 600; color: var(--tu); }
+
+  /* ── PLACEMENT READINESS (tiers) ── */
+  .placement-section { margin-bottom: 28px; }
+  .placement-widget {
+    background: linear-gradient(135deg, var(--gm), var(--gd));
+    border-radius: 18px; padding: 22px 26px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; margin-bottom: 16px; color: #fff; flex-wrap: wrap;
+  }
+  .pw-main { flex: 1; min-width: 200px; }
+  .pw-eyebrow { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.65); margin-bottom: 6px; }
+  .pw-tier { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .pw-score { font-size: 13px; color: rgba(255,255,255,0.75); }
+  .pw-cta {
+    font-size: 13px; font-weight: 700; color: var(--gl); text-decoration: none;
+    white-space: nowrap; padding: 10px 18px; border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 10px; transition: all 0.2s;
+  }
+  .pw-cta:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .tier-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 960px) { .tier-cards { grid-template-columns: 1fr; } }
+  .tier-card {
+    background: var(--wh); border: 1.5px solid var(--bd); border-radius: 16px;
+    padding: 18px; transition: box-shadow 0.2s;
+  }
+  .tier-card.eligible { border-color: var(--gn); box-shadow: 0 0 0 1px rgba(34,197,94,0.15); }
+  .tier-card.current { border-color: var(--am); box-shadow: 0 0 0 2px rgba(245,158,11,0.15); }
+  .tc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .tc-name { font-size: 15px; font-weight: 800; color: var(--gd); }
+  .tc-range { font-size: 11px; color: var(--tu); font-weight: 600; }
+  .tc-pct { font-size: 22px; font-weight: 800; color: var(--gd); margin-bottom: 8px; }
+  .tc-bar { height: 8px; background: var(--bd); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+  .tc-fill { height: 100%; border-radius: 4px; transition: width 1.2s ease; }
+  .tc-foot { font-size: 11px; font-weight: 700; }
+  .tc-foot.eligible { color: var(--gn); }
+  .tc-foot.pending { color: var(--am); }
+  .signal-list {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--bd);
+  }
+  .signal-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; }
+  .signal-name { color: var(--tm); font-weight: 600; flex: 1; }
+  .signal-val { font-weight: 800; color: var(--gd); }
+  .signal-need { font-size: 10px; font-weight: 700; color: var(--am); white-space: nowrap; }
+  .st-done { color: var(--gn); }
+  .st-progress { color: var(--am); }
+  .st-todo { color: var(--rd); }
+  .pr-actions-link {
+    display: inline-flex; margin-top: 14px; font-size: 12px; font-weight: 700;
+    color: var(--ga); text-decoration: none;
+  }
+  .pr-actions-link:hover { color: var(--gd); text-decoration: underline; }
+
+  .mission-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+  @media(max-width:900px){ .mission-grid { grid-template-columns:1fr; } }
+  .mission-card { background:linear-gradient(135deg,rgba(13,61,46,0.04),rgba(45,140,106,0.06)); border-radius:16px; border:1.5px solid var(--bd); padding:20px; }
+  .mission-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
+  .mission-title { font-size:13px; font-weight:700; color:var(--tu); text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:6px; }
+  .mission-streak-freeze { font-size:11px; font-weight:700; color:var(--am); background:rgba(245,158,11,0.1); padding:4px 10px; border-radius:20px; }
+  .mission-pct { font-size:11px; font-weight:800; color:var(--ga); }
+  .missions-list { display:flex; flex-direction:column; gap:8px; }
+  .mission-item { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--wh); border:1px solid var(--bd); border-radius:10px; transition:all 0.2s; cursor:pointer; }
+  .mission-item:hover { border-color:var(--ga); }
+  .mission-item.done { opacity:0.6; }
+  .mission-check { width:20px; height:20px; border-radius:6px; border:2px solid var(--bd); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; }
+  .mission-item.done .mission-check { background:var(--ga); border-color:var(--ga); color:#fff; }
+  .mission-text { font-size:13px; font-weight:600; color:var(--tm); flex:1; }
+  .mission-item.done .mission-text { text-decoration:line-through; color:var(--tu); }
+  .mission-pts { font-size:11px; font-weight:700; color:var(--ga); }
+
+  .roadmap-card { background:var(--wh); border-radius:16px; border:1px solid var(--bd); padding:22px; }
+  .roadmap-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .roadmap-title { font-size:13px; font-weight:700; color:var(--tu); text-transform:uppercase; letter-spacing:0.5px; }
+  .milestone-bar { height:8px; background:var(--bd); border-radius:4px; overflow:hidden; margin:12px 0; }
+  .milestone-fill { height:100%; background:linear-gradient(90deg,var(--ga),var(--am)); border-radius:4px; transition:width 1s ease; }
+  .milestone-stats { display:flex; gap:16px; font-size:12px; color:var(--tm); flex-wrap:wrap; }
+  .milestone-stats b { color:var(--gd); }
+
+  .ai-mock-locked { background:linear-gradient(135deg,rgba(55,48,80,0.92),rgba(40,32,65,0.97)); border:1.5px solid rgba(124,58,237,0.3); border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:14px; margin-top:12px; }
+  .ai-mock-unlocked { background:linear-gradient(135deg,#4C1D95,#7C3AED); border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:14px; margin-top:12px; cursor:pointer; transition:transform 0.2s; }
+  .ai-mock-unlocked:hover { transform:translateY(-2px); }
+
+  .top-cards { display:grid; grid-template-columns:1fr 1.2fr 1fr; gap:16px; margin-bottom:24px; }
+  @media(max-width:960px){ .top-cards { grid-template-columns:1fr; } }
+  .card { background:var(--wh); border-radius:16px; border:1px solid var(--bd); padding:22px; opacity:0; transform:translateY(14px); transition:box-shadow 0.2s; }
+  .card:hover { box-shadow:0 4px 24px rgba(13,61,46,0.09); }
+  .card.vis { animation:fadeUp 0.45s ease forwards; }
+  .card-title { font-size:13px; font-weight:700; color:var(--tu); margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px; }
+
+  .prob-summary { display:flex; flex-direction:column; gap:12px; }
+  .prob-total { text-align:center; padding:16px; background:var(--mb); border-radius:12px; }
+  .prob-total-val { font-size:36px; font-weight:800; color:var(--gd); line-height:1; }
+  .prob-total-lbl { font-size:12px; color:var(--tu); font-weight:600; margin-top:4px; }
+  .diff-pills-row { display:flex; gap:8px; }
+  .diff-pill { flex:1; background:var(--mb); border:1px solid var(--bd); border-radius:10px; padding:10px 6px; text-align:center; }
+  .diff-pill-lbl { font-size:10px; font-weight:700; letter-spacing:0.3px; margin-bottom:4px; }
+  .diff-pill-lbl.easy { color:#22C55E; }
+  .diff-pill-lbl.med { color:var(--am); }
+  .diff-pill-lbl.hard { color:var(--rd); }
+  .diff-pill-val { font-size:18px; font-weight:800; color:var(--gd); }
+
+  .awards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .award-item { aspect-ratio:1; border-radius:12px; background:var(--mb); border:1.5px solid var(--bd); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; transition:all 0.2s; padding:8px; opacity:0.4; }
+  .award-item:hover { border-color:var(--ga); background:#E8F5EF; opacity:0.7; }
+  .award-item .ai-icon { font-size:22px; }
+  .award-item .ai-lbl { font-size:9px; font-weight:600; color:var(--tu); text-align:center; }
+
+  .streak-card { background:var(--wh); border-radius:16px; border:1px solid var(--bd); padding:22px; opacity:0; transform:translateY(14px); }
+  .streak-card.vis { animation:fadeUp 0.45s ease forwards; }
+  .streak-card-title { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--tu); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .fire-emoji { font-size:18px; animation:firePulse 1.5s ease-in-out infinite; }
+  @keyframes firePulse { 0%,100%{transform:scale(1) rotate(-3deg)} 50%{transform:scale(1.15) rotate(3deg)} }
+  .streak-hero { display:flex; align-items:baseline; gap:6px; margin:8px 0 4px; }
+  .streak-num { font-size:38px; font-weight:800; color:var(--gd); line-height:1; }
+  .streak-unit { font-size:13px; font-weight:600; color:var(--tu); }
+  .streak-active { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--ga); font-weight:600; margin-bottom:14px; }
+  .pulse-dot { width:6px; height:6px; background:var(--ga); border-radius:50%; animation:pulseDot 1.5s infinite; }
+  @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+  .cal-label { font-size:11px; font-weight:600; color:var(--tu); margin-bottom:6px; }
+  .cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:3px; }
+  .cal-wd { font-size:9px; font-weight:700; color:var(--tu); text-align:center; }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+  .cal-day { aspect-ratio:1; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:8px; font-weight:600; transition:transform 0.15s; cursor:default; }
+  .cal-day:hover { transform:scale(1.2); z-index:1; }
+  .cal-day.empty { background:transparent; }
+  .cal-day.inactive { background:#F0F5F2; color:#BACED0; }
+  .cal-day.active { background:var(--gd); color:#fff; }
+  .cal-day.today { background:var(--ga); color:#fff; box-shadow:0 0 0 2px var(--gd); }
+  .cal-day.future { background:#F8FAF9; color:#D0D8D4; }
+
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-thumb { background:var(--bd); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<script src="/rise-nav.js"></script>
+<script src="/placement-engine.js"></script>
+<script src="/placement-journey.js"></script>
+<script>riseAuthGate();</script>
+
+<aside class="sidebar">
+  <div class="sb-brand">RISE 2027</div>
+  <a href="/" target="_top" class="sb-home-link">← Home</a>
+  <div class="sb-profile">
+    <div class="sb-name" id="sb-name">Ananya Rao</div>
+    <span class="sb-badge" id="sb-badge">🟡 Intermediate · Level 3</span>
+  </div>
+  <nav class="nav-section" id="rise-nav"></nav>
+  <div class="sb-footer">RISE 2027 · YOG Batch</div>
+</aside>
+
+<main class="main">
+
+  <!-- HERO -->
+  <div class="banner">
+    <div>
+      <div class="w-tag">✦ Welcome back,</div>
+      <div class="b-name" id="hero-name">Ananya Rao</div>
+      <div class="b-tags">
+        <span class="bt pu" id="hero-tier">🟡 Intermediate</span>
+        <span class="bt ol" id="hero-level">Level 3</span>
+        <span class="bt gr" id="hero-batch">YOG 2027 Batch</span>
+      </div>
+    </div>
+    <div class="profile-strength">
+      <div class="ps-lbl">PROFILE STRENGTH</div>
+      <div class="ps-val" id="profile-strength">0%</div>
+      <div class="ps-bar"><div class="ps-fill" id="ps-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="stats-row">
+    <div class="stat-card" data-delay="0">
+      <div class="stat-lbl">RISE Score</div>
+      <div class="stat-val" id="kpi-score">0</div>
+      <div class="stat-note">Top 10 this week</div>
+    </div>
+    <div class="stat-card" data-delay="1">
+      <div class="stat-lbl">Current Level</div>
+      <div class="stat-val" id="kpi-level">3</div>
+      <div class="stat-note" id="kpi-level-name">Intermediate</div>
+    </div>
+    <div class="stat-card" data-delay="2">
+      <div class="stat-lbl">Day Streak</div>
+      <div class="stat-val" id="kpi-streak">37</div>
+      <div class="stat-note">Keep it alive today</div>
+    </div>
+    <div class="stat-card" data-delay="3">
+      <div class="stat-lbl">Leaderboard Rank</div>
+      <div class="stat-val" id="kpi-rank">#8</div>
+      <div class="stat-note">Squad Alpha-7</div>
+    </div>
+    <div class="stat-card highlight" data-delay="4">
+      <div class="stat-lbl">Placement Readiness</div>
+      <div class="stat-val" id="kpi-placement">0%</div>
+      <div class="stat-note" id="kpi-placement-note">Career GPS active</div>
+    </div>
+  </div>
+
+  <!-- PLACEMENT JOURNEY -->
+  <div id="placement-journey-root"></div>
+
+  <!-- PLACEMENT READINESS & ELIGIBILITY -->
+  <section class="placement-section">
+    <div class="section-title">Placement Readiness &amp; Eligibility</div>
+    <div class="placement-widget" id="placement-widget"></div>
+    <div class="tier-cards" id="tier-cards"></div>
+    <a class="pr-actions-link" href="/placement-readiness?tab=actions" target="_top">🎯 View Recommended Actions →</a>
+  </section>
+
+  <!-- DAILY MISSION + MONTHLY MILESTONE -->
+  <div class="mission-grid">
+    <div class="mission-card">
+      <div class="mission-header">
+        <div class="mission-title">🎯 Daily Mission</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="mission-pct" id="mission-pct">33% complete</span>
+          <span class="mission-streak-freeze">⛄ 1 freeze left</span>
+        </div>
+      </div>
+      <div class="missions-list" id="missions-list">
+        <div class="mission-item done" onclick="toggleMission(this)">
+          <div class="mission-check">✓</div>
+          <div class="mission-text">Streak on all connected coding platforms</div>
+          <div class="mission-pts">+25 pts</div>
+        </div>
+        <div class="mission-item" onclick="toggleMission(this)">
+          <div class="mission-check"></div>
+          <div class="mission-text">Push 1 commit to GitHub</div>
+          <div class="mission-pts">+15 pts</div>
+        </div>
+        <div class="mission-item" onclick="toggleMission(this)">
+          <div class="mission-check"></div>
+          <div class="mission-text">Complete 1 DSA Activity Track Module</div>
+          <div class="mission-pts">+30 pts</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="roadmap-card">
+        <div class="roadmap-header">
+          <div class="roadmap-title">🗓️ Monthly Milestone — June</div>
+          <div style="font-size:11px;font-weight:700;color:var(--am)">8 days left</div>
+        </div>
+        <div class="milestone-bar"><div class="milestone-fill" id="milestone-fill" style="width:50%"></div></div>
+        <div class="milestone-stats">
+          <span><b id="ms-done">2</b> tasks completed</span>
+          <span><b id="ms-left">2</b> remaining</span>
+          <span>Deadline: <b>Jun 30</b></span>
+        </div>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:5px;background:var(--ga);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div><div style="font-size:12px;color:var(--tu);text-decoration:line-through">Aptitude Modules 1–3</div></div>
+          <div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="toggleMilestone(this)"><div style="width:16px;height:16px;border-radius:5px;border:1.5px solid var(--bd)"></div><div style="font-size:12px;font-weight:600;color:var(--tm)">Verbal GD practice session</div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:5px;border:1.5px solid var(--bd)"></div><div style="font-size:12px;font-weight:600;color:var(--tm)">Full-stack project submission</div></div>
+        </div>
+      </div>
+
+      <div class="ai-mock-locked" id="ai-mock-card">
+        <div style="font-size:26px;flex-shrink:0;filter:grayscale(1);opacity:0.5">🤖</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.45);margin-bottom:3px;display:flex;align-items:center;gap:6px;"><span>🔒</span> AI Mock Interview — Locked</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.5;">Complete monthly milestone to unlock. <span id="mock-progress">2/4 tasks done</span> toward unlock.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEMS · BADGES · STREAK -->
+  <div class="top-cards">
+    <div class="card" data-delay="0">
+      <div class="card-title">Problems Summary</div>
+      <div class="prob-summary">
+        <div class="prob-total">
+          <div class="prob-total-val" id="prob-total">147</div>
+          <div class="prob-total-lbl">Total Solved</div>
+        </div>
+        <div class="diff-pills-row">
+          <div class="diff-pill"><div class="diff-pill-lbl easy">Easy</div><div class="diff-pill-val" id="prob-easy">52</div></div>
+          <div class="diff-pill"><div class="diff-pill-lbl med">Medium</div><div class="diff-pill-val" id="prob-med">78</div></div>
+          <div class="diff-pill"><div class="diff-pill-lbl hard">Hard</div><div class="diff-pill-val" id="prob-hard">17</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-delay="1">
+      <div class="card-title">Badges &amp; Rewards</div>
+      <div class="awards-grid">
+        <div class="award-item" style="opacity:1;border-color:var(--ga);background:#E8F5EF"><div class="ai-icon">🏅</div><div class="ai-lbl">DSA Badge</div></div>
+        <div class="award-item" style="opacity:1;border-color:var(--pu);background:rgba(124,58,237,0.07)"><div class="ai-icon">🤖</div><div class="ai-lbl">AI Badge</div></div>
+        <div class="award-item"><div class="ai-icon">⭐</div><div class="ai-lbl">OSS Badge</div></div>
+        <div class="award-item" style="opacity:1;border-color:var(--am);background:rgba(245,158,11,0.07)"><div class="ai-icon">🔥</div><div class="ai-lbl">Streak 30</div></div>
+        <div class="award-item"><div class="ai-icon">🌟</div><div class="ai-lbl">Student/Week</div></div>
+        <div class="award-item" style="opacity:1;border-color:var(--ga);background:#E8F5EF"><div class="ai-icon">🚀</div><div class="ai-lbl">100 Solved</div></div>
+      </div>
+    </div>
+
+    <div class="streak-card" data-delay="2">
+      <div class="streak-card-title"><span class="fire-emoji">🔥</span> Overall Coding Streak</div>
+      <div class="streak-hero"><span class="streak-num" id="streak-num">37</span><span class="streak-unit">day streak</span></div>
+      <div class="streak-active"><div class="pulse-dot"></div> Active today</div>
+      <div class="cal-label">Last 30 Days</div>
+      <div class="cal-weekdays">
+        <div class="cal-wd">M</div><div class="cal-wd">T</div><div class="cal-wd">W</div>
+        <div class="cal-wd">T</div><div class="cal-wd">F</div><div class="cal-wd">S</div><div class="cal-wd">S</div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+renderRiseNav('dashboard', 'rise-nav');
+
+const S = PLACEMENT_ENGINE.student;
+const today = new Date(2026, 5, 22);
+
+document.getElementById('hero-name').textContent = S.name;
+document.getElementById('sb-name').textContent = S.name;
+document.getElementById('hero-tier').textContent = '🟡 ' + S.tier;
+document.getElementById('hero-level').textContent = 'Level ' + S.level + ' · ' + S.levelName;
+document.getElementById('hero-batch').textContent = S.batch + ' Batch';
+document.getElementById('sb-badge').textContent = '🟡 ' + S.tier + ' · Level ' + S.level;
+document.getElementById('kpi-level').textContent = S.level;
+document.getElementById('kpi-level-name').textContent = S.levelName;
+document.getElementById('kpi-streak').textContent = S.streak;
+document.getElementById('streak-num').textContent = S.streak;
+document.getElementById('kpi-rank').textContent = '#' + S.rank;
+document.getElementById('prob-total').textContent = S.problems.total;
+document.getElementById('prob-easy').textContent = S.problems.easy;
+document.getElementById('prob-med').textContent = S.problems.medium;
+document.getElementById('prob-hard').textContent = S.problems.hard;
+
+const placementScore = getPlacementScore();
+document.getElementById('kpi-placement').textContent = placementScore + '%';
+
+document.getElementById('placement-journey-root').innerHTML = renderDashboardJourney();
+document.getElementById('placement-widget').innerHTML = renderDashboardPlacementWidget();
+document.getElementById('tier-cards').innerHTML = renderDashboardTierCards();
+
+setTimeout(() => {
+  document.querySelectorAll('.pj-summary-fill').forEach((b) => {
+    b.style.width = b.dataset.w;
+  });
+  document.querySelectorAll('.tc-fill').forEach((b) => {
+    b.style.width = b.dataset.w;
+  });
+}, 350);
+
+function countUp(el, to, dur) {
+  const s = performance.now();
+  function step(n) {
+    const t = Math.min((n - s) / dur, 1);
+    const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    el.textContent = Math.round(to * ease).toLocaleString();
+    if (t < 1) requestAnimationFrame(step);
+    else el.textContent = to.toLocaleString();
+  }
+  requestAnimationFrame(step);
+}
+
+setTimeout(() => {
+  countUp(document.getElementById('kpi-score'), S.riseScore, 1000);
+  const ps = S.profileStrength;
+  let p = 0;
+  const psEl = document.getElementById('profile-strength');
+  const iv = setInterval(() => {
+    p += 2;
+    if (p >= ps) { p = ps; clearInterval(iv); }
+    psEl.textContent = p + '%';
+  }, 20);
+  document.getElementById('ps-fill').style.width = ps + '%';
+  document.getElementById('kpi-placement').textContent = placementScore + '%';
+}, 300);
+
+function buildCalendar() {
+  const grid = document.getElementById('cal-grid');
+  const start = new Date(today);
+  start.setDate(today.getDate() - 29);
+  const startDow = (start.getDay() + 6) % 7;
+  for (let i = 0; i < startDow; i++) {
+    const e = document.createElement('div');
+    e.className = 'cal-day empty';
+    grid.appendChild(e);
+  }
+  const activeDays = new Set();
+  for (let i = 0; i <= 36; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    activeDays.add(d.toDateString());
+  }
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    const cell = document.createElement('div');
+    const isToday = d.toDateString() === today.toDateString();
+    const isFuture = d > today;
+    const isActive = activeDays.has(d.toDateString());
+    cell.className = 'cal-day ' + (isFuture ? 'future' : isToday ? 'today' : isActive ? 'active' : 'inactive');
+    cell.textContent = d.getDate();
+    grid.appendChild(cell);
+  }
+}
+
+function updateMissionPct() {
+  const items = document.querySelectorAll('.mission-item');
+  const done = [...items].filter((i) => i.classList.contains('done')).length;
+  const pct = Math.round((done / items.length) * 100);
+  document.getElementById('mission-pct').textContent = pct + '% complete';
+}
+
+function toggleMission(el) {
+  el.classList.toggle('done');
+  el.querySelector('.mission-check').textContent = el.classList.contains('done') ? '✓' : '';
+  updateMissionPct();
+}
+
+function toggleMilestone(el) {
+  const box = el.querySelector('div');
+  if (box.style.background) {
+    box.style.background = '';
+    box.style.border = '1.5px solid var(--bd)';
+    box.textContent = '';
+  } else {
+    box.style.background = 'var(--ga)';
+    box.style.border = 'none';
+    box.textContent = '✓';
+    box.style.color = '#fff';
+    box.style.fontSize = '9px';
+    box.style.display = 'flex';
+    box.style.alignItems = 'center';
+    box.style.justifyContent = 'center';
+  }
+}
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) {
+      const d = parseInt(e.target.dataset.delay || 0);
+      setTimeout(() => e.target.classList.add('vis'), d * 110);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05 });
+document.querySelectorAll('.stat-card,.card,.streak-card').forEach((c) => obs.observe(c));
+
+buildCalendar();
+updateMissionPct();
+</script>
+</body>
+</html>

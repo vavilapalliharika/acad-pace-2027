@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levels · RISE 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gd:#0D3D2E;--gm:#1B5E45;--ga:#2D8C6A;--gl:#4CAF85;--mb:#EEF7F3;--wh:#fff;--td:#0D1F1A;--tm:#2E5045;--tu:#7A9E90;--bd:#D4EBE0;--am:#F59E0B;--pu:#7C3AED;--gtint:#e8f5e9}
+  body{font-family:'Inter',sans-serif;background:var(--mb);color:var(--td);min-height:100vh;display:flex}
+  .sidebar{width:260px;background:var(--gd);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sb-brand{padding:28px 24px 20px;font-size:22px;font-weight:800;color:#fff}
+  .sb-home-link{margin:0 12px 8px;display:flex;padding:9px 14px;border-radius:9px;color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none}
+  .sb-home-link:hover{background:rgba(255,255,255,0.08);color:#fff}
+  .sb-profile{margin:0 16px 24px;background:var(--gm);border-radius:12px;padding:16px}
+  .sb-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}
+  .sb-badge{display:inline-block;background:rgba(255,255,255,0.15);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+  .nav-section{padding:0 12px;flex:1}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;margin-bottom:2px;text-decoration:none}
+  .nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.12);color:#fff}
+  .nav-item .nic{width:20px;text-align:center}
+  .sb-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.08);margin-top:auto;font-size:11px;color:rgba(255,255,255,0.35);text-align:center}
+  .main{flex:1;padding:32px;overflow-y:auto;max-width:1200px}
+  .page-title{font-size:28px;font-weight:800;color:var(--gd);margin-bottom:4px}
+  .page-sub{font-size:13px;color:var(--tu);margin-bottom:24px}
+  .section-title{font-size:18px;font-weight:800;margin:28px 0 14px;color:var(--td)}
+  .overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:8px}
+  @media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,1fr)}}
+  .ov-card{background:var(--wh);border:1px solid var(--bd);border-radius:14px;padding:18px;text-align:center}
+  .ov-lbl{font-size:11px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+  .ov-val{font-size:28px;font-weight:800;color:var(--gd)}
+  .progress-card{background:var(--wh);border:1px solid var(--bd);border-radius:16px;padding:22px;margin-bottom:8px}
+  .prog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .prog-pct{font-size:32px;font-weight:800;color:var(--gd)}
+  .prog-bar{height:12px;background:var(--bd);border-radius:8px;overflow:hidden;margin-bottom:8px}
+  .prog-fill{height:100%;background:linear-gradient(90deg,var(--ga),var(--am));border-radius:8px;transition:width 1s ease}
+  .prog-foot{font-size:12px;color:var(--tu);font-weight:600}
+  .ai-tracks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:800px){.ai-tracks{grid-template-columns:repeat(2,1fr)}}
+  .ai-tier{background:var(--wh);border:1px solid var(--bd);border-radius:14px;padding:16px;text-align:center;transition:all .2s}
+  .ai-tier.current{border-color:var(--am);background:#fffbeb;box-shadow:0 0 0 2px rgba(245,158,11,.15)}
+  .ai-tier.done{border-color:var(--gn);background:#f0fdf4}
+  .ai-tier.locked{opacity:.5}
+  .ai-icon{font-size:28px;margin-bottom:6px}
+  .ai-name{font-size:13px;font-weight:800;color:var(--gd)}
+  .ai-status{font-size:10px;font-weight:700;color:var(--tu);margin-top:4px}
+  .history-card,.locked-card{background:var(--wh);border:1px solid var(--bd);border-radius:16px;padding:20px}
+  .hist-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed var(--bd)}
+  .hist-item:last-child{border-bottom:none}
+  .hist-badge{width:40px;height:40px;border-radius:50%;background:var(--gn);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+  .hist-info{flex:1}
+  .hist-name{font-size:14px;font-weight:800;color:var(--gd)}
+  .hist-date{font-size:11px;color:var(--tu)}
+  .locked-item{padding:14px 0;border-bottom:1px dashed var(--bd)}
+  .locked-item:last-child{border-bottom:none}
+  .locked-name{font-size:14px;font-weight:800;color:var(--gd);margin-bottom:4px}
+  .locked-req{font-size:12px;color:var(--tm);line-height:1.5}
+  .levels-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px}
+  @media(max-width:960px){.levels-grid{grid-template-columns:1fr}}
+  .lvl{background:var(--wh);border:1px solid var(--bd);border-left:5px solid var(--bd);border-radius:14px;padding:20px}
+  .lvl.cleared{border-left-color:#22C55E;background:linear-gradient(180deg,var(--gtint),#fff 60%)}
+  .lvl.progress{border-left-color:var(--am)}
+  .lvl.locked{opacity:.55}
+  .lvl-head{display:flex;justify-content:space-between;margin-bottom:6px}
+  .lvl-name{font-size:17px;font-weight:800;color:var(--gd)}
+  .lvl-badge{font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px;text-transform:uppercase}
+  .lvl-badge.cleared{background:#22C55E;color:#fff}
+  .lvl-badge.progress{background:var(--am);color:#fff}
+  .lvl-badge.locked{background:#E5E7EB;color:#6B7280}
+  .lvl-bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden;margin:10px 0}
+  .lvl-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--ga),var(--gl));transition:width 1s ease}
+  .lvl-foot{font-size:11.5px;color:var(--tu)}
+</style>
+</head>
+<body>
+<script src="/rise-nav.js"></script>
+<script>riseAuthGate();</script>
+
+<aside class="sidebar">
+  <div class="sb-brand">RISE 2027</div>
+  <a href="/" target="_top" class="sb-home-link">← Home</a>
+  <div class="sb-profile"><div class="sb-name">Ananya Rao</div><span class="sb-badge">🟡 Intermediate · Level 3</span></div>
+  <nav class="nav-section" id="rise-nav"></nav>
+  <div class="sb-footer">RISE 2027 · YOG Batch</div>
+</aside>
+
+<main class="main">
+  <div class="page-title">◈ Levels</div>
+  <div class="page-sub">Battle-pass style progression — clear levels, earn XP, unlock placement perks.</div>
+
+  <div class="section-title">Progress Overview</div>
+  <div class="overview-grid" id="overview-grid"></div>
+
+  <div class="section-title">Level Progress</div>
+  <div class="progress-card" id="progress-card"></div>
+
+  <div class="section-title">AI Track</div>
+  <div class="ai-tracks" id="ai-tracks"></div>
+
+  <div class="section-title">Level History</div>
+  <div class="history-card" id="history-card"></div>
+
+  <div class="section-title">Locked Levels</div>
+  <div class="locked-card" id="locked-card"></div>
+
+  <div class="section-title">All Levels</div>
+  <div class="levels-grid" id="levels-grid"></div>
+</main>
+
+<script>
+renderRiseNav('levels', 'rise-nav');
+
+const STUDENT = { score: 2140, avgPerDay: 37, xpEarned: 2140 };
+const LEVELS = [
+  { n:1, name:'Foundation',   threshold:500,  clearedOn:'May 22, 2026', unlocks:'Daily mission tracking, profile badge.' },
+  { n:2, name:'Builder',      threshold:1000, clearedOn:'Jun 04, 2026', unlocks:'GitHub auto-sync, weekly leaderboard.' },
+  { n:3, name:'Intermediate', threshold:1800, clearedOn:'Jun 18, 2026', unlocks:'Mentor 1:1, advanced DSA tracks.' },
+  { n:4, name:'Advanced',     threshold:2800, unlocks:'Unlimited AI mocks, recruiter visibility.' },
+  { n:5, name:'Elite',        threshold:4000, unlocks:'Priority referrals, mock placement drives.' }
+];
+const AI_TRACKS = [
+  { name:'Explorer', icon:'🔵', status:'done', detail:'3/3 projects' },
+  { name:'Builder', icon:'🟡', status:'current', detail:'1/3 projects' },
+  { name:'Creator', icon:'🟣', status:'locked', detail:'Locked' },
+  { name:'Specialist', icon:'🏆', status:'locked', detail:'Locked' }
+];
+
+let prevCleared = true;
+const states = LEVELS.map(l => {
+  const s = STUDENT.score >= l.threshold ? 'cleared' : (prevCleared ? 'progress' : 'locked');
+  prevCleared = (s === 'cleared');
+  return s;
+});
+const cleared = states.filter(s => s === 'cleared').length;
+const currentLevel = Math.min(cleared + 1, 5);
+const currentL = LEVELS[currentLevel - 1];
+const prevThresh = currentLevel > 1 ? LEVELS[currentLevel - 2].threshold : 0;
+const needed = Math.max(0, currentL.threshold - STUDENT.score);
+const etaDays = STUDENT.avgPerDay > 0 ? Math.ceil(needed / STUDENT.avgPerDay) : '—';
+const pct = currentLevel <= cleared ? 100 : Math.round(((STUDENT.score - prevThresh) / (currentL.threshold - prevThresh)) * 100);
+
+document.getElementById('overview-grid').innerHTML = `
+  <div class="ov-card"><div class="ov-lbl">Current Level</div><div class="ov-val">L${currentLevel}</div></div>
+  <div class="ov-card"><div class="ov-lbl">Total Levels</div><div class="ov-val">5</div></div>
+  <div class="ov-card"><div class="ov-lbl">XP Earned</div><div class="ov-val">${STUDENT.xpEarned.toLocaleString()}</div></div>
+  <div class="ov-card"><div class="ov-lbl">XP Required</div><div class="ov-val">${currentL.threshold.toLocaleString()}</div></div>`;
+
+document.getElementById('progress-card').innerHTML = `
+  <div class="prog-head"><span style="font-size:13px;font-weight:700;color:var(--tu);text-transform:uppercase">Level ${currentLevel} · ${currentL.name}</span><span class="prog-pct">${pct}%</span></div>
+  <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="prog-foot">${needed === 0 ? '🏆 Level cleared!' : `~${etaDays} days to next level · ${needed.toLocaleString()} XP remaining · +${STUDENT.avgPerDay} XP/day avg`}</div>`;
+
+document.getElementById('ai-tracks').innerHTML = AI_TRACKS.map(t => `
+  <div class="ai-tier ${t.status}">
+    <div class="ai-icon">${t.icon}</div>
+    <div class="ai-name">${t.name}</div>
+    <div class="ai-status">${t.status === 'done' ? '✔ Complete' : t.status === 'current' ? '⚡ In Progress' : '🔒 Locked'} · ${t.detail}</div>
+  </div>`).join('');
+
+document.getElementById('history-card').innerHTML = LEVELS.filter((_, i) => states[i] === 'cleared').map(l => `
+  <div class="hist-item">
+    <div class="hist-badge">L${l.n}</div>
+    <div class="hist-info"><div class="hist-name">Level ${l.n} · ${l.name}</div><div class="hist-date">Unlocked ${l.clearedOn} · ${l.threshold.toLocaleString()} XP threshold</div></div>
+    <span style="font-size:12px;font-weight:700;color:var(--gn)">✔ Cleared</span>
+  </div>`).join('');
+
+document.getElementById('locked-card').innerHTML = LEVELS.filter((_, i) => states[i] === 'locked').map(l => `
+  <div class="locked-item">
+    <div class="locked-name">🔒 Level ${l.n} · ${l.name}</div>
+    <div class="locked-req"><b>Requirements:</b> ${l.threshold.toLocaleString()} XP · Clear Level ${l.n - 1} first<br><b>Unlocks:</b> ${l.unlocks}</div>
+  </div>`).join('') || '<div style="color:var(--gn);font-weight:700;padding:12px">No locked levels — you cleared them all!</div>';
+
+const grid = document.getElementById('levels-grid');
+grid.innerHTML = LEVELS.map((l, i) => {
+  const st = states[i];
+  const badge = st === 'cleared' ? 'CLEARED ✅' : (st === 'progress' ? 'IN PROGRESS 🔄' : 'LOCKED 🔒');
+  const prevT = i > 0 ? LEVELS[i-1].threshold : 0;
+  let pctW = st === 'cleared' ? 100 : st === 'progress' ? Math.max(2, Math.min(100, ((STUDENT.score - prevT) / (l.threshold - prevT)) * 100)) : 0;
+  const foot = st === 'cleared' ? `✓ Cleared on ${l.clearedOn}` : st === 'progress' ? `⚡ ${(l.threshold - STUDENT.score).toLocaleString()} XP to go` : `🔒 Clear Level ${l.n-1} to unlock`;
+  return `<div class="lvl ${st}">
+    <div class="lvl-head"><div class="lvl-name">Level ${l.n} · ${l.name}</div><span class="lvl-badge ${st}">${badge}</span></div>
+    <div style="font-size:12px;color:var(--tm);margin-bottom:6px">${STUDENT.score.toLocaleString()} / ${l.threshold.toLocaleString()} XP</div>
+    <div class="lvl-bar"><div class="lvl-fill" style="width:0%" data-w="${pctW}"></div></div>
+    <div class="lvl-foot">${foot}</div>
+  </div>`;
+}).join('');
+
+setTimeout(() => {
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.querySelectorAll('.lvl-fill').forEach(b => b.style.width = b.dataset.w + '%');
+}, 150);
+</script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track · RISE 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gd:#0D3D2E;--gm:#1B5E45;--ga:#2D8C6A;--gl:#4CAF85;--mb:#EEF7F3;--wh:#fff;--td:#0D1F1A;--tm:#2E5045;--tu:#7A9E90;--bd:#D4EBE0;--am:#F59E0B}
+  body{font-family:'Inter',sans-serif;background:var(--mb);color:var(--td);min-height:100vh;display:flex}
+  .sidebar{width:260px;background:var(--gd);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sb-brand{padding:28px 24px 20px;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+  .sb-home-link{display:inline-block;margin:0 24px 16px;font-size:12px;color:rgba(255,255,255,0.6);text-decoration:none}
+  .sb-home-link:hover{color:#fff}
+  .sb-profile{margin:0 16px 24px;background:var(--gm);border-radius:12px;padding:16px}
+  .sb-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}
+  .sb-badge{display:inline-block;background:rgba(255,255,255,0.15);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.25)}
+  .nav-section{padding:0 12px;flex:1}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;margin-bottom:2px;text-decoration:none}
+  .nav-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+  .nav-item.active{background:rgba(255,255,255,0.12);color:#fff}
+  .nav-item .nic{font-size:16px;width:20px;text-align:center}
+  .sb-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.08);margin-top:auto;font-size:11px;color:rgba(255,255,255,0.35);text-align:center}
+
+  .main{flex:1;padding:32px;overflow-y:auto;max-width:1200px}
+  .page-title{font-size:28px;font-weight:800;color:var(--gd);letter-spacing:-0.5px;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+  .page-sub{font-size:13px;color:var(--tu);margin-bottom:22px}
+
+  .tabs{display:flex;gap:6px;border-bottom:2px solid var(--bd);margin-bottom:22px;flex-wrap:wrap}
+  .tab{padding:10px 18px;font-size:13px;font-weight:700;color:var(--tu);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;display:flex;align-items:center;gap:6px}
+  .tab:hover{color:var(--gd)}
+  .tab.active{color:var(--gd);border-bottom-color:var(--ga)}
+  .tab.locked{color:#cbd5d1;cursor:not-allowed}
+
+  .tab-panel{display:none}
+  .tab-panel.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--wh);border:1px solid var(--bd);border-radius:14px;padding:22px;margin-bottom:16px}
+  .card h3{font-size:16px;font-weight:800;color:var(--gd);margin-bottom:10px;letter-spacing:-0.3px}
+  .card p{font-size:13.5px;color:var(--tm);line-height:1.65;margin-bottom:8px}
+  .muted{color:var(--tu);font-size:12.5px}
+
+  .pill{display:inline-block;background:#fff;border:1px solid var(--bd);color:var(--tm);font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:14px;margin:0 4px 6px 0}
+  .pill.am{background:#fffbeb;border-color:#fcd34d;color:#92400e}
+  .pill.gn{background:#dcfce7;border-color:#86efac;color:#15803d}
+
+  /* tier cards */
+  .tier{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px;position:relative}
+  .tier.locked{opacity:.55;background:#fafafa}
+  .tier.current{border-color:var(--am);box-shadow:0 0 0 2px rgba(245,158,11,0.18);background:#fffbeb}
+  .tier.done{border-color:#22C55E;background:#f0fdf4}
+  .tier-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+  .tier-name{font-size:14px;font-weight:800;color:var(--gd);display:flex;align-items:center;gap:8px}
+  .tier-lbl{font-size:10px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:0.4px}
+  .tier-stat{font-size:11.5px;font-weight:700;color:var(--am)}
+  .tier.done .tier-stat{color:#15803d}
+  .tier.locked .tier-stat{color:#9ca3af}
+
+  .proj-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px dashed #eef2ef}
+  .proj-row:last-child{border-bottom:none}
+  .proj-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .proj-name{font-size:13px;color:var(--td);font-weight:600;flex:1;min-width:160px}
+  .proj-sub{display:flex;gap:6px;align-items:center;padding-left:0;flex-wrap:wrap}
+  .sub-input{flex:1;min-width:180px;font-size:12px;padding:6px 10px;border:1px solid var(--bd);border-radius:6px;outline:none;font-family:inherit;color:var(--td);background:#fff}
+  .sub-input:focus{border-color:var(--ga)}
+  .sub-btn{font-size:11px;font-weight:700;color:var(--gd);background:#fff;border:1.5px solid var(--ga);padding:5px 14px;border-radius:6px;cursor:pointer;white-space:nowrap}
+  .sub-btn:hover{background:var(--ga);color:#fff}
+  .sub-link{font-size:11.5px;font-weight:700;color:#15803d;text-decoration:none;background:#dcfce7;border:1px solid #86efac;padding:4px 12px;border-radius:14px}
+  .sub-link:hover{text-decoration:underline}
+  .sub-placeholder{font-size:11.5px;color:var(--tu);background:#f3f4f6;border:1px dashed #cbd5d1;padding:4px 12px;border-radius:14px}
+
+  .skill-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .btn-primary{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--gd);background:#fff;border:1.5px solid var(--ga);padding:8px 16px;border-radius:22px;cursor:pointer;text-decoration:none}
+  .btn-primary:hover{background:var(--ga);color:#fff}
+
+  .sup-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--mb);font-size:13px;color:var(--tm);line-height:1.55}
+  .sup-item:last-child{border-bottom:none}
+  .sup-item .sicn{font-size:18px;flex-shrink:0;width:28px;text-align:center}
+  .sup-item b{color:var(--gd)}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:12px}
+  .stat-box{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+  .stat-box .l{font-size:11px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px}
+  .stat-box .v{font-size:22px;font-weight:800;color:var(--gd);line-height:1}
+  .stat-box .s{font-size:11px;color:var(--tu);margin-top:3px}
+
+  table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+  table.tbl th,table.tbl td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--mb)}
+  table.tbl th{font-size:11px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:0.4px}
+  table.tbl tr:last-child td{border-bottom:none}
+
+  .quote{border-left:3px solid var(--ga);padding:8px 14px;font-style:italic;font-size:13px;color:var(--tu);line-height:1.55;background:#f6fbf8;border-radius:0 8px 8px 0;margin-bottom:14px}
+  .qp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .qp-card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px;transition:border-color .2s}
+  .qp-card:hover{border-color:var(--ga)}
+  .qp-title{font-size:14px;font-weight:800;color:var(--gd);margin:8px 0}
+  .qp-tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;margin:2px 4px 2px 0}
+  .qp-tag.easy{background:#dcfce7;color:#15803d}
+  .qp-tag.medium{background:#fef3c7;color:#92400e}
+  .qp-tag.hard{background:#fee2e2;color:#dc2626}
+  .qp-tag.topic{background:#eff6ff;color:#2563eb}
+  .qp-link{font-size:12px;font-weight:700;color:var(--ga);text-decoration:none;display:inline-block;margin-top:8px}
+  .topic-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .topic-btn{font-size:12px;font-weight:700;padding:8px 16px;border-radius:20px;border:1.5px solid var(--bd);background:#fff;cursor:pointer;font-family:inherit;color:var(--tm)}
+  .topic-btn:hover{border-color:var(--ga);color:var(--gd)}
+</style>
+</head>
+<body>
+
+<script src="/rise-nav.js"></script>
+<script>riseAuthGate();</script>
+
+<aside class="sidebar">
+  <div class="sb-brand">RISE 2027</div>
+  <a href="/" target="_top" class="sb-home-link">← Home</a>
+  <div class="sb-profile">
+    <div class="sb-name">Ananya Rao</div>
+    <span class="sb-badge">🟡 Intermediate · Level 3</span>
+  </div>
+  <nav class="nav-section" id="rise-nav"></nav>
+  <div class="sb-footer">RISE 2027 · YOG Batch</div>
+</aside>
+
+<main class="main" id="main"></main>
+
+<script>
+const TRACKS = {
+  ai: {
+    icon:'🤖', title:'AI Track',
+    sub:'Build with AI — every shipped project is a step toward AI Innovator.',
+    tabs:['Overview','Tiers & Projects','Skills & Resources','Support']
+  },
+  dsa: {
+    icon:'</>',title:'DSA Track',
+    sub:'Daily problem-solving discipline · Target: 200 problems shipped.',
+    tabs:['Overview','Question Pool','Practice','Tracking','Support']
+  },
+  oss: {
+    icon:'⌥', title:'Open Source',
+    sub:'Contribute to real-world projects — issues, PRs, reviews.',
+    tabs:['Overview','Contributions','Support']
+  },
+  aptitude: {
+    icon:'🎓',title:'Aptitude & GD',
+    sub:'Aptitude, verbal, group discussion & HR prep.',
+    tabs:['Schedule','Mock OA','Support']
+  },
+  dev: {
+    icon:'⚙', title:'Dev & System Design',
+    sub:'React · Node · MongoDB — ship full-stack projects + design systems.',
+    tabs:['Overview','Milestones','System Design','Support']
+  }
+};
+
+const qs = new URLSearchParams(location.search);
+const KEY = qs.get('t') || 'ai';
+const T = TRACKS[KEY] || TRACKS.ai;
+document.title = T.title + ' · RISE 2027';
+
+renderRiseNav(KEY === 'dsa' ? 'dsa' : '', 'rise-nav');
+
+// ── persistent submit-link state ──
+const STORE_KEY = 'rise_track_subs_v1';
+let SUBS = {};
+try { SUBS = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e){}
+function saveSubs(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(SUBS)); }catch(e){} }
+window.submitLink = function(id){
+  const inp = document.getElementById('inp-' + id);
+  const v = inp ? inp.value.trim() : '';
+  if(!v){ if(inp) inp.focus(); return; }
+  if(!/^https?:\/\//i.test(v)){ alert('Paste a valid URL starting with http(s)://'); return; }
+  SUBS[id] = v; saveSubs(); renderCurrent();
+};
+function subCell(id){
+  const v = SUBS[id];
+  if(v){
+    return `<div class="proj-sub"><a class="sub-link" href="${v.replace(/"/g,'&quot;')}" target="_blank" rel="noopener">✅ Submitted · View ↗</a></div>`;
+  }
+  return `<div class="proj-sub">
+    <input id="inp-${id}" class="sub-input" type="url" placeholder="🔗 Paste submission link" />
+    <button class="sub-btn" onclick="submitLink('${id}')">Submit</button>
+  </div>`;
+}
+
+// ── content renderers per track ──
+const AI_TIERS = [
+  { key:'explorer',  name:'AI Explorer',  icon:'🔵', projects:['Prompt Engineering project','AI-powered To-Do App','AI Chatbot'] },
+  { key:'builder',   name:'AI Builder',   icon:'🟡', projects:['RAG Application','AI Resume Analyzer','AI Study Assistant'] },
+  { key:'innovator', name:'AI Innovator', icon:'🟣', projects:['Multi-agent system','AI workflow automation','Domain-specific AI solution'] }
+];
+
+function aiTierState(){
+  const shipped = AI_TIERS.map(t => t.projects.filter((_,i) => SUBS['ai|'+t.key+'|'+i]).length);
+  let unlockedThrough = 0;
+  for(let i=0;i<AI_TIERS.length;i++){ if(i===0 || shipped[i-1]===3) unlockedThrough = i; else break; }
+  return { shipped, unlockedThrough };
+}
+
+function aiTiersHtml(){
+  const s = aiTierState();
+  return AI_TIERS.map((t,i) => {
+    const done = s.shipped[i] === 3;
+    const unlocked = i <= s.unlockedThrough;
+    const cls = done ? 'done' : (unlocked ? 'current' : 'locked');
+    const lock = !unlocked;
+    const stat = done ? `✓ ${s.shipped[i]}/3 shipped · Badge earned`
+              : unlocked ? `⚡ ${s.shipped[i]}/3 projects shipped`
+              : `🔒 Locked · Clear Tier ${i} first`;
+    const projs = t.projects.map((p,idx) => {
+      const id = 'ai|'+t.key+'|'+idx;
+      const sub = lock
+        ? `<div class="proj-sub"><span class="sub-placeholder">🔒 Tier locked</span></div>`
+        : subCell(id);
+      return `<div class="proj-row">
+        <div class="proj-head"><div class="proj-name">${p}</div></div>
+        ${sub}
+      </div>`;
+    }).join('');
+    return `<div class="tier ${cls}">
+      <div class="tier-head">
+        <div>
+          <div class="tier-lbl">Tier ${i+1} ${lock?'🔒':''}</div>
+          <div class="tier-name">${t.icon} ${t.name}</div>
+        </div>
+        <div class="tier-stat">${stat}</div>
+      </div>
+      ${projs}
+    </div>`;
+  }).join('');
+}
+
+const DEV_MILESTONES = [
+  { id:'fe', name:'Frontend deploy', hint:'Vercel / Netlify URL' },
+  { id:'be', name:'Backend deploy',  hint:'Render / Railway / Fly URL' },
+  { id:'fs', name:'Full-stack deploy', hint:'Live product URL' }
+];
+
+function panelsFor(key){
+  if(key === 'ai'){
+    return {
+      'Overview': `
+        <div class="card">
+          <h3>What is the AI Builder track?</h3>
+          <p>This track turns you from an AI <i>user</i> into an AI <i>builder</i>. Across 3 tiers — Explorer, Builder, Innovator — you ship 9 progressively harder projects, from prompt engineering to multi-agent systems.</p>
+          <div class="quote">"Don't just use AI — build with it. Every project shipped is a step closer to becoming an AI Innovator."</div>
+          <p class="muted">Tiers unlock sequentially: finish all 3 projects in a tier to unlock the next.</p>
+        </div>`,
+      'Tiers & Projects': aiTiersHtml(),
+      'Skills & Resources': `
+        <div class="card">
+          <h3>Skills you'll build</h3>
+          <div class="skill-row">
+            ${['LLM','Agentic','RAG','DSA','MCP','Prompt Engineering'].map(s=>`<span class="pill">${s}</span>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <h3>Course Resources</h3>
+          <p>Curated CCBP courses for AI builders — open both in new tabs.</p>
+          <a class="btn-primary" href="#" onclick="window.open('https://learning.ccbp.in/course?c_id=b9811b34-585b-47e0-a0be-65f1081a74f2','_blank');window.open('https://learning.ccbp.in/course?c_id=0ab1a0a2-ddf1-4b96-885a-b065a8db4483','_blank');return false;">📚 Open Course Resources</a>
+        </div>`,
+      'Support': `
+        <div class="card">
+          <h3>Support available</h3>
+          <div class="sup-item"><span class="sicn">🛠</span><div><b>Monthly AI build session</b> — live, instructor-led project walkthrough.</div></div>
+          <div class="sup-item"><span class="sicn">🧑‍🏫</span><div><b>Mentor project reviews</b> — submit your project, get individual feedback.</div></div>
+          <div class="sup-item"><span class="sicn">📦</span><div><b>Starter templates</b> — RAG, Agent, and chatbot boilerplates ready to fork.</div></div>
+        </div>`
+    };
+  }
+  if(key === 'dsa'){
+    const potd = [
+      { platform:'LeetCode', title:'Find the Duplicate Number', diff:'medium', topics:['Array','Binary Search'], url:'https://leetcode.com/problems/find-the-duplicate-number/' },
+      { platform:'CodeChef', title:'Chef and Binary String', diff:'medium', topics:['Strings','Greedy'], url:'#' },
+      { platform:'Codeforces', title:'Watermelon', diff:'easy', topics:['Math'], url:'https://codeforces.com/problemset/problem/4/A' }
+    ];
+    const aiRec = [
+      { title:'Longest Substring Without Repeating Characters', diff:'medium', topics:['Sliding Window'], reason:'Weak topic: Strings' },
+      { title:'Coin Change II', diff:'medium', topics:['DP'], reason:'Level 3 DP gap' },
+      { title:'Number of Islands', diff:'medium', topics:['Graphs','BFS'], reason:'Past OA pattern' }
+    ];
+    const recent = [
+      { title:'Valid Parentheses', diff:'easy', date:'Jun 20', solved:true },
+      { title:'Merge Two Sorted Lists', diff:'easy', date:'Jun 19', solved:true },
+      { title:'Subarray Sum Equals K', diff:'medium', date:'Jun 18', solved:false },
+      { title:'LRU Cache', diff:'hard', date:'Jun 17', solved:false }
+    ];
+    const topics = ['Arrays','Strings','Linked Lists','Trees','Graphs','DP','Greedy','Binary Search','Backtracking'];
+    const qpCard = (p, showReason) => `<div class="qp-card">
+      ${showReason ? `<span class="pill am">${p.reason}</span>` : `<span class="pill">${p.platform||p.date}</span>`}
+      <div class="qp-title">${p.title}</div>
+      <div>${(p.topics||[]).map(t=>`<span class="qp-tag topic">${t}</span>`).join('')}<span class="qp-tag ${p.diff}">${p.diff}</span></div>
+      ${p.url ? `<a class="qp-link" href="${p.url}" target="_blank" rel="noopener">Solve ↗</a>` : `<span class="muted">${p.solved?'✓ Solved':'○ Unsolved'}</span>`}
+    </div>`;
+    return {
+      'Overview': `
+        <div class="card">
+          <h3>Daily structure</h3>
+          <p>Solve a mix of Easy / Medium / Hard every day. Consistency beats intensity — aim for steady daily output toward the goal of <b>200 problems shipped</b>.</p>
+          <p class="muted">All progress auto-syncs from your LeetCode profile via the official GraphQL API.</p>
+        </div>`,
+      'Question Pool': `
+        <div class="card">
+          <h3>Problem of the Day</h3>
+          <p class="muted" style="margin-bottom:14px">LeetCode · CodeChef · Codeforces — today's curated problems.</p>
+          <div class="qp-grid">${potd.map(p=>qpCard(p)).join('')}</div>
+        </div>
+        <div class="card">
+          <h3>AI Recommended Questions</h3>
+          <p class="muted" style="margin-bottom:14px">Based on weak topics, current level, and past performance.</p>
+          <div class="qp-grid">${aiRec.map(p=>qpCard(p,true)).join('')}</div>
+        </div>
+        <div class="card">
+          <h3>Recent Questions — Last 7 Days</h3>
+          <div class="qp-grid">${recent.map(p=>qpCard(p)).join('')}</div>
+        </div>
+        <div class="card">
+          <h3>Topic Practice</h3>
+          <div class="topic-grid">${topics.map(t=>`<button class="topic-btn">${t}</button>`).join('')}</div>
+        </div>`,
+      'Practice': `
+        <div class="card">
+          <h3>Daily point targets</h3>
+          <div class="stat-grid">
+            <div class="stat-box"><div class="l">Easy</div><div class="v">10 pts</div><div class="s">per problem</div></div>
+            <div class="stat-box"><div class="l">Medium</div><div class="v">25 pts</div><div class="s">per problem</div></div>
+            <div class="stat-box"><div class="l">Hard</div><div class="v">40 pts</div><div class="s">per problem</div></div>
+            <div class="stat-box"><div class="l">Contest</div><div class="v">100 pts</div><div class="s">per contest</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Streak tracker</h3>
+          <div class="stat-grid">
+            <div class="stat-box"><div class="l">Current streak</div><div class="v">12 🔥</div><div class="s">days</div></div>
+            <div class="stat-box"><div class="l">Longest streak</div><div class="v">21</div><div class="s">days</div></div>
+            <div class="stat-box"><div class="l">Solved this week</div><div class="v">18</div><div class="s">problems</div></div>
+            <div class="stat-box"><div class="l">Total solved</div><div class="v">147</div><div class="s">/ 200 goal</div></div>
+          </div>
+        </div>`,
+      'Tracking': `
+        <div class="card">
+          <h3>LeetCode auto-sync</h3>
+          <div class="sup-item"><span class="sicn">🔗</span><div><b>API:</b> LeetCode GraphQL · <span class="pill gn">Connected</span></div></div>
+          <div class="sup-item"><span class="sicn">⏱</span><div><b>Last sync:</b> 4 minutes ago</div></div>
+          <div class="sup-item"><span class="sicn">🔄</span><div><b>Sync cadence:</b> every 15 minutes</div></div>
+        </div>`,
+      'Support': `
+        <div class="card">
+          <h3>Support available</h3>
+          <div class="sup-item"><span class="sicn">🎥</span><div><b>Direct video link per question</b> — every problem in the tracker links to a curated explanation.</div></div>
+          <div class="sup-item"><span class="sicn">🙋</span><div><b>Raise mentor request</b> — stuck for &gt;30 mins? Drop a request, get a 1:1 within 24h.</div></div>
+          <div class="sup-item"><span class="sicn">📞</span><div><b>2–3 free sessions / month</b> with instructor or mentor.</div></div>
+        </div>`
+    };
+  }
+  if(key === 'oss'){
+    return {
+      'Overview': `
+        <div class="card">
+          <h3>Open Source Contribution</h3>
+          <p>One orientation session kicks off your OSS journey. After that, you'll contribute to real-world projects — fixing issues, opening PRs, reviewing others' work.</p>
+          <p class="muted">Earn <b>5 pts per issue</b> raised and <b>5 pts per PR</b> merged.</p>
+        </div>`,
+      'Contributions': `
+        <div class="card">
+          <h3>Your GitHub</h3>
+          <div class="proj-row">
+            <div class="proj-head"><div class="proj-name">GitHub profile URL</div></div>
+            ${subCell('oss|github')}
+          </div>
+        </div>
+        <div class="card">
+          <h3>Submit a contribution</h3>
+          ${[1,2,3,4].map(i => `
+            <div class="proj-row">
+              <div class="proj-head"><div class="proj-name">Contribution #${i}</div><span class="pill am">5 pts</span></div>
+              ${subCell('oss|pr|'+i)}
+            </div>`).join('')}
+        </div>`,
+      'Support': `
+        <div class="card">
+          <h3>Support available</h3>
+          <div class="sup-item"><span class="sicn">🧑‍🏫</span><div><b>Mentor shortlists issues</b> — beginner-friendly issues curated weekly.</div></div>
+          <div class="sup-item"><span class="sicn">📅</span><div><b>Monthly instructor session</b> — OSS workflow, PR etiquette, review walkthroughs.</div></div>
+        </div>`
+    };
+  }
+  if(key === 'aptitude'){
+    return {
+      'Schedule': `
+        <div class="card">
+          <h3>Bi-weekly schedule</h3>
+          <table class="tbl">
+            <thead><tr><th>Track</th><th>Cadence</th><th>Next session</th></tr></thead>
+            <tbody>
+              <tr><td>Aptitude</td><td>Bi-weekly</td><td>Mon · 7:00 PM</td></tr>
+              <tr><td>Verbal</td><td>Bi-weekly</td><td>Wed · 7:00 PM</td></tr>
+              <tr><td>Group Discussion</td><td>Bi-weekly</td><td>Sat · 11:00 AM</td></tr>
+            </tbody>
+          </table>
+        </div>`,
+      'Mock OA': `
+        <div class="card">
+          <h3>Mock OA scores</h3>
+          <table class="tbl">
+            <thead><tr><th>Date</th><th>Score</th><th>Accuracy</th><th>Speed</th></tr></thead>
+            <tbody>
+              <tr><td>Jun 10</td><td>72 / 100</td><td>81%</td><td>1m 24s/q</td></tr>
+              <tr><td>May 27</td><td>65 / 100</td><td>76%</td><td>1m 38s/q</td></tr>
+              <tr><td>May 13</td><td>58 / 100</td><td>70%</td><td>1m 52s/q</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="l">Avg accuracy</div><div class="v">76%</div><div class="s">last 3 OAs</div></div>
+          <div class="stat-box"><div class="l">Avg speed</div><div class="v">1m 38s</div><div class="s">per question</div></div>
+          <div class="stat-box"><div class="l">Trend</div><div class="v">↗ +14</div><div class="s">vs first OA</div></div>
+        </div>`,
+      'Support': `
+        <div class="card">
+          <h3>Support available</h3>
+          <div class="sup-item"><span class="sicn">🎬</span><div><b>Recorded sessions</b> — every aptitude & verbal class available on-demand.</div></div>
+          <div class="sup-item"><span class="sicn">📋</span><div><b>GD feedback rubrics</b> — structured scoring on content, clarity, leadership.</div></div>
+          <div class="sup-item"><span class="sicn">💬</span><div><b>Model HR answers</b> — bank of crafted answers for common HR rounds.</div></div>
+        </div>`
+    };
+  }
+  if(key === 'dev'){
+    return {
+      'Overview': `
+        <div class="card">
+          <h3>Stack & Goal</h3>
+          <p>You'll build full-stack products on <b>React · Node · MongoDB</b>. The track is structured around shipping three deployments — frontend, backend, and a complete full-stack product.</p>
+          <div class="skill-row">
+            ${['React','Node.js','Express','MongoDB','REST APIs','Deployment'].map(s=>`<span class="pill">${s}</span>`).join('')}
+          </div>
+        </div>`,
+      'Milestones': `
+        <div class="card">
+          <h3>Deployment milestones</h3>
+          ${DEV_MILESTONES.map(m => `
+            <div class="proj-row">
+              <div class="proj-head"><div class="proj-name">${m.name}</div><span class="muted">${m.hint}</span></div>
+              ${subCell('dev|'+m.id)}
+            </div>`).join('')}
+        </div>`,
+      'System Design': `
+        <div class="card">
+          <h3>System Design</h3>
+          <p>Progressively learn to design real systems — start with URL shorteners and rate limiters, build up to scalable feed / chat / video systems.</p>
+          <div class="sup-item"><span class="sicn">📘</span><div><b>Weekly design problem</b> — work through 1 design problem per week.</div></div>
+          <div class="sup-item"><span class="sicn">🧭</span><div><b>Design walkthroughs</b> — recorded sessions on caching, sharding, queues.</div></div>
+          <div class="proj-row">
+            <div class="proj-head"><div class="proj-name">Submit your design doc</div><span class="pill am">peer-reviewed</span></div>
+            ${subCell('dev|design')}
+          </div>
+        </div>`,
+      'Support': `
+        <div class="card">
+          <h3>Support available</h3>
+          <div class="sup-item"><span class="sicn">👁</span><div><b>Code reviews</b> — submit any repo for line-by-line review.</div></div>
+          <div class="sup-item"><span class="sicn">🚀</span><div><b>Deployment walkthroughs</b> — live, hands-on deploys with the mentor.</div></div>
+          <div class="sup-item"><span class="sicn">🧱</span><div><b>Mentor for blockers</b> — async + sync help when you're stuck.</div></div>
+        </div>`
+    };
+  }
+  return {};
+}
+
+let activeTab = T.tabs[0];
+
+function renderCurrent(){
+  const panels = panelsFor(KEY);
+  document.getElementById('main').innerHTML = `
+    <div class="page-title">${T.icon.replace(/</g,'&lt;').replace(/>/g,'&gt;')} ${T.title}</div>
+    <div class="page-sub">${T.sub}</div>
+    <div class="tabs" id="tabs">
+      ${T.tabs.map(t => `<button class="tab ${t===activeTab?'active':''}" onclick="setTab('${t.replace(/'/g,"\\'")}')">${t}</button>`).join('')}
+    </div>
+    ${T.tabs.map(t => `<div class="tab-panel ${t===activeTab?'active':''}">${panels[t] || '<div class="card"><p class="muted">Coming soon.</p></div>'}</div>`).join('')}
+  `;
+}
+window.setTab = function(t){ activeTab = t; renderCurrent(); };
+renderCurrent();
+</script>
+</body>
+</html>

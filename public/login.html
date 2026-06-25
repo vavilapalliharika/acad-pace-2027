@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · RISE 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gd:#0D3D2E;--gm:#1B5E45;--ga:#2D8C6A;--mb:#EEF7F3;--td:#0D1F1A;--tu:#7A9E90;--bd:#D4EBE0;--am:#F59E0B}
+  body{font-family:'Inter',sans-serif;background:radial-gradient(ellipse at top left,#1B5E45 0%,#0D3D2E 60%,#08251C 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;color:var(--td)}
+  .card{width:100%;max-width:420px;background:#fff;border-radius:20px;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,0.35)}
+  .brand{font-size:22px;font-weight:800;color:var(--gd);letter-spacing:-0.5px;margin-bottom:4px}
+  .sub{font-size:13px;color:var(--tu);margin-bottom:24px}
+  label{display:block;font-size:12px;font-weight:700;color:var(--gd);margin-bottom:6px;letter-spacing:0.3px}
+  input{width:100%;padding:12px 14px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;font-family:inherit;background:var(--mb);color:var(--td);outline:none;transition:border .15s}
+  input:focus{border-color:var(--ga);background:#fff}
+  .field{margin-bottom:14px}
+  button{width:100%;padding:13px;border:none;border-radius:10px;background:var(--gd);color:#fff;font-weight:700;font-size:14px;cursor:pointer;margin-top:6px;transition:background .15s}
+  button:hover{background:var(--gm)}
+  .err{font-size:12px;color:#EF4444;margin-top:10px;display:none;font-weight:600}
+  .hint{margin-top:18px;padding:12px 14px;background:var(--mb);border:1px dashed var(--bd);border-radius:10px;font-size:11.5px;color:var(--tu);line-height:1.6}
+  .hint b{color:var(--gd)}
+  .back{display:inline-block;margin-top:14px;font-size:12px;color:var(--tu);text-decoration:none}
+  .back:hover{color:var(--gd)}
+</style>
+</head>
+<body>
+<form class="card" onsubmit="return doLogin(event)">
+  <div class="brand">RISE 2027</div>
+  <div class="sub">Sign in to your student dashboard</div>
+  <div class="field">
+    <label>Email</label>
+    <input id="email" type="text" autocomplete="username" placeholder="student@rise2027.com" required>
+  </div>
+  <div class="field">
+    <label>Password</label>
+    <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" required>
+  </div>
+  <button type="submit">Sign in →</button>
+  <div class="err" id="err">Invalid email or password.</div>
+  <div class="hint">
+    <b>Demo credentials</b><br>
+    Email: <b>student@rise2027.com</b><br>
+    Password: <b>rise2027</b>
+  </div>
+  <a href="/" target="_top" class="back">← Back to home</a>
+</form>
+<script>
+  function getNext(){
+    var p = new URLSearchParams(location.search);
+    var n = p.get('next');
+    return n && n.startsWith('/') ? n : '/dashboard';
+  }
+  function doLogin(e){
+    e.preventDefault();
+    var em = document.getElementById('email').value.trim().toLowerCase();
+    var pw = document.getElementById('pwd').value;
+    if((em === 'student@rise2027.com' || em === 'ananya') && pw === 'rise2027'){
+      sessionStorage.setItem('rise_user', JSON.stringify({name:'Ananya Rao',email:em,level:3}));
+      window.top.location.replace(getNext());
+    } else {
+      document.getElementById('err').style.display = 'block';
+    }
+    return false;
+  }
+  // Auto-fill for convenience
+  if(!sessionStorage.getItem('rise_user')){
+    document.getElementById('email').value = 'student@rise2027.com';
+  } else {
+    window.top.location.replace(getNext());
+  }
+</script>
+</body>
+</html>

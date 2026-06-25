@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connectors · RISE 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gd:#0D3D2E;--gm:#1B5E45;--ga:#2D8C6A;--mb:#EEF7F3;--wh:#fff;--td:#0D1F1A;--tm:#2E5045;--tu:#7A9E90;--bd:#D4EBE0;--am:#F59E0B;--gn:#22C55E}
+  body{font-family:'Inter',sans-serif;background:var(--mb);color:var(--td);min-height:100vh;display:flex}
+  .sidebar{width:260px;background:var(--gd);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sb-brand{padding:28px 24px 20px;font-size:22px;font-weight:800;color:#fff}
+  .sb-home-link{margin:0 12px 8px;display:flex;padding:9px 14px;border-radius:9px;color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none}
+  .sb-home-link:hover{background:rgba(255,255,255,0.08);color:#fff}
+  .sb-profile{margin:0 16px 24px;background:var(--gm);border-radius:12px;padding:16px}
+  .sb-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}
+  .sb-badge{display:inline-block;background:rgba(255,255,255,0.15);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+  .nav-section{padding:0 12px;flex:1}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;margin-bottom:2px;text-decoration:none}
+  .nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.12);color:#fff}
+  .nav-item .nic{width:20px;text-align:center}
+  .sb-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.08);margin-top:auto;font-size:11px;color:rgba(255,255,255,0.35);text-align:center}
+  .main{flex:1;padding:32px;overflow-y:auto;max-width:1280px}
+  .page-title{font-size:28px;font-weight:800;color:var(--gd);margin-bottom:4px}
+  .page-sub{font-size:13px;color:var(--tu);margin-bottom:24px}
+  .section-title{font-size:18px;font-weight:800;color:var(--td);margin:28px 0 14px}
+  .filter-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+  .filter-group{display:flex;gap:10px;align-items:center}
+  .filter-lbl{font-size:12px;font-weight:700;color:var(--tu)}
+  .filter-select{display:flex;align-items:center;gap:8px;background:var(--gd);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+  .filter-select select{background:transparent;border:none;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;outline:none}
+  .filter-select option{color:var(--td);background:#fff}
+  .platforms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:8px}
+  @media(max-width:1100px){.platforms-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.platforms-grid{grid-template-columns:1fr}}
+  .platform-card{background:var(--wh);border-radius:14px;border:1px solid var(--bd);padding:18px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .2s}
+  .platform-card:hover{box-shadow:0 4px 18px rgba(13,61,46,0.09);border-color:var(--ga)}
+  .platform-card.is-add{border:2px dashed var(--bd);background:transparent;cursor:pointer;align-items:center;justify-content:center;min-height:220px}
+  .pc-top{display:flex;align-items:center;gap:12px}
+  .platform-name{font-size:14px;font-weight:800;color:var(--gd)}
+  .pc-user{font-size:11px;color:var(--tu);font-weight:600}
+  .pc-status{font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px;width:fit-content}
+  .pc-status.on{background:#dcfce7;color:#15803d}
+  .pc-status.off{background:#fef3c7;color:#92400e}
+  .pc-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+  .pc-stat{background:var(--mb);border-radius:8px;padding:8px;text-align:center}
+  .pc-stat .v{font-size:18px;font-weight:800;color:var(--gd)}
+  .pc-stat .l{font-size:9px;color:var(--tu);font-weight:600;text-transform:uppercase}
+  .sync-health{font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px}
+  .sync-health.good{color:var(--gn)}
+  .sync-health.warn{color:var(--am)}
+  .connect-btn{width:100%;padding:8px;border-radius:9px;border:1.5px solid var(--ga);background:transparent;color:var(--ga);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:auto}
+  .connect-btn:hover{background:var(--gd);color:#fff;border-color:var(--gd)}
+  .connect-btn.connected{background:var(--gd);color:#fff;cursor:default}
+  .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.analytics-grid{grid-template-columns:1fr}}
+  .analytics-card{background:var(--wh);border:1px solid var(--bd);border-radius:16px;padding:20px}
+  .ac-title{font-size:13px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:.4px;margin-bottom:14px}
+  .heatmap{display:grid;grid-template-columns:repeat(26,1fr);gap:3px}
+  .hm-cell{aspect-ratio:1;border-radius:3px;background:#e8f0ec}
+  .hm-cell.l1{background:#c6e7d8}.hm-cell.l2{background:#8fd4b4}.hm-cell.l3{background:#4caf85}.hm-cell.l4{background:#2d8c6a}
+  .activity-bars{display:flex;align-items:flex-end;gap:6px;height:100px}
+  .ab-col{flex:1;background:var(--ga);border-radius:4px 4px 0 0;min-height:8px;transition:height .8s ease}
+  .ab-labels{display:flex;gap:6px;margin-top:6px}
+  .ab-labels span{flex:1;font-size:9px;color:var(--tu);text-align:center;font-weight:600}
+  .breakdown-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .br-name{font-size:12px;font-weight:600;color:var(--tm);width:90px}
+  .br-bar{flex:1;height:8px;background:var(--bd);border-radius:4px;overflow:hidden}
+  .br-fill{height:100%;background:var(--ga);border-radius:4px}
+  .br-val{font-size:11px;font-weight:800;color:var(--gd);width:36px;text-align:right}
+  .trend-tabs{display:flex;gap:6px;margin-bottom:12px}
+  .trend-tab{font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;border:1px solid var(--bd);background:#fff;cursor:pointer}
+  .trend-tab.active{background:var(--gd);color:#fff;border-color:var(--gd)}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .25s}
+  .modal-overlay.show{opacity:1;pointer-events:all}
+  .modal{background:var(--wh);border-radius:20px;padding:28px;width:440px;max-width:90vw}
+  .modal-title{font-size:18px;font-weight:800;color:var(--gd);margin-bottom:16px}
+  .plat-options{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:16px}
+  .plat-opt{padding:11px;border-radius:11px;border:1.5px solid var(--bd);cursor:pointer;font-size:12px;font-weight:600}
+  .plat-opt.sel{border-color:var(--gd);background:rgba(13,61,46,.06)}
+  .modal-inp input{width:100%;padding:11px;border:1.5px solid var(--bd);border-radius:9px;font-family:inherit;margin-bottom:16px}
+  .modal-acts{display:flex;gap:10px}
+  .btn-cancel,.btn-confirm{flex:1;padding:11px;border-radius:9px;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn-cancel{border:1.5px solid var(--bd);background:transparent}
+  .btn-confirm{border:none;background:var(--gd);color:#fff}
+</style>
+</head>
+<body>
+<script src="/rise-nav.js"></script>
+<script>riseAuthGate();</script>
+
+<aside class="sidebar">
+  <div class="sb-brand">RISE 2027</div>
+  <a href="/" target="_top" class="sb-home-link">← Home</a>
+  <div class="sb-profile"><div class="sb-name">Ananya Rao</div><span class="sb-badge">🟡 Intermediate · Level 3</span></div>
+  <nav class="nav-section" id="rise-nav"></nav>
+  <div class="sb-footer">RISE 2027 · YOG Batch</div>
+</aside>
+
+<main class="main">
+  <div class="page-title">🔗 Connectors</div>
+  <div class="page-sub">Connect coding platforms, sync streaks, and track your activity across the ecosystem.</div>
+
+  <div class="filter-bar">
+    <div class="section-title" style="margin:0">Connected Platforms</div>
+    <div class="filter-group">
+      <span class="filter-lbl">Month</span>
+      <div class="filter-select"><select id="month-select"></select> ▾</div>
+      <span class="filter-lbl">Year</span>
+      <div class="filter-select"><select id="year-select"></select> ▾</div>
+    </div>
+  </div>
+
+  <div class="platforms-grid" id="platforms-grid"></div>
+
+  <div class="section-title">Analytics</div>
+  <div class="analytics-grid">
+    <div class="analytics-card">
+      <div class="ac-title">Contribution Heatmap</div>
+      <div class="heatmap" id="heatmap"></div>
+      <div style="font-size:10px;color:var(--tu);margin-top:8px">GitHub-style activity · last 26 weeks</div>
+    </div>
+    <div class="analytics-card">
+      <div class="ac-title">Daily Activity Graph</div>
+      <div class="activity-bars" id="activity-bars"></div>
+      <div class="ab-labels" id="activity-labels"></div>
+    </div>
+    <div class="analytics-card">
+      <div class="ac-title">Platform Breakdown</div>
+      <div id="platform-breakdown"></div>
+    </div>
+    <div class="analytics-card">
+      <div class="ac-title">Streak Trends</div>
+      <div class="trend-tabs">
+        <button class="trend-tab active" onclick="setTrend('weekly',this)">Weekly</button>
+        <button class="trend-tab" onclick="setTrend('monthly',this)">Monthly</button>
+        <button class="trend-tab" onclick="setTrend('quarterly',this)">Quarterly</button>
+      </div>
+      <div class="activity-bars" id="trend-bars" style="height:80px"></div>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">Add Platform</div>
+    <div class="plat-options" id="plat-options"></div>
+    <div class="modal-inp"><input type="text" id="plat-username" placeholder="Username" oninput="chkInput()"></div>
+    <div class="modal-acts">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" id="btn-confirm" onclick="confirmAdd()" disabled>Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+renderRiseNav('connectors', 'rise-nav');
+
+const LOGOS = {
+  LeetCode:'<svg viewBox="0 0 100 100" width="36" height="36"><rect width="100" height="100" rx="14" fill="#fff"/><path d="M62 14 C55 14 45 17 37 27 C29 37 29 53 37 63 C45 73 55 76 62 76" stroke="#E8A020" stroke-width="10" fill="none" stroke-linecap="round"/></svg>',
+  CodeChef:'<svg viewBox="0 0 100 100" width="36" height="36"><rect width="100" height="100" rx="14" fill="#111"/><path d="M32 52 C24 48 20 38 23 28 C25 20 31 15 38 14 C39 10 43 8 48 9 C53 8 57 11 58 15 C65 17 70 24 68 33 C70 40 67 50 60 53 Z" fill="#fff"/></svg>',
+  CodeForces:'<svg viewBox="0 0 80 80" width="36" height="36"><rect width="80" height="80" rx="10" fill="#1F3561"/><rect x="17" y="46" width="14" height="20" rx="3" fill="#EFC050"/><rect x="33" y="34" width="14" height="32" rx="3" fill="#CC3333"/><rect x="49" y="23" width="14" height="43" rx="3" fill="#4A90D9"/></svg>',
+  GitHub:'<svg viewBox="0 0 80 80" width="36" height="36"><rect width="80" height="80" rx="10" fill="#24292F"/><path fill="#fff" d="M40 12C24.5 12 12 24.5 12 40c0 12.4 8 22.9 19.2 26.6 1.4.3 1.9-.6 1.9-1.3v-4.8c-7.8 1.7-9.4-3.8-9.4-3.8-1.3-3.2-3.1-4.1-3.1-4.1-2.5-1.7.2-1.7.2-1.7 2.8.2 4.3 2.9 4.3 2.9 2.5 4.3 6.5 3 8.1 2.3.3-1.8 1-3 1.8-3.7-6.2-.7-12.8-3.1-12.8-13.8 0-3.1 1.1-5.6 2.9-7.5-.3-.7-1.2-3.6.3-7.4 0 0 2.3-.8 7.7 2.9 2.2-.6 4.6-.9 7-.9s4.8.3 7 .9c5.3-3.6 7.7-2.9 7.7-2.9 1.5 3.9.6 6.7.3 7.4 1.8 1.9 2.9 4.4 2.9 7.5 0 10.7-6.5 13.1-12.8 13.8.8.7 1.6 2.2 1.6 4.4v6.5c0 .7.5 1.6 1.9 1.3C60 62.9 68 52.4 68 40c0-15.5-12.5-28-28-28z"/></svg>',
+  HackerRank:'<svg viewBox="0 0 80 80" width="36" height="36"><rect width="80" height="80" rx="10" fill="#2EC866"/><text x="40" y="54" font-size="34" text-anchor="middle" fill="#fff" font-weight="bold">H</text></svg>',
+  GeeksForGeeks:'<svg viewBox="0 0 80 80" width="36" height="36"><rect width="80" height="80" rx="10" fill="#2F8D46"/><text x="40" y="52" font-size="22" text-anchor="middle" fill="#fff" font-weight="bold">GfG</text></svg>',
+  AtCoder:'<svg viewBox="0 0 80 80" width="36" height="36"><rect width="80" height="80" rx="10" fill="#222"/><text x="40" y="52" font-size="26" text-anchor="middle" fill="#fff" font-weight="bold">AC</text></svg>',
+  Kaggle:'<svg viewBox="0 0 80 80" width="36" height="36"><rect width="80" height="80" rx="10" fill="#20BEFF"/><text x="40" y="54" font-size="34" text-anchor="middle" fill="#fff" font-weight="bold">K</text></svg>'
+};
+
+const ALL_PLATFORMS = ['LeetCode','CodeChef','CodeForces','GitHub','HackerRank','GeeksForGeeks','AtCoder','Kaggle'];
+let platforms = [
+  { name:'LeetCode', username:'ananya_lc', connected:true, streak:37, synced:147, lastSync:'4 min ago', health:'good' },
+  { name:'CodeChef', username:'ananya_cc', connected:true, streak:12, synced:42, lastSync:'12 min ago', health:'good' },
+  { name:'CodeForces', username:'ananya_cf', connected:true, streak:5, synced:28, lastSync:'1 hr ago', health:'warn' },
+  { name:'GitHub', username:'ananya-rao', connected:true, streak:21, synced:89, lastSync:'2 min ago', health:'good' },
+  { name:'HackerRank', username:'', connected:false, streak:0, synced:0, lastSync:'—', health:'warn' },
+  { name:'GeeksForGeeks', username:'', connected:false, streak:0, synced:0, lastSync:'—', health:'warn' },
+  { name:'AtCoder', username:'', connected:false, streak:0, synced:0, lastSync:'—', health:'warn' },
+  { name:'Kaggle', username:'', connected:false, streak:0, synced:0, lastSync:'—', health:'warn' },
+];
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const YEARS = [2025, 2026, 2027, 2028];
+let selMonth = 5, selYear = 2026, selPlat = '', trendMode = 'weekly';
+
+const monthSel = document.getElementById('month-select');
+const yearSel = document.getElementById('year-select');
+MONTHS.forEach((m,i) => { const o = document.createElement('option'); o.value = i; o.textContent = m; if(i===5)o.selected=true; monthSel.appendChild(o); });
+YEARS.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; if(y===2026)o.selected=true; yearSel.appendChild(o); });
+monthSel.onchange = () => { selMonth = +monthSel.value; renderPlatforms(); };
+yearSel.onchange = () => { selYear = +yearSel.value; renderPlatforms(); };
+
+function renderPlatforms() {
+  const grid = document.getElementById('platforms-grid');
+  grid.innerHTML = platforms.map((p,i) => `
+    <div class="platform-card">
+      <div class="pc-top">${LOGOS[p.name]||''}<div><div class="platform-name">${p.name}</div><div class="pc-user">${p.connected ? '@'+p.username : 'Not connected'}</div></div></div>
+      <span class="pc-status ${p.connected?'on':'off'}">${p.connected?'● Connected':'○ Disconnected'}</span>
+      <div class="pc-meta">
+        <div class="pc-stat"><div class="v">${p.streak}</div><div class="l">Streak</div></div>
+        <div class="pc-stat"><div class="v">${p.synced}</div><div class="l">Problems</div></div>
+      </div>
+      <div style="font-size:10px;color:var(--tu)">Last sync: <b>${p.lastSync}</b></div>
+      <div class="sync-health ${p.health}">${p.health==='good'?'● Healthy sync':'◐ Sync delayed'}</div>
+      <button class="connect-btn ${p.connected?'connected':''}" onclick="${p.connected?'':`connectPlatform(${i},this)`}">${p.connected?'✓ Connected':'Connect'}</button>
+    </div>`).join('');
+  if(platforms.length < 8) {
+    grid.innerHTML += `<div class="platform-card is-add" onclick="openModal()"><div style="font-size:28px;color:var(--bd)">+</div><div style="font-size:13px;font-weight:700;color:var(--tu)">Add Platform</div></div>`;
+  }
+  renderBreakdown();
+}
+
+function connectPlatform(i, btn) {
+  btn.textContent = 'Syncing…';
+  setTimeout(() => { platforms[i].connected = true; platforms[i].username = 'user_'+platforms[i].name.toLowerCase(); platforms[i].streak = 7; platforms[i].synced = 15; platforms[i].lastSync = 'Just now'; platforms[i].health = 'good'; renderPlatforms(); }, 1000);
+}
+
+function renderHeatmap() {
+  const el = document.getElementById('heatmap');
+  el.innerHTML = '';
+  for(let i=0;i<182;i++) {
+    const c = document.createElement('div');
+    const lvl = Math.random() > 0.35 ? Math.ceil(Math.random()*4) : 0;
+    c.className = 'hm-cell' + (lvl ? ' l'+lvl : '');
+    el.appendChild(c);
+  }
+}
+
+function renderActivityBars(id, labelsId, data) {
+  const max = Math.max(...data, 1);
+  document.getElementById(id).innerHTML = data.map(v => `<div class="ab-col" style="height:0%" data-h="${Math.round(v/max*100)}%"></div>`).join('');
+  if(labelsId) document.getElementById(labelsId).innerHTML = data.map((_,i) => `<span>${labelsId.includes('activity')?['M','T','W','T','F','S','S'][i]:'W'+(i+1)}</span>`).join('');
+  setTimeout(() => document.querySelectorAll('#'+id+' .ab-col').forEach(b => b.style.height = b.dataset.h), 100);
+}
+
+function renderBreakdown() {
+  const connected = platforms.filter(p => p.connected);
+  const max = Math.max(...connected.map(p => p.synced), 1);
+  document.getElementById('platform-breakdown').innerHTML = connected.map(p => `
+    <div class="breakdown-row"><span class="br-name">${p.name}</span><div class="br-bar"><div class="br-fill" style="width:${Math.round(p.synced/max*100)}%"></div></div><span class="br-val">${p.synced}</span></div>`).join('');
+}
+
+function setTrend(mode, btn) {
+  trendMode = mode;
+  document.querySelectorAll('.trend-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const data = mode==='weekly' ? [5,8,12,7,9,11,14] : mode==='monthly' ? [28,32,35,41] : [95,102,118];
+  renderActivityBars('trend-bars', null, data);
+}
+
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('show');
+  const opts = document.getElementById('plat-options');
+  const names = platforms.map(p => p.name);
+  opts.innerHTML = ALL_PLATFORMS.filter(n => !names.includes(n)).map(n =>
+    `<div class="plat-opt" onclick="selPlat(this,'${n}')">${n}</div>`).join('') || '<div style="font-size:13px;color:var(--tu)">All platforms added.</div>';
+  selPlat = '';
+  document.getElementById('plat-username').value = '';
+  document.getElementById('btn-confirm').disabled = true;
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); }
+function selPlat(el, n) { document.querySelectorAll('.plat-opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); selPlat = n; chkInput(); }
+function chkInput() { document.getElementById('btn-confirm').disabled = !(selPlat && document.getElementById('plat-username').value.trim().length>1); }
+function confirmAdd() {
+  platforms.push({ name:selPlat, username:document.getElementById('plat-username').value.trim(), connected:false, streak:0, synced:0, lastSync:'—', health:'warn' });
+  closeModal(); renderPlatforms();
+}
+
+renderPlatforms();
+renderHeatmap();
+renderActivityBars('activity-bars', 'activity-labels', [3,5,8,6,9,4,7]);
+setTrend('weekly', document.querySelector('.trend-tab'));
+</script>
+</body>
+</html>
