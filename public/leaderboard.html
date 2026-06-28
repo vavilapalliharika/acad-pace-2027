@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard · PACE 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/pace-theme.css">
+</head>
+<body>
+<div class="pace-app">
+  <div class="pace-overlay" id="pace-overlay"></div>
+  <aside class="pace-sidebar" id="pace-sidebar">
+    <div class="pace-brand">PACE <span>2027</span></div>
+    <a href="/" target="_top" class="pace-home-link">← Back to home</a>
+    <div class="pace-profile">
+      <div class="pace-profile-name" id="pace-profile-name">Student</div>
+      <span class="pace-profile-badge" id="pace-profile-badge">YOG</span>
+    </div>
+    <nav class="pace-nav" id="rise-nav"></nav>
+    <div class="pace-sb-footer">PACE 2027 · YOG Batch</div>
+  </aside>
+  <div class="pace-main">
+    <div class="pace-topbar">
+      <button type="button" class="pace-menu-btn" id="pace-menu-btn" aria-label="Open menu">☰</button>
+      <span class="pace-brand">PACE <span>2027</span></span>
+    </div>
+    <h1 class="pace-page-title pace-reveal">Leaderboard</h1>
+    <p class="pace-page-sub pace-reveal">Rankings based on XP, track completion, placement readiness, and contributions.</p>
+
+    <div class="pace-lb-podium pace-reveal">
+      <div class="pace-lb-card silver">
+        <div class="pace-lb-rank">🥈</div>
+        <div class="pace-lb-name">Rahul Sharma</div>
+        <div class="pace-lb-score">4,120 XP · PR 68%</div>
+      </div>
+      <div class="pace-lb-card gold" style="transform:scale(1.04)">
+        <div class="pace-lb-rank">🥇</div>
+        <div class="pace-lb-name">Priya Nair</div>
+        <div class="pace-lb-score">4,580 XP · PR 74%</div>
+      </div>
+      <div class="pace-lb-card bronze">
+        <div class="pace-lb-rank">🥉</div>
+        <div class="pace-lb-name">Harika Vavilapalli</div>
+        <div class="pace-lb-score">3,840 XP · PR 50%</div>
+      </div>
+    </div>
+
+    <div class="pace-card pace-card-static pace-reveal">
+      <table class="pace-lb-table">
+        <thead>
+          <tr><th>Rank</th><th>Student</th><th>XP</th><th>Readiness</th><th>Streak</th><th>Squad</th></tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="/rise-nav.js"></script>
+<script src="/placement-engine.js"></script>
+<script>
+initPaceShell('leaderboard');
+var rows = [
+  { r: 1, n: 'Priya Nair', xp: 4580, pr: '74%', s: 42, sq: 'Alpha-3' },
+  { r: 2, n: 'Rahul Sharma', xp: 4120, pr: '68%', s: 38, sq: 'Beta-1' },
+  { r: 3, n: 'Harika Vavilapalli', xp: 3840, pr: '50%', s: 37, sq: 'Alpha-7' },
+  { r: 4, n: 'Vikram Desai', xp: 3620, pr: '48%', s: 31, sq: 'Gamma-2' },
+  { r: 5, n: 'Karthik Reddy', xp: 3410, pr: '45%', s: 28, sq: 'Alpha-7' },
+  { r: 6, n: 'Sneha Patel', xp: 3180, pr: '42%', s: 25, sq: 'Beta-4' },
+  { r: 7, n: 'Arjun Mehta', xp: 2950, pr: '40%', s: 22, sq: 'Gamma-1' },
+  { r: 8, n: 'Divya Singh', xp: 2720, pr: '38%', s: 19, sq: 'Alpha-3' },
+];
+document.getElementById('lb-body').innerHTML = rows.map(function (x) {
+  var hi = x.n === 'Harika Vavilapalli' ? ' style="color:var(--primary);font-weight:700"' : '';
+  return '<tr><td>#' + x.r + '</td><td' + hi + '>' + x.n + '</td><td>' + x.xp.toLocaleString() + '</td><td>' + x.pr + '</td><td>' + x.s + 'd</td><td>' + x.sq + '</td></tr>';
+}).join('');
+initPaceReveal();
+</script>
+</body>
+</html>

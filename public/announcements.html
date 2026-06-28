@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achievements · PACE 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/pace-theme.css">
+</head>
+<body>
+<div class="pace-app">
+  <div class="pace-overlay" id="pace-overlay"></div>
+  <aside class="pace-sidebar" id="pace-sidebar">
+    <div class="pace-brand">PACE <span>2027</span></div>
+    <a href="/" target="_top" class="pace-home-link">← Back to home</a>
+    <div class="pace-profile">
+      <div class="pace-profile-name" id="pace-profile-name">Student</div>
+      <span class="pace-profile-badge" id="pace-profile-badge">YOG</span>
+    </div>
+    <nav class="pace-nav" id="rise-nav"></nav>
+    <div class="pace-sb-footer">PACE 2027 · YOG Batch</div>
+  </aside>
+  <div class="pace-main">
+    <div class="pace-topbar">
+      <button type="button" class="pace-menu-btn" id="pace-menu-btn" aria-label="Open menu">☰</button>
+      <span class="pace-brand">PACE <span>2027</span></span>
+    </div>
+    <h1 class="pace-page-title pace-reveal">Achievements</h1>
+    <p class="pace-page-sub pace-reveal">Placements, badges, and batch news.</p>
+
+    <div class="pace-ach-subtabs pace-reveal" role="tablist">
+      <button type="button" class="pace-ach-subtab active" role="tab" aria-selected="true" data-panel="student" onclick="setAchTab('student')">Student Achievements</button>
+      <button type="button" class="pace-ach-subtab" role="tab" aria-selected="false" data-panel="updates" onclick="setAchTab('updates')">Updates</button>
+    </div>
+
+    <div id="panel-student" class="pace-ach-panel active pace-reveal" role="tabpanel">
+      <div class="pace-ach-grid" id="ach-feed"></div>
+    </div>
+
+    <div id="panel-updates" class="pace-ach-panel pace-reveal" role="tabpanel" hidden>
+      <div class="pace-upd-list" id="ann-feed"></div>
+    </div>
+  </div>
+</div>
+<script src="/rise-nav.js"></script>
+<script src="/placement-engine.js"></script>
+<script>
+initPaceShell('announcements');
+
+function achInitials(name) {
+  return name.split(/\s+/).map(function(w) { return w[0] || ''; }).join('').slice(0, 2).toUpperCase();
+}
+
+var achievements = [
+  { name: 'Harshawardhan L.', company: 'Amazon', package: '22 LPA', points: 8420, hook: 'Placed · AI Track', date: 'Jun 24' },
+  { name: 'Priya Sharma', company: 'Flipkart', package: '16 LPA', points: 7180, hook: 'Placed · DSA Track', date: 'Jun 22' },
+  { name: 'Arjun Mehta', company: 'Google', package: '28 LPA', points: 9105, hook: 'GSoC → Offer', date: 'Jun 20' },
+  { name: 'Sneha Reddy', company: 'Microsoft', package: '20 LPA', points: 7650, hook: 'Placed · Dev Track', date: 'Jun 18' },
+  { name: 'Rahul K.', company: 'Razorpay', package: '18 LPA', points: 6920, hook: 'Full-stack badge', date: 'Jun 15' },
+  { name: 'Ananya P.', company: 'Goldman Sachs', package: '24 LPA', points: 8010, hook: 'OA cleared', date: 'Jun 12' }
+];
+
+function renderReactions(r) {
+  return Object.keys(r).map(function(emoji) {
+    return '<button type="button" class="pace-ach-react" onclick="return false">' + emoji + ' <b>' + r[emoji] + '</b></button>';
+  }).join('');
+}
+
+function renderAchievement(a, i) {
+  var reacts = renderReactions({ '👏': 40 + i * 8, '🎉': 22 + i * 5, '🔥': 12 + i * 3 });
+  return '<article class="pace-ach-compact pace-reveal" style="transition-delay:' + (i * 0.04) + 's">' +
+    '<div class="pace-ach-compact-top">' +
+      '<div class="pace-ach-photo" aria-label="Student photo placeholder">' +
+        '<span class="pace-ach-photo-initials">' + achInitials(a.name) + '</span>' +
+        '<span class="pace-ach-photo-lbl">Photo</span>' +
+      '</div>' +
+      '<div class="pace-ach-compact-main">' +
+        '<div class="pace-ach-compact-name">' + a.name + '</div>' +
+        '<div class="pace-ach-compact-hook">' + a.hook + '</div>' +
+        '<div class="pace-ach-compact-meta">' +
+          '<span class="pace-ach-mini-pill"><strong>' + a.company + '</strong></span>' +
+          '<span class="pace-ach-mini-pill"><strong>' + a.package + '</strong></span>' +
+          '<span class="pace-ach-mini-pill"><strong>' + a.points.toLocaleString() + '</strong> pts</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="pace-ach-compact-foot">' +
+      '<span class="pace-ach-compact-date">' + a.date + '</span>' +
+      '<div class="pace-ach-reactions">' + reacts + '</div>' +
+    '</div>' +
+  '</article>';
+}
+
+document.getElementById('ach-feed').innerHTML = achievements.map(renderAchievement).join('');
+
+var updates = [
+  { tag: 'Placement', title: 'Type B drives open Jun 30', desc: 'TR-2 eligible students can register.', date: 'Jun 22', pri: 'high' },
+  { tag: 'Company', title: 'Infosys PPT — Jul 3', desc: 'Virtual talk on OA format & packages.', date: 'Jun 21', pri: 'med' },
+  { tag: 'Hackathon', title: 'AI Buildathon — register', desc: '48-hr agent sprint. XP + badges.', date: 'Jun 18', pri: 'med' },
+  { tag: 'Contest', title: 'DSA Contest #14 — Sat', desc: '10 AM IST. Join via DSA Track.', date: 'Jun 14', pri: 'low' }
+];
+
+document.getElementById('ann-feed').innerHTML = updates.map(function(u, i) {
+  return '<article class="pace-upd-row pace-reveal" style="transition-delay:' + (i * 0.04) + 's">' +
+    '<span class="pace-upd-dot ' + u.pri + '" aria-hidden="true"></span>' +
+    '<div class="pace-upd-body">' +
+      '<div class="pace-upd-title">' + u.title + '</div>' +
+      '<p class="pace-upd-desc">' + u.desc + '</p>' +
+      '<div class="pace-upd-meta"><span class="pace-upd-tag">' + u.tag + '</span><span>' + u.date + '</span></div>' +
+    '</div></article>';
+}).join('');
+
+window.setAchTab = function(id) {
+  document.querySelectorAll('.pace-ach-subtab').forEach(function(btn) {
+    var on = btn.getAttribute('data-panel') === id;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.querySelectorAll('.pace-ach-panel').forEach(function(panel) {
+    var on = panel.id === 'panel-' + id;
+    panel.classList.toggle('active', on);
+    panel.hidden = !on;
+  });
+};
+
+initPaceReveal();
+</script>
+</body>
+</html>

@@ -3,128 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Track · RISE 2027</title>
+<title>Track · PACE 2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{--gd:#0D3D2E;--gm:#1B5E45;--ga:#2D8C6A;--gl:#4CAF85;--mb:#EEF7F3;--wh:#fff;--td:#0D1F1A;--tm:#2E5045;--tu:#7A9E90;--bd:#D4EBE0;--am:#F59E0B}
-  body{font-family:'Inter',sans-serif;background:var(--mb);color:var(--td);min-height:100vh;display:flex}
-  .sidebar{width:260px;background:var(--gd);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
-  .sb-brand{padding:28px 24px 20px;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px}
-  .sb-home-link{display:inline-block;margin:0 24px 16px;font-size:12px;color:rgba(255,255,255,0.6);text-decoration:none}
-  .sb-home-link:hover{color:#fff}
-  .sb-profile{margin:0 16px 24px;background:var(--gm);border-radius:12px;padding:16px}
-  .sb-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}
-  .sb-badge{display:inline-block;background:rgba(255,255,255,0.15);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.25)}
-  .nav-section{padding:0 12px;flex:1}
-  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;margin-bottom:2px;text-decoration:none}
-  .nav-item:hover{background:rgba(255,255,255,0.08);color:#fff}
-  .nav-item.active{background:rgba(255,255,255,0.12);color:#fff}
-  .nav-item .nic{font-size:16px;width:20px;text-align:center}
-  .sb-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.08);margin-top:auto;font-size:11px;color:rgba(255,255,255,0.35);text-align:center}
-
-  .main{flex:1;padding:32px;overflow-y:auto;max-width:1200px}
-  .page-title{font-size:28px;font-weight:800;color:var(--gd);letter-spacing:-0.5px;margin-bottom:4px;display:flex;align-items:center;gap:10px}
-  .page-sub{font-size:13px;color:var(--tu);margin-bottom:22px}
-
-  .tabs{display:flex;gap:6px;border-bottom:2px solid var(--bd);margin-bottom:22px;flex-wrap:wrap}
-  .tab{padding:10px 18px;font-size:13px;font-weight:700;color:var(--tu);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;display:flex;align-items:center;gap:6px}
-  .tab:hover{color:var(--gd)}
-  .tab.active{color:var(--gd);border-bottom-color:var(--ga)}
-  .tab.locked{color:#cbd5d1;cursor:not-allowed}
-
-  .tab-panel{display:none}
-  .tab-panel.active{display:block;animation:fade .25s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-  .card{background:var(--wh);border:1px solid var(--bd);border-radius:14px;padding:22px;margin-bottom:16px}
-  .card h3{font-size:16px;font-weight:800;color:var(--gd);margin-bottom:10px;letter-spacing:-0.3px}
-  .card p{font-size:13.5px;color:var(--tm);line-height:1.65;margin-bottom:8px}
-  .muted{color:var(--tu);font-size:12.5px}
-
-  .pill{display:inline-block;background:#fff;border:1px solid var(--bd);color:var(--tm);font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:14px;margin:0 4px 6px 0}
-  .pill.am{background:#fffbeb;border-color:#fcd34d;color:#92400e}
-  .pill.gn{background:#dcfce7;border-color:#86efac;color:#15803d}
-
-  /* tier cards */
-  .tier{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px;position:relative}
-  .tier.locked{opacity:.55;background:#fafafa}
-  .tier.current{border-color:var(--am);box-shadow:0 0 0 2px rgba(245,158,11,0.18);background:#fffbeb}
-  .tier.done{border-color:#22C55E;background:#f0fdf4}
-  .tier-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
-  .tier-name{font-size:14px;font-weight:800;color:var(--gd);display:flex;align-items:center;gap:8px}
-  .tier-lbl{font-size:10px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:0.4px}
-  .tier-stat{font-size:11.5px;font-weight:700;color:var(--am)}
-  .tier.done .tier-stat{color:#15803d}
-  .tier.locked .tier-stat{color:#9ca3af}
-
-  .proj-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px dashed #eef2ef}
-  .proj-row:last-child{border-bottom:none}
-  .proj-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .proj-name{font-size:13px;color:var(--td);font-weight:600;flex:1;min-width:160px}
-  .proj-sub{display:flex;gap:6px;align-items:center;padding-left:0;flex-wrap:wrap}
-  .sub-input{flex:1;min-width:180px;font-size:12px;padding:6px 10px;border:1px solid var(--bd);border-radius:6px;outline:none;font-family:inherit;color:var(--td);background:#fff}
-  .sub-input:focus{border-color:var(--ga)}
-  .sub-btn{font-size:11px;font-weight:700;color:var(--gd);background:#fff;border:1.5px solid var(--ga);padding:5px 14px;border-radius:6px;cursor:pointer;white-space:nowrap}
-  .sub-btn:hover{background:var(--ga);color:#fff}
-  .sub-link{font-size:11.5px;font-weight:700;color:#15803d;text-decoration:none;background:#dcfce7;border:1px solid #86efac;padding:4px 12px;border-radius:14px}
-  .sub-link:hover{text-decoration:underline}
-  .sub-placeholder{font-size:11.5px;color:var(--tu);background:#f3f4f6;border:1px dashed #cbd5d1;padding:4px 12px;border-radius:14px}
-
-  .skill-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-  .btn-primary{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--gd);background:#fff;border:1.5px solid var(--ga);padding:8px 16px;border-radius:22px;cursor:pointer;text-decoration:none}
-  .btn-primary:hover{background:var(--ga);color:#fff}
-
-  .sup-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--mb);font-size:13px;color:var(--tm);line-height:1.55}
-  .sup-item:last-child{border-bottom:none}
-  .sup-item .sicn{font-size:18px;flex-shrink:0;width:28px;text-align:center}
-  .sup-item b{color:var(--gd)}
-
-  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:12px}
-  .stat-box{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
-  .stat-box .l{font-size:11px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px}
-  .stat-box .v{font-size:22px;font-weight:800;color:var(--gd);line-height:1}
-  .stat-box .s{font-size:11px;color:var(--tu);margin-top:3px}
-
-  table.tbl{width:100%;border-collapse:collapse;font-size:13px}
-  table.tbl th,table.tbl td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--mb)}
-  table.tbl th{font-size:11px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:0.4px}
-  table.tbl tr:last-child td{border-bottom:none}
-
-  .quote{border-left:3px solid var(--ga);padding:8px 14px;font-style:italic;font-size:13px;color:var(--tu);line-height:1.55;background:#f6fbf8;border-radius:0 8px 8px 0;margin-bottom:14px}
-  .qp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-  .qp-card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px;transition:border-color .2s}
-  .qp-card:hover{border-color:var(--ga)}
-  .qp-title{font-size:14px;font-weight:800;color:var(--gd);margin:8px 0}
-  .qp-tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;margin:2px 4px 2px 0}
-  .qp-tag.easy{background:#dcfce7;color:#15803d}
-  .qp-tag.medium{background:#fef3c7;color:#92400e}
-  .qp-tag.hard{background:#fee2e2;color:#dc2626}
-  .qp-tag.topic{background:#eff6ff;color:#2563eb}
-  .qp-link{font-size:12px;font-weight:700;color:var(--ga);text-decoration:none;display:inline-block;margin-top:8px}
-  .topic-grid{display:flex;flex-wrap:wrap;gap:8px}
-  .topic-btn{font-size:12px;font-weight:700;padding:8px 16px;border-radius:20px;border:1.5px solid var(--bd);background:#fff;cursor:pointer;font-family:inherit;color:var(--tm)}
-  .topic-btn:hover{border-color:var(--ga);color:var(--gd)}
-</style>
+<link rel="stylesheet" href="/pace-theme.css">
+<link rel="stylesheet" href="/pace-legacy-bridge.css">
+<link rel="stylesheet" href="/pace-pages.css">
 </head>
 <body>
 
 <script src="/rise-nav.js"></script>
-<script>riseAuthGate();</script>
-
-<aside class="sidebar">
-  <div class="sb-brand">RISE 2027</div>
-  <a href="/" target="_top" class="sb-home-link">← Home</a>
-  <div class="sb-profile">
-    <div class="sb-name">Ananya Rao</div>
-    <span class="sb-badge">🟡 Intermediate · Level 3</span>
-  </div>
-  <nav class="nav-section" id="rise-nav"></nav>
-  <div class="sb-footer">RISE 2027 · YOG Batch</div>
-</aside>
-
+<script src="/placement-engine.js"></script>
+<script src="/pace-shell.js"></script>
+<aside class="sidebar" style="display:none" aria-hidden="true"></aside>
 <main class="main" id="main"></main>
 
 <script>
@@ -132,36 +24,37 @@ const TRACKS = {
   ai: {
     icon:'🤖', title:'AI Track',
     sub:'Build with AI — every shipped project is a step toward AI Innovator.',
-    tabs:['Overview','Tiers & Projects','Skills & Resources','Support']
+    tabs:['Overview','Tiers & Projects','Skills & Resources','Eligible Companies']
   },
   dsa: {
     icon:'</>',title:'DSA Track',
     sub:'Daily problem-solving discipline · Target: 200 problems shipped.',
-    tabs:['Overview','Question Pool','Practice','Tracking','Support']
+    tabs:['Overview','Question Pool','Practice','Eligible Companies']
   },
   oss: {
     icon:'⌥', title:'Open Source',
     sub:'Contribute to real-world projects — issues, PRs, reviews.',
-    tabs:['Overview','Contributions','Support']
+    tabs:['Overview','Contributions','Submissions','Eligible Companies']
   },
   aptitude: {
     icon:'🎓',title:'Aptitude & GD',
     sub:'Aptitude, verbal, group discussion & HR prep.',
-    tabs:['Schedule','Mock OA','Support']
+    tabs:['Schedule','Mock OA','Submissions','Eligible Companies']
   },
   dev: {
     icon:'⚙', title:'Dev & System Design',
     sub:'React · Node · MongoDB — ship full-stack projects + design systems.',
-    tabs:['Overview','Milestones','System Design','Support']
+    tabs:['Overview','Milestones','System Design','Submissions','Eligible Companies']
   }
 };
 
 const qs = new URLSearchParams(location.search);
 const KEY = qs.get('t') || 'ai';
 const T = TRACKS[KEY] || TRACKS.ai;
-document.title = T.title + ' · RISE 2027';
+document.title = T.title + ' · PACE 2027';
 
-renderRiseNav(KEY === 'dsa' ? 'dsa' : '', 'rise-nav');
+wrapPaceMain();
+initPaceShell(KEY);
 
 // ── persistent submit-link state ──
 const STORE_KEY = 'rise_track_subs_v1';
@@ -186,18 +79,299 @@ function subCell(id){
   </div>`;
 }
 
+function fileUploadRow(id, label, accept) {
+  const v = SUBS[id];
+  if (v) {
+    if (v.indexOf('uploaded:') === 0) {
+      return `<div class="proj-sub"><span class="sub-link">✅ Uploaded · ${v.replace('uploaded:','')}</span></div>`;
+    }
+    return `<div class="proj-sub"><a class="sub-link" href="${v.replace(/"/g,'&quot;')}" target="_blank" rel="noopener">✅ Uploaded · View ↗</a></div>`;
+  }
+  return `<div class="proj-sub proj-sub-file">
+    <input id="file-${id}" type="file" class="sub-file" accept="${accept || '.pdf,.png,.jpg,.jpeg'}" onchange="uploadTrackFile('${id}')" />
+    <span class="muted" style="font-size:11px">or paste certificate / badge URL</span>
+    <input id="inp-${id}" class="sub-input" type="url" placeholder="🔗 Certificate / badge URL" />
+    <button class="sub-btn" onclick="submitLink('${id}')">Submit</button>
+  </div>`;
+}
+
+window.uploadTrackFile = function(id) {
+  var inp = document.getElementById('file-' + id);
+  if (!inp || !inp.files || !inp.files[0]) return;
+  SUBS[id] = 'uploaded:' + inp.files[0].name;
+  saveSubs();
+  renderCurrent();
+};
+
+function comingSoonHtml(title, desc) {
+  return '<div class="card cs-card">' +
+    '<div class="cs-icon">🚧</div>' +
+    '<h3>' + (title || 'Coming Soon') + '</h3>' +
+    '<p class="muted">' + (desc || 'This section is being built and will be available shortly.') + '</p>' +
+    '</div>';
+}
+
+function submissionsHtml(prefix, opts) {
+  opts = opts || {};
+  return `
+    <div class="card">
+      <h3>Add Project</h3>
+      <p class="muted">Submit a live project, repo, or deployed URL for mentor review.</p>
+      <div class="proj-row">
+        <div class="proj-head"><div class="proj-name">Project submission</div><span class="pill am">+${opts.projectPts || 200} pts</span></div>
+        ${subCell(prefix + '|project')}
+      </div>
+    </div>
+    <div class="card">
+      <h3>Documentation & Badges</h3>
+      <p class="muted">Upload proof from open source contributions, program certificates, and documentation badges.</p>
+      <div class="proj-row">
+        <div class="proj-head"><div class="proj-name">Open source contribution</div><span class="pill gn">PR / issue link</span></div>
+        ${subCell(prefix + '|oss-contrib')}
+      </div>
+      <div class="proj-row">
+        <div class="proj-head"><div class="proj-name">Certificate or badge</div><span class="pill am">GSoC · LFX · Hacktoberfest</span></div>
+        ${fileUploadRow(prefix + '|cert-badge', 'Certificate or badge', '.pdf,.png,.jpg,.jpeg,.webp')}
+      </div>
+      <div class="proj-row">
+        <div class="proj-head"><div class="proj-name">Documentation / README badge</div><span class="pill">Docs link</span></div>
+        ${subCell(prefix + '|docs-badge')}
+      </div>
+    </div>`;
+}
+
 // ── content renderers per track ──
 const AI_TIERS = [
-  { key:'explorer',  name:'AI Explorer',  icon:'🔵', projects:['Prompt Engineering project','AI-powered To-Do App','AI Chatbot'] },
-  { key:'builder',   name:'AI Builder',   icon:'🟡', projects:['RAG Application','AI Resume Analyzer','AI Study Assistant'] },
-  { key:'innovator', name:'AI Innovator', icon:'🟣', projects:['Multi-agent system','AI workflow automation','Domain-specific AI solution'] }
+  { key:'explorer',  name:'AI Explorer',  icon:'🔵', projects:[
+    { name:'Prompt Engineering project', pts:150 },
+    { name:'AI-powered To-Do App', pts:200 },
+    { name:'AI Chatbot', pts:250 }
+  ]},
+  { key:'builder',   name:'AI Builder',   icon:'🟡', projects:[
+    { name:'RAG Application', pts:350 },
+    { name:'AI Resume Analyzer', pts:400 },
+    { name:'AI Study Assistant', pts:450 }
+  ]},
+  { key:'innovator', name:'AI Innovator', icon:'🟣', projects:[
+    { name:'Multi-agent system', pts:550 },
+    { name:'AI workflow automation', pts:650 },
+    { name:'Domain-specific AI solution', pts:750 }
+  ]}
 ];
+
+function aiProjectName(p){ return typeof p === 'string' ? p : p.name; }
+function aiProjectPts(p){ return typeof p === 'object' && p.pts ? p.pts : 0; }
 
 function aiTierState(){
   const shipped = AI_TIERS.map(t => t.projects.filter((_,i) => SUBS['ai|'+t.key+'|'+i]).length);
   let unlockedThrough = 0;
   for(let i=0;i<AI_TIERS.length;i++){ if(i===0 || shipped[i-1]===3) unlockedThrough = i; else break; }
   return { shipped, unlockedThrough };
+}
+
+const AI_COMPANIES = [
+  { name: 'Google', logo: 'G', bg: '#4285F4', pkg: '18 – 24 LPA', skills: ['LLM', 'RAG', 'Python', 'System Design'], eligible: true },
+  { name: 'Microsoft', logo: 'M', bg: '#0078D4', pkg: '16 – 22 LPA', skills: ['Azure AI', 'Copilot', 'Agents', 'C#'], eligible: true },
+  { name: 'Amazon', logo: 'A', bg: '#FF9900', pkg: '14 – 20 LPA', skills: ['Bedrock', 'ML Ops', 'AWS', 'Python'], eligible: true },
+  { name: 'Flipkart', logo: 'F', bg: '#2874F0', pkg: '12 – 16 LPA', skills: ['Recommendations', 'NLP', 'Python'], eligible: false },
+  { name: 'Freshworks', logo: 'Fw', bg: '#1DB954', pkg: '10 – 14 LPA', skills: ['Chatbots', 'Prompt Eng', 'Node.js'], eligible: false },
+  { name: 'Zoho', logo: 'Z', bg: '#E42527', pkg: '8 – 12 LPA', skills: ['AI Apps', 'Full-stack', 'Python'], eligible: false }
+];
+
+const DSA_COMPANIES = [
+  { name: 'Amazon', logo: 'A', bg: '#FF9900', pkg: '18 – 24 LPA', skills: ['Arrays', 'Graphs', 'DP', 'System Design'], eligible: true },
+  { name: 'Flipkart', logo: 'F', bg: '#2874F0', pkg: '14 – 18 LPA', skills: ['Trees', 'Greedy', 'Java', 'SQL'], eligible: true },
+  { name: 'Goldman Sachs', logo: 'GS', bg: '#003087', pkg: '16 – 22 LPA', skills: ['Math', 'DP', 'C++', 'Quant'], eligible: true },
+  { name: 'PhonePe', logo: 'P', bg: '#5F259F', pkg: '12 – 16 LPA', skills: ['Strings', 'Hashing', 'Kotlin'], eligible: false },
+  { name: 'Swiggy', logo: 'S', bg: '#FC8019', pkg: '10 – 14 LPA', skills: ['Graphs', 'Heaps', 'Java'], eligible: false },
+  { name: 'TCS Digital', logo: 'T', bg: '#0066B3', pkg: '7 – 9 LPA', skills: ['Basics', 'Aptitude', 'Java'], eligible: false }
+];
+
+const OSS_COMPANIES = [
+  { name: 'Google', logo: 'G', bg: '#4285F4', pkg: '20 – 30 LPA', skills: ['GSoC', 'Kubernetes', 'Go', 'OSS'], eligible: true },
+  { name: 'Red Hat', logo: 'RH', bg: '#CC0000', pkg: '18 – 26 LPA', skills: ['Linux', 'OpenShift', 'PRs'], eligible: true },
+  { name: 'Microsoft', logo: 'M', bg: '#0078D4', pkg: '18 – 24 LPA', skills: ['Azure', 'TypeScript', 'OSS'], eligible: true },
+  { name: 'Mozilla', logo: 'Mz', bg: '#FF7139', pkg: '16 – 22 LPA', skills: ['Rust', 'Web', 'LFX'], eligible: false },
+  { name: 'HashiCorp', logo: 'H', bg: '#000', pkg: '20 – 28 LPA', skills: ['Terraform', 'Go', 'DevOps'], eligible: false },
+  { name: 'GitHub', logo: 'GH', bg: '#24292f', pkg: '18 – 25 LPA', skills: ['Actions', 'APIs', 'Community'], eligible: false }
+];
+
+const APT_COMPANIES = [
+  { name: 'Deloitte', logo: 'D', bg: '#86BC25', pkg: '8 – 12 LPA', skills: ['Aptitude', 'Verbal', 'GD'], eligible: true },
+  { name: 'Accenture', logo: 'Ac', bg: '#A100FF', pkg: '6 – 10 LPA', skills: ['Reasoning', 'HR', 'Communication'], eligible: true },
+  { name: 'Capgemini', logo: 'C', bg: '#0070AD', pkg: '7 – 11 LPA', skills: ['Quant', 'Verbal', 'OA'], eligible: true },
+  { name: 'Infosys', logo: 'I', bg: '#007CC3', pkg: '6 – 9 LPA', skills: ['Aptitude', 'Pseudocode'], eligible: false },
+  { name: 'Wipro', logo: 'W', bg: '#0066B3', pkg: '6 – 8 LPA', skills: ['Verbal', 'GD'], eligible: false },
+  { name: 'Cognizant', logo: 'Cg', bg: '#1A4F8B', pkg: '7 – 10 LPA', skills: ['Mock OA', 'HR'], eligible: false }
+];
+
+const DEV_COMPANIES = [
+  { name: 'Razorpay', logo: 'R', bg: '#0C2451', pkg: '18 – 28 LPA', skills: ['React', 'Node', 'System Design'], eligible: true },
+  { name: 'Atlassian', logo: 'At', bg: '#0052CC', pkg: '20 – 30 LPA', skills: ['Full-stack', 'APIs', 'MongoDB'], eligible: true },
+  { name: 'Uber', logo: 'U', bg: '#000', pkg: '22 – 35 LPA', skills: ['Microservices', 'React', 'Scale'], eligible: true },
+  { name: 'Freshworks', logo: 'Fw', bg: '#1DB954', pkg: '12 – 18 LPA', skills: ['React', 'SaaS'], eligible: false },
+  { name: 'Zoho', logo: 'Z', bg: '#E42527', pkg: '10 – 14 LPA', skills: ['Full-stack', 'Product'], eligible: false },
+  { name: 'Startups', logo: 'S', bg: '#14b8a6', pkg: '8 – 15 LPA', skills: ['MERN', 'Deploy'], eligible: false }
+];
+
+const OSS_OFFICIAL = [
+  { name: 'Google Summer of Code', url: 'https://summerofcode.withgoogle.com/', icon: '🌞' },
+  { name: 'LFX Mentorship', url: 'https://lfx.linuxfoundation.org/tools/mentorship/', icon: '🐧' },
+  { name: 'Outreachy', url: 'https://www.outreachy.org/', icon: '🌍' },
+  { name: 'Hacktoberfest', url: 'https://hacktoberfest.com/', icon: '🎃' },
+  { name: 'Season of Docs', url: 'https://developers.google.com/season-of-docs', icon: '📄' }
+];
+
+const OSS_UPCOMING = [
+  { title: 'OSS Kickoff — First PR Walkthrough', date: 'Jul 8, 2026', time: '6:00 PM IST', link: 'https://docs.github.com/en/get-started', tag: 'PACE Live' },
+  { title: 'GSoC 2027 — Application Prep', date: 'Jul 15, 2026', time: '7:00 PM IST', link: 'https://summerofcode.withgoogle.com/', tag: 'Official' },
+  { title: 'LFX Spring Mentorship — Org Selection', date: 'Jul 22, 2026', time: '6:30 PM IST', link: 'https://lfx.linuxfoundation.org/tools/mentorship/', tag: 'Official' },
+  { title: 'Good First Issue Sprint', date: 'Aug 2, 2026', time: '11:00 AM IST', link: 'https://goodfirstissue.dev/', tag: 'PACE Workshop' }
+];
+
+function eligibleCompaniesHtml(companies) {
+  return `
+    <div class="pace-card-block" style="margin-bottom:20px">
+      <h3>Companies you can unlock</h3>
+      <p>Based on your current level, coding score, and track progress. Complete more projects & problems to unlock higher packages.</p>
+    </div>
+    <div class="co-grid">${companies.map(c => `
+      <div class="co-card">
+        <div class="co-head">
+          <div class="co-logo" style="background:${c.bg}">${c.logo}</div>
+          <div>
+            <div class="co-name">${c.name}</div>
+            <div class="co-pkg">${c.pkg}</div>
+          </div>
+        </div>
+        <div class="co-tags">
+          ${c.skills.map(s => `<span class="co-tag ${c.eligible ? 'unlocked' : ''}">${s}</span>`).join('')}
+          <span class="co-tag ${c.eligible ? 'unlocked' : ''}">${c.eligible ? '✓ Eligible' : '🔒 Level up to unlock'}</span>
+        </div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function aiOverviewRoadmapHtml(){
+  const s = aiTierState();
+  const subtitles = [
+    'Prompt engineering & first AI apps',
+    'RAG, agents & production apps',
+    'Multi-agent systems & automation'
+  ];
+  const totalShipped = s.shipped.reduce(function(a,b){ return a + b; }, 0);
+  const parts = [];
+  AI_TIERS.forEach(function(t, i){
+    if(i > 0) parts.push('<div class="tr-arrow" aria-hidden="true">→</div>');
+    const done = s.shipped[i] === 3;
+    const unlocked = i <= s.unlockedThrough;
+    const cls = done ? 'done' : (unlocked ? 'current' : 'locked');
+    const badge = done ? '✓ Complete' : (unlocked ? s.shipped[i] + '/3 shipped' : '🔒 Locked');
+    const projs = t.projects.map(function(p, j){
+      const submitted = !!SUBS['ai|' + t.key + '|' + j];
+      const pts = aiProjectPts(p);
+      return '<li class="tr-proj' + (submitted ? ' shipped' : '') + '">' + (submitted ? '✓' : '○') + ' ' + aiProjectName(p) + ' <span class="tr-proj-pts">+' + pts + ' pts</span></li>';
+    }).join('');
+    const dots = [0,1,2].map(function(j){
+      return '<span class="tr-dot' + (j < s.shipped[i] ? ' on' : '') + '"></span>';
+    }).join('');
+    parts.push(
+      '<div class="tr-step ' + cls + '">' +
+      '<div class="tr-step-num">Tier ' + (i+1) + '</div>' +
+      '<div class="tr-step-icon">' + t.icon + '</div>' +
+      '<div class="tr-step-name">' + t.name + '</div>' +
+      '<div class="tr-step-sub">' + subtitles[i] + '</div>' +
+      '<span class="tr-step-badge">' + badge + '</span>' +
+      '<ul class="tr-proj-list">' + projs + '</ul>' +
+      '<div class="tr-dots">' + dots + '</div></div>'
+    );
+  });
+  return (
+    '<div class="tr-hero">' +
+    '<div class="tr-hero-main"><h3>AI Explorer → AI Builder → AI Innovator</h3>' +
+    '<p>Ship <strong>9 projects</strong> across 3 tiers — from prompt engineering to multi-agent systems.</p></div>' +
+    '<div class="tr-hero-stat"><div class="tr-hero-val">' + totalShipped + '<span>/9</span></div>' +
+    '<div class="tr-hero-lbl">Projects shipped</div></div></div>' +
+    '<div class="tr-quote">"Don\'t just use AI — build with it. Every project shipped is a step closer to becoming an AI Innovator."</div>' +
+    '<div class="tr-roadmap">' + parts.join('') + '</div>' +
+    '<div class="tr-rule"><span>1</span> Finish all 3 projects in a tier' +
+    '<span class="tr-rule-arrow">→</span><span>2</span> Unlock next tier' +
+    '<span class="tr-rule-arrow">→</span><span>3</span> Earn AI Innovator badge</div>'
+  );
+}
+
+function dsaOverviewRoadmapHtml(){
+  const phases = [
+    { icon:'🌱', name:'Daily Discipline', sub:'Easy + Medium mix every day', pills:['10 pts Easy','25 pts Medium'], stat:'Consistency wins' },
+    { icon:'📚', name:'Topic Mastery', sub:'Arrays · Trees · Graphs · DP', pills:['Weak topics first','AI recommendations'], stat:'Fill skill gaps' },
+    { icon:'🎯', name:'200 Problems', sub:'Placement-ready volume', pills:['147 solved','53 to go'], stat:'Auto-sync LeetCode' },
+    { icon:'🏆', name:'OA Ready', sub:'Timed mocks & contests', pills:['40 pts Hard','100 pts contest'], stat:'Interview prep' }
+  ];
+  const parts = [];
+  phases.forEach(function(p, i){
+    if(i > 0) parts.push('<div class="tr-arrow" aria-hidden="true">→</div>');
+    parts.push(
+      '<div class="tr-step' + (i === 1 ? ' current' : '') + '">' +
+      '<div class="tr-step-num">Phase ' + (i+1) + '</div>' +
+      '<div class="tr-step-icon">' + p.icon + '</div>' +
+      '<div class="tr-step-name">' + p.name + '</div>' +
+      '<div class="tr-step-sub">' + p.sub + '</div>' +
+      '<span class="tr-step-badge">' + p.stat + '</span>' +
+      '<div class="skill-row" style="justify-content:center;margin:0 0 10px">' +
+      p.pills.map(function(x){ return '<span class="pill">' + x + '</span>'; }).join('') +
+      '</div></div>'
+    );
+  });
+  return (
+    '<div class="tr-hero">' +
+    '<div class="tr-hero-main"><h3>Daily practice → Placement readiness</h3>' +
+    '<p>Solve a mix of <strong>Easy / Medium / Hard</strong> every day. Target: <strong>200 problems shipped</strong>.</p></div>' +
+    '<div class="tr-hero-stat"><div class="tr-hero-val">147<span>/200</span></div>' +
+    '<div class="tr-hero-lbl">Problems solved</div></div></div>' +
+    '<div class="tr-roadmap">' + parts.join('') + '</div>' +
+    '<div class="tr-rule"><span>1</span> Daily problems synced from connectors' +
+    '<span class="tr-rule-arrow">→</span><span>2</span> PACE points increase' +
+    '<span class="tr-rule-arrow">→</span><span>3</span> Unlock higher company tiers</div>'
+  );
+}
+
+function ossOverviewHtml() {
+  const importance = [
+    { icon: '🏆', title: 'GSoC & LFX', desc: 'Top-tier open source programs signal production-ready skills to FAANG and product companies.', pkg: '20+ LPA' },
+    { icon: '🔀', title: 'Merged PRs', desc: 'Real merged PRs prove collaboration, code review discipline, and codebase ownership.', pkg: '18+ LPA' },
+    { icon: '📈', title: 'PACE Score Boost', desc: 'Each OSS contribution adds placement points and unlocks Type A company eligibility.', pkg: 'Tier A unlock' },
+    { icon: '🌐', title: 'Global Visibility', desc: 'Maintainers and recruiters discover you through GitHub — beyond campus placements.', pkg: 'Referral edge' }
+  ];
+  return (
+    '<div class="tr-hero">' +
+    '<div class="tr-hero-main"><h3>Open Source → Premium Placements</h3>' +
+    '<p>Strong OSS profiles unlock <strong>20+ LPA</strong> roles at Google, Red Hat, Microsoft and product companies.</p></div>' +
+    '<div class="tr-hero-stat"><div class="tr-hero-val">20<span>+ LPA</span></div>' +
+    '<div class="tr-hero-lbl">Eligible package tier</div></div></div>' +
+    '<div class="co-grid" style="margin-bottom:20px">' +
+    importance.map(function(c) {
+      return '<div class="co-card"><div class="co-head"><div class="co-logo" style="background:rgba(20,184,166,0.2);font-size:22px">' + c.icon + '</div>' +
+        '<div><div class="co-name">' + c.title + '</div><div class="co-pkg">' + c.pkg + '</div></div></div>' +
+        '<p style="font-size:12px;color:var(--muted);line-height:1.55;margin:0">' + c.desc + '</p></div>';
+    }).join('') +
+    '</div>' +
+    '<div class="card"><h3>Upcoming OSS Contributions & Sessions</h3>' +
+    '<p class="muted" style="margin-bottom:14px">Join live walkthroughs and prep for official programs — materials linked below.</p>' +
+    '<table class="tbl"><thead><tr><th>Session</th><th>Date</th><th>Time</th><th>Materials</th></tr></thead><tbody>' +
+    OSS_UPCOMING.map(function(u) {
+      return '<tr><td><b>' + u.title + '</b><br><span class="pill" style="margin-top:4px">' + u.tag + '</span></td>' +
+        '<td>' + u.date + '</td><td>' + u.time + '</td>' +
+        '<td><a class="qp-link" href="' + u.link + '" target="_blank" rel="noopener">Open resources ↗</a></td></tr>';
+    }).join('') +
+    '</tbody></table></div>' +
+    '<div class="card"><h3>Official Program Pages</h3>' +
+    '<p class="muted" style="margin-bottom:14px">Apply and track global open source mentorship programs.</p>' +
+    '<div class="skill-row">' +
+    OSS_OFFICIAL.map(function(o) {
+      return '<a class="btn-primary" href="' + o.url + '" target="_blank" rel="noopener">' + o.icon + ' ' + o.name + '</a>';
+    }).join('') +
+    '</div></div>'
+  );
 }
 
 function aiTiersHtml(){
@@ -212,11 +386,16 @@ function aiTiersHtml(){
               : `🔒 Locked · Clear Tier ${i} first`;
     const projs = t.projects.map((p,idx) => {
       const id = 'ai|'+t.key+'|'+idx;
+      const pts = aiProjectPts(p);
+      const submitted = !!SUBS[id];
+      const ptsPill = submitted
+        ? '<span class="pill gn">+' + pts + ' pts earned</span>'
+        : '<span class="pill am">+' + pts + ' pts on ship</span>';
       const sub = lock
-        ? `<div class="proj-sub"><span class="sub-placeholder">🔒 Tier locked</span></div>`
+        ? `<div class="proj-sub"><span class="sub-placeholder">🔒 Tier locked · ${pts} pts when unlocked</span></div>`
         : subCell(id);
       return `<div class="proj-row">
-        <div class="proj-head"><div class="proj-name">${p}</div></div>
+        <div class="proj-head"><div class="proj-name">${aiProjectName(p)}</div>${ptsPill}</div>
         ${sub}
       </div>`;
     }).join('');
@@ -242,13 +421,7 @@ const DEV_MILESTONES = [
 function panelsFor(key){
   if(key === 'ai'){
     return {
-      'Overview': `
-        <div class="card">
-          <h3>What is the AI Builder track?</h3>
-          <p>This track turns you from an AI <i>user</i> into an AI <i>builder</i>. Across 3 tiers — Explorer, Builder, Innovator — you ship 9 progressively harder projects, from prompt engineering to multi-agent systems.</p>
-          <div class="quote">"Don't just use AI — build with it. Every project shipped is a step closer to becoming an AI Innovator."</div>
-          <p class="muted">Tiers unlock sequentially: finish all 3 projects in a tier to unlock the next.</p>
-        </div>`,
+      'Overview': aiOverviewRoadmapHtml(),
       'Tiers & Projects': aiTiersHtml(),
       'Skills & Resources': `
         <div class="card">
@@ -262,13 +435,7 @@ function panelsFor(key){
           <p>Curated CCBP courses for AI builders — open both in new tabs.</p>
           <a class="btn-primary" href="#" onclick="window.open('https://learning.ccbp.in/course?c_id=b9811b34-585b-47e0-a0be-65f1081a74f2','_blank');window.open('https://learning.ccbp.in/course?c_id=0ab1a0a2-ddf1-4b96-885a-b065a8db4483','_blank');return false;">📚 Open Course Resources</a>
         </div>`,
-      'Support': `
-        <div class="card">
-          <h3>Support available</h3>
-          <div class="sup-item"><span class="sicn">🛠</span><div><b>Monthly AI build session</b> — live, instructor-led project walkthrough.</div></div>
-          <div class="sup-item"><span class="sicn">🧑‍🏫</span><div><b>Mentor project reviews</b> — submit your project, get individual feedback.</div></div>
-          <div class="sup-item"><span class="sicn">📦</span><div><b>Starter templates</b> — RAG, Agent, and chatbot boilerplates ready to fork.</div></div>
-        </div>`
+      'Eligible Companies': eligibleCompaniesHtml(AI_COMPANIES)
     };
   }
   if(key === 'dsa'){
@@ -296,12 +463,7 @@ function panelsFor(key){
       ${p.url ? `<a class="qp-link" href="${p.url}" target="_blank" rel="noopener">Solve ↗</a>` : `<span class="muted">${p.solved?'✓ Solved':'○ Unsolved'}</span>`}
     </div>`;
     return {
-      'Overview': `
-        <div class="card">
-          <h3>Daily structure</h3>
-          <p>Solve a mix of Easy / Medium / Hard every day. Consistency beats intensity — aim for steady daily output toward the goal of <b>200 problems shipped</b>.</p>
-          <p class="muted">All progress auto-syncs from your LeetCode profile via the official GraphQL API.</p>
-        </div>`,
+      'Overview': dsaOverviewRoadmapHtml(),
       'Question Pool': `
         <div class="card">
           <h3>Problem of the Day</h3>
@@ -340,30 +502,12 @@ function panelsFor(key){
             <div class="stat-box"><div class="l">Total solved</div><div class="v">147</div><div class="s">/ 200 goal</div></div>
           </div>
         </div>`,
-      'Tracking': `
-        <div class="card">
-          <h3>LeetCode auto-sync</h3>
-          <div class="sup-item"><span class="sicn">🔗</span><div><b>API:</b> LeetCode GraphQL · <span class="pill gn">Connected</span></div></div>
-          <div class="sup-item"><span class="sicn">⏱</span><div><b>Last sync:</b> 4 minutes ago</div></div>
-          <div class="sup-item"><span class="sicn">🔄</span><div><b>Sync cadence:</b> every 15 minutes</div></div>
-        </div>`,
-      'Support': `
-        <div class="card">
-          <h3>Support available</h3>
-          <div class="sup-item"><span class="sicn">🎥</span><div><b>Direct video link per question</b> — every problem in the tracker links to a curated explanation.</div></div>
-          <div class="sup-item"><span class="sicn">🙋</span><div><b>Raise mentor request</b> — stuck for &gt;30 mins? Drop a request, get a 1:1 within 24h.</div></div>
-          <div class="sup-item"><span class="sicn">📞</span><div><b>2–3 free sessions / month</b> with instructor or mentor.</div></div>
-        </div>`
+      'Eligible Companies': eligibleCompaniesHtml(DSA_COMPANIES)
     };
   }
   if(key === 'oss'){
     return {
-      'Overview': `
-        <div class="card">
-          <h3>Open Source Contribution</h3>
-          <p>One orientation session kicks off your OSS journey. After that, you'll contribute to real-world projects — fixing issues, opening PRs, reviewing others' work.</p>
-          <p class="muted">Earn <b>5 pts per issue</b> raised and <b>5 pts per PR</b> merged.</p>
-        </div>`,
+      'Overview': ossOverviewHtml(),
       'Contributions': `
         <div class="card">
           <h3>Your GitHub</h3>
@@ -380,12 +524,8 @@ function panelsFor(key){
               ${subCell('oss|pr|'+i)}
             </div>`).join('')}
         </div>`,
-      'Support': `
-        <div class="card">
-          <h3>Support available</h3>
-          <div class="sup-item"><span class="sicn">🧑‍🏫</span><div><b>Mentor shortlists issues</b> — beginner-friendly issues curated weekly.</div></div>
-          <div class="sup-item"><span class="sicn">📅</span><div><b>Monthly instructor session</b> — OSS workflow, PR etiquette, review walkthroughs.</div></div>
-        </div>`
+      'Submissions': submissionsHtml('oss', { projectPts: 300 }),
+      'Eligible Companies': eligibleCompaniesHtml(OSS_COMPANIES)
     };
   }
   if(key === 'aptitude'){
@@ -402,30 +542,9 @@ function panelsFor(key){
             </tbody>
           </table>
         </div>`,
-      'Mock OA': `
-        <div class="card">
-          <h3>Mock OA scores</h3>
-          <table class="tbl">
-            <thead><tr><th>Date</th><th>Score</th><th>Accuracy</th><th>Speed</th></tr></thead>
-            <tbody>
-              <tr><td>Jun 10</td><td>72 / 100</td><td>81%</td><td>1m 24s/q</td></tr>
-              <tr><td>May 27</td><td>65 / 100</td><td>76%</td><td>1m 38s/q</td></tr>
-              <tr><td>May 13</td><td>58 / 100</td><td>70%</td><td>1m 52s/q</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="stat-grid">
-          <div class="stat-box"><div class="l">Avg accuracy</div><div class="v">76%</div><div class="s">last 3 OAs</div></div>
-          <div class="stat-box"><div class="l">Avg speed</div><div class="v">1m 38s</div><div class="s">per question</div></div>
-          <div class="stat-box"><div class="l">Trend</div><div class="v">↗ +14</div><div class="s">vs first OA</div></div>
-        </div>`,
-      'Support': `
-        <div class="card">
-          <h3>Support available</h3>
-          <div class="sup-item"><span class="sicn">🎬</span><div><b>Recorded sessions</b> — every aptitude & verbal class available on-demand.</div></div>
-          <div class="sup-item"><span class="sicn">📋</span><div><b>GD feedback rubrics</b> — structured scoring on content, clarity, leadership.</div></div>
-          <div class="sup-item"><span class="sicn">💬</span><div><b>Model HR answers</b> — bank of crafted answers for common HR rounds.</div></div>
-        </div>`
+      'Mock OA': comingSoonHtml('Mock OA — Coming Soon', 'Aptitude & GD mock online assessments with timed sections, accuracy tracking, and OA-style scoring will launch here soon.'),
+      'Submissions': submissionsHtml('aptitude', { projectPts: 100 }),
+      'Eligible Companies': eligibleCompaniesHtml(APT_COMPANIES)
     };
   }
   if(key === 'dev'){
@@ -447,24 +566,9 @@ function panelsFor(key){
               ${subCell('dev|'+m.id)}
             </div>`).join('')}
         </div>`,
-      'System Design': `
-        <div class="card">
-          <h3>System Design</h3>
-          <p>Progressively learn to design real systems — start with URL shorteners and rate limiters, build up to scalable feed / chat / video systems.</p>
-          <div class="sup-item"><span class="sicn">📘</span><div><b>Weekly design problem</b> — work through 1 design problem per week.</div></div>
-          <div class="sup-item"><span class="sicn">🧭</span><div><b>Design walkthroughs</b> — recorded sessions on caching, sharding, queues.</div></div>
-          <div class="proj-row">
-            <div class="proj-head"><div class="proj-name">Submit your design doc</div><span class="pill am">peer-reviewed</span></div>
-            ${subCell('dev|design')}
-          </div>
-        </div>`,
-      'Support': `
-        <div class="card">
-          <h3>Support available</h3>
-          <div class="sup-item"><span class="sicn">👁</span><div><b>Code reviews</b> — submit any repo for line-by-line review.</div></div>
-          <div class="sup-item"><span class="sicn">🚀</span><div><b>Deployment walkthroughs</b> — live, hands-on deploys with the mentor.</div></div>
-          <div class="sup-item"><span class="sicn">🧱</span><div><b>Mentor for blockers</b> — async + sync help when you're stuck.</div></div>
-        </div>`
+      'System Design': comingSoonHtml('System Design — Coming Soon', 'Weekly design problems, walkthroughs, and peer-reviewed design doc submissions are on the way.'),
+      'Submissions': submissionsHtml('dev', { projectPts: 350 }),
+      'Eligible Companies': eligibleCompaniesHtml(DEV_COMPANIES)
     };
   }
   return {};

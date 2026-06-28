@@ -13,8 +13,10 @@ import { Route as PlacementReadinessRouteImport } from './routes/placement-readi
 import { Route as PlacementJourneyRouteImport } from './routes/placement-journey'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LevelsRouteImport } from './routes/levels'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConnectorsRouteImport } from './routes/connectors'
+import { Route as AnnouncementsRouteImport } from './routes/announcements'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackOssRouteImport } from './routes/track.oss'
 import { Route as TrackDsaRouteImport } from './routes/track.dsa'
@@ -42,6 +44,11 @@ const LevelsRoute = LevelsRouteImport.update({
   path: '/levels',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -50,6 +57,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ConnectorsRoute = ConnectorsRouteImport.update({
   id: '/connectors',
   path: '/connectors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnnouncementsRoute = AnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -85,8 +97,10 @@ const TrackAiRoute = TrackAiRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/connectors': typeof ConnectorsRoute
   '/dashboard': typeof DashboardRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/levels': typeof LevelsRoute
   '/login': typeof LoginRoute
   '/placement-journey': typeof PlacementJourneyRoute
@@ -99,8 +113,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/connectors': typeof ConnectorsRoute
   '/dashboard': typeof DashboardRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/levels': typeof LevelsRoute
   '/login': typeof LoginRoute
   '/placement-journey': typeof PlacementJourneyRoute
@@ -114,8 +130,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/connectors': typeof ConnectorsRoute
   '/dashboard': typeof DashboardRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/levels': typeof LevelsRoute
   '/login': typeof LoginRoute
   '/placement-journey': typeof PlacementJourneyRoute
@@ -130,8 +148,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/announcements'
     | '/connectors'
     | '/dashboard'
+    | '/leaderboard'
     | '/levels'
     | '/login'
     | '/placement-journey'
@@ -144,8 +164,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/announcements'
     | '/connectors'
     | '/dashboard'
+    | '/leaderboard'
     | '/levels'
     | '/login'
     | '/placement-journey'
@@ -158,8 +180,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/announcements'
     | '/connectors'
     | '/dashboard'
+    | '/leaderboard'
     | '/levels'
     | '/login'
     | '/placement-journey'
@@ -173,8 +197,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnnouncementsRoute: typeof AnnouncementsRoute
   ConnectorsRoute: typeof ConnectorsRoute
   DashboardRoute: typeof DashboardRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   LevelsRoute: typeof LevelsRoute
   LoginRoute: typeof LoginRoute
   PlacementJourneyRoute: typeof PlacementJourneyRoute
@@ -216,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LevelsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -228,6 +261,13 @@ declare module '@tanstack/react-router' {
       path: '/connectors'
       fullPath: '/connectors'
       preLoaderRoute: typeof ConnectorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/announcements': {
+      id: '/announcements'
+      path: '/announcements'
+      fullPath: '/announcements'
+      preLoaderRoute: typeof AnnouncementsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -277,8 +317,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnnouncementsRoute: AnnouncementsRoute,
   ConnectorsRoute: ConnectorsRoute,
   DashboardRoute: DashboardRoute,
+  LeaderboardRoute: LeaderboardRoute,
   LevelsRoute: LevelsRoute,
   LoginRoute: LoginRoute,
   PlacementJourneyRoute: PlacementJourneyRoute,

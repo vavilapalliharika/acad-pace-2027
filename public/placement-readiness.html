@@ -3,105 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Placement Readiness · RISE 2027</title>
+<title>Placement Readiness · PACE 2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{--gd:#0D3D2E;--gm:#1B5E45;--ga:#2D8C6A;--mb:#EEF7F3;--wh:#fff;--td:#0D1F1A;--tm:#2E5045;--tu:#7A9E90;--bd:#D4EBE0;--am:#F59E0B;--gn:#22C55E;--rd:#EF4444;--pu:#7C3AED}
-  body{font-family:'Inter',sans-serif;background:var(--mb);color:var(--td);min-height:100vh;display:flex}
-  .sidebar{width:260px;background:var(--gd);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
-  .sb-brand{padding:28px 24px 20px;font-size:22px;font-weight:800;color:#fff}
-  .sb-home-link{margin:0 12px 8px;display:flex;padding:9px 14px;border-radius:9px;color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none}
-  .sb-profile{margin:0 16px 24px;background:var(--gm);border-radius:12px;padding:16px}
-  .sb-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}
-  .sb-badge{display:inline-block;background:rgba(255,255,255,0.15);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
-  .nav-section{padding:0 12px;flex:1}
-  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;margin-bottom:2px;text-decoration:none}
-  .nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.12);color:#fff}
-  .nav-item .nic{width:20px;text-align:center}
-  .sb-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.08);margin-top:auto;font-size:11px;color:rgba(255,255,255,0.35);text-align:center}
-  .main{flex:1;padding:32px;overflow-y:auto;max-width:1100px}
-  .page-title{font-size:28px;font-weight:800;color:var(--gd);margin-bottom:4px}
-  .page-sub{font-size:13px;color:var(--tu);margin-bottom:20px}
-  .back-link{display:inline-block;font-size:12px;font-weight:700;color:var(--ga);text-decoration:none;margin-bottom:16px}
-  .back-link:hover{text-decoration:underline}
-
-  .pr-tabs{display:flex;gap:8px;border-bottom:2px solid var(--bd);margin-bottom:24px;flex-wrap:wrap}
-  .pr-tab{padding:10px 20px;font-size:13px;font-weight:700;color:var(--tu);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
-  .pr-tab:hover{color:var(--gd)}
-  .pr-tab.active{color:var(--gd);border-bottom-color:var(--ga)}
-  .pr-panel{display:none}
-  .pr-panel.active{display:block;animation:fadeIn .25s ease}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-  .overview{background:linear-gradient(135deg,var(--gm),var(--gd));border-radius:18px;padding:28px;color:#fff;margin-bottom:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  @media(max-width:700px){.overview{grid-template-columns:1fr}}
-  .ov-lbl{font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-  .ov-val{font-size:28px;font-weight:800}
-  .ov-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px}
-  .section-title{font-size:18px;font-weight:800;margin:28px 0 14px;color:var(--td)}
-  .section-title:first-child{margin-top:0}
-  .tier-detail{background:var(--wh);border:1px solid var(--bd);border-radius:16px;padding:22px;margin-bottom:16px}
-  .td-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
-  .td-name{font-size:18px;font-weight:800;color:var(--gd)}
-  .td-pct{font-size:14px;font-weight:800;padding:6px 14px;border-radius:20px}
-  .td-pct.done{background:#dcfce7;color:#15803d}
-  .td-pct.partial{background:#fef3c7;color:#92400e}
-  .signal-table{width:100%;border-collapse:collapse;font-size:13px}
-  .signal-table th,.signal-table td{padding:12px 10px;text-align:left;border-bottom:1px solid var(--mb)}
-  .signal-table th{font-size:11px;font-weight:700;color:var(--tu);text-transform:uppercase;letter-spacing:.4px}
-  .st-done{color:var(--gn);font-weight:700}
-  .st-progress{color:var(--am);font-weight:700}
-  .st-todo{color:var(--rd);font-weight:700}
-  .missing-card{background:var(--wh);border:1px solid var(--bd);border-radius:16px;padding:22px}
-  .missing-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed var(--bd);font-size:14px;font-weight:600;color:var(--tm)}
-  .missing-item:last-child{border-bottom:none}
-  .missing-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--bd);flex-shrink:0}
-
-  .recs-header{margin-bottom:18px}
-  .recs-title{font-size:20px;font-weight:800;color:var(--td);letter-spacing:-0.3px;margin-bottom:6px}
-  .recs-subtitle{font-size:13px;color:var(--tu);line-height:1.55;max-width:640px}
-  .action-cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-  @media(max-width:700px){.action-cards-grid{grid-template-columns:1fr}}
-  .action-card{background:var(--wh);border:1.5px solid var(--bd);border-radius:16px;padding:18px;display:flex;align-items:stretch;justify-content:space-between;gap:16px;transition:box-shadow .2s,border-color .2s}
-  .action-card:hover{border-color:var(--ga);box-shadow:0 6px 24px rgba(13,61,46,0.08)}
-  @media(max-width:520px){.action-card{flex-direction:column}}
-  .action-card-body{display:flex;gap:14px;flex:1;min-width:0}
-  .action-card-icon{width:44px;height:44px;flex-shrink:0;background:var(--mb);border:1px solid var(--bd);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
-  .action-card-title{font-size:15px;font-weight:800;color:var(--gd);margin-bottom:5px}
-  .action-card-desc{font-size:12px;color:var(--tm);line-height:1.5;margin-bottom:12px}
-  .action-progress-meta{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--tu);margin-bottom:5px}
-  .action-progress-meta .prog-val{color:var(--gd)}
-  .action-progress-bar{height:7px;background:var(--bd);border-radius:4px;overflow:hidden;margin-bottom:10px}
-  .action-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ga),#4CAF85);transition:width 1s ease}
-  .impact-badge{display:inline-flex;font-size:10px;font-weight:800;letter-spacing:.4px;padding:4px 10px;border-radius:20px;text-transform:uppercase}
-  .impact-high{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
-  .impact-medium{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
-  .impact-low{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
-  .impact-pct{font-size:11px;font-weight:700;color:var(--tm);margin-top:6px}
-  .impact-pct span{color:var(--gd)}
-  .action-cta{align-self:center;flex-shrink:0;display:inline-flex;padding:11px 18px;border-radius:10px;background:var(--gd);color:#fff;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}
-  .action-cta:hover{background:var(--gm);color:#fff}
-</style>
+<link rel="stylesheet" href="/pace-theme.css">
+<link rel="stylesheet" href="/pace-legacy-bridge.css">
+<link rel="stylesheet" href="/pace-pages.css">
 </head>
 <body>
 <script src="/rise-nav.js"></script>
 <script src="/placement-engine.js"></script>
-<script>riseAuthGate();</script>
-
-<aside class="sidebar">
-  <div class="sb-brand">RISE 2027</div>
-  <a href="/" target="_top" class="sb-home-link">← Home</a>
-  <div class="sb-profile"><div class="sb-name">Ananya Rao</div><span class="sb-badge">🟡 Intermediate · Level 3</span></div>
-  <nav class="nav-section" id="rise-nav"></nav>
-  <div class="sb-footer">RISE 2027 · YOG Batch</div>
-</aside>
-
+<script src="/pace-shell.js"></script>
+<aside class="sidebar" style="display:none" aria-hidden="true"></aside>
 <main class="main">
-  <a href="/dashboard" target="_top" class="back-link">← Back to Dashboard</a>
-  <div class="page-title">🚀 Placement Readiness</div>
-  <div class="page-sub">Tier eligibility breakdown and high-impact actions to unlock higher salary brackets.</div>
+  <a href="/dashboard" target="_top" class="pace-back-link">← Back to Dashboard</a>
+  <div class="pace-page-title">🚀 Placement Readiness</div>
+  <div class="pace-page-sub">Tier eligibility breakdown and high-impact actions to unlock higher salary brackets.</div>
 
   <div class="pr-tabs">
     <button type="button" class="pr-tab active" data-tab="eligibility" onclick="switchPrTab('eligibility',this)">Eligibility</button>
@@ -109,100 +26,139 @@
   </div>
 
   <div class="pr-panel active" id="panel-eligibility">
-    <div class="overview" id="overview"></div>
-    <div class="section-title">Tier Requirements</div>
+    <div class="pr-overview" id="overview"></div>
+    <div class="pace-section-label">Tier Requirements</div>
     <div id="tier-details"></div>
-    <div class="section-title">Missing Signals</div>
+
+    <div class="pace-section-label">Score & Progress</div>
+    <div class="pr-score-panel" id="score-panel"></div>
+
+    <div class="pr-checklist-head">
+      <div class="pace-section-label" style="margin:0">Placement Checklist</div>
+      <span class="pr-checklist-count" id="checklist-count"></span>
+    </div>
     <div class="missing-card" id="missing-list"></div>
   </div>
 
   <div class="pr-panel" id="panel-actions">
-    <div class="recs-header">
-      <div class="recs-title">🎯 Recommended Next Actions</div>
-      <p class="recs-subtitle">Complete these high-impact actions to increase your placement eligibility and unlock higher salary brackets.</p>
-    </div>
+    <div class="recs-title">🎯 Recommended Next Actions</div>
+    <p class="recs-subtitle">Complete these high-impact actions to increase your placement eligibility and unlock higher salary brackets.</p>
     <div class="action-cards-grid" id="recs-list"></div>
   </div>
 </main>
 
 <script>
-renderRiseNav('placement', 'rise-nav');
+wrapPaceMain();
+initPaceShell('placement');
 
-const current = getCurrentEligibleTier();
-const score = getPlacementScore();
-const tierA = getTierEligibility(PLACEMENT_ENGINE.tiers[0]);
-const projected = tierA.pct >= 80 ? PLACEMENT_ENGINE.tiers[0] : current;
+var checklistState = loadChecklistState();
+var displayTier = getDisplayEligibleTier();
+var score = getPlacementScore();
+var tierA = getTierEligibility(PLACEMENT_ENGINE.tiers[0]);
+var projected = tierA.pct >= 80 ? PLACEMENT_ENGINE.tiers[0] : displayTier;
 
-document.getElementById('overview').innerHTML = `
-  <div><div class="ov-lbl">Current Eligible Tier</div><div class="ov-val">${current.icon} ${current.name}</div><div class="ov-sub">${current.range}</div></div>
-  <div><div class="ov-lbl">Placement Score</div><div class="ov-val">${score}%</div><div class="ov-sub">Composite readiness index</div></div>
-  <div><div class="ov-lbl">Projected Tier</div><div class="ov-val">${projected.icon} ${projected.name}</div><div class="ov-sub">If current pace continues</div></div>`;
+function renderOverview() {
+  var s = calcChecklistScore(checklistState);
+  document.getElementById('overview').innerHTML =
+    '<div><div class="pr-ov-lbl">Current Eligible Tier</div><div class="pr-ov-val">' + displayTier.icon + ' ' + displayTier.name + '</div><div class="pr-ov-sub">' + displayTier.range + '</div></div>' +
+    '<div><div class="pr-ov-lbl">Placement Score</div><div class="pr-ov-val">' + s.totalPct + '%</div><div class="pr-ov-sub">Base ' + s.basePct + '% + ' + s.bonusPct + '% from checklist</div></div>' +
+    '<div><div class="pr-ov-lbl">Projected Tier</div><div class="pr-ov-val">' + projected.icon + ' ' + projected.name + '</div><div class="pr-ov-sub">If current pace continues</div></div>';
+}
 
-document.getElementById('tier-details').innerHTML = PLACEMENT_ENGINE.tiers.map(tier => {
-  const e = getTierEligibility(tier);
-  const rows = e.results.map(r => {
-    const st = statusLabel(r.status);
-    const cur = r.boolean ? (r.status === 'done' ? '✔ Yes' : '✗ No') : r.current;
-    const req = r.boolean ? (r.alt || r.unit) : r.required;
-    const rem = r.status === 'done' ? '—' : `Need ${r.remaining} more`;
-    return `<tr>
-      <td>${r.name}</td>
-      <td><b>${cur}</b></td>
-      <td>${req}</td>
-      <td class="${st.cls}">${st.icon} ${st.label}</td>
-      <td>${rem}</td>
-    </tr>`;
+function renderScorePanel() {
+  var s = calcChecklistScore(checklistState);
+  document.getElementById('score-panel').innerHTML =
+    '<div class="pr-score-block">' +
+    '<div class="pr-score-lbl">Placement Score</div>' +
+    '<div class="pr-score-val" id="pr-total-pct">' + s.totalPct + '<span>%</span></div>' +
+    '<div class="pr-score-sub">Base ' + s.basePct + '% + bonus ' + s.bonusPct + '%</div></div>' +
+    '<div class="pr-score-block">' +
+    '<div class="pr-score-lbl">PACE Points</div>' +
+    '<div class="pr-score-val" id="pr-pace-total">' + s.paceTotal.toLocaleString() + '</div>' +
+    '<div class="pr-score-sub">+' + s.bonusPts.toLocaleString() + ' pts from checklist</div></div>' +
+    '<div class="pr-score-block">' +
+    '<div class="pr-score-lbl">Checklist</div>' +
+    '<div class="pr-score-val">' + s.checked + '<span>/' + s.total + '</span></div>' +
+    '<div class="pr-score-sub">Items completed</div></div>' +
+    '<div class="pr-score-bar-wrap">' +
+    '<div class="pr-score-bar-meta"><span>Progress to 100%</span><span id="pr-bar-label">' + s.totalPct + '%</span></div>' +
+    '<div class="pr-score-bar"><div class="pr-score-bar-fill" id="pr-bar-fill" style="width:' + s.totalPct + '%"></div></div></div>';
+}
+
+function renderChecklist() {
+  var items = getMissingChecklistItems();
+  var el = document.getElementById('missing-list');
+  var countEl = document.getElementById('checklist-count');
+
+  if (!items.length) {
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--accent-green);font-weight:700">🎉 All signals complete for all tiers!</div>';
+    if (countEl) countEl.textContent = '0 remaining';
+    return;
+  }
+
+  var checked = items.filter(function (i) { return checklistState[i.id]; }).length;
+  if (countEl) countEl.textContent = checked + ' of ' + items.length + ' done';
+
+  el.innerHTML = items.map(function (item) {
+    var done = !!checklistState[item.id];
+    return (
+      '<label class="missing-item' + (done ? ' done' : '') + '">' +
+      '<input type="checkbox" class="missing-check" data-id="' + item.id + '"' + (done ? ' checked' : '') + ' onchange="toggleChecklistItem(this)">' +
+      '<span class="missing-label">' + item.text + '</span>' +
+      '<span class="missing-pts">+' + item.pts + ' pts</span>' +
+      '<span class="missing-tier">' + item.tier + '</span></label>'
+    );
   }).join('');
-  return `<div class="tier-detail">
-    <div class="td-head">
-      <div class="td-name">${tier.icon} ${tier.name} — ${tier.range}</div>
-      <span class="td-pct ${e.eligible?'done':'partial'}">${e.pct}% · ${e.eligible?'Eligible':'In Progress'}</span>
-    </div>
-    <table class="signal-table">
-      <thead><tr><th>Signal</th><th>Current</th><th>Required</th><th>Status</th><th>Remaining</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  </div>`;
+}
+
+window.toggleChecklistItem = function (input) {
+  var id = input.getAttribute('data-id');
+  if (input.checked) checklistState[id] = true;
+  else delete checklistState[id];
+  saveChecklistState(checklistState);
+  renderScorePanel();
+  renderOverview();
+  renderChecklist();
+};
+
+renderOverview();
+
+document.getElementById('tier-details').innerHTML = PLACEMENT_ENGINE.tiers.map(function (tier) {
+  var e = getTierEligibility(tier);
+  var rows = e.results.map(function (r) {
+    var st = statusLabel(r.status);
+    var cur = r.boolean ? (r.status === 'done' ? '✔ Yes' : '✗ No') : r.current;
+    var req = r.boolean ? (r.alt || r.unit) : r.required;
+    var rem = r.status === 'done' ? '—' : 'Need ' + r.remaining + ' more';
+    return '<tr><td>' + r.name + '</td><td><b>' + cur + '</b></td><td>' + req + '</td><td class="' + st.cls + '">' + st.icon + ' ' + st.label + '</td><td>' + rem + '</td></tr>';
+  }).join('');
+  return '<div class="pr-tier-card"><div class="td-head"><div class="td-name">' + tier.icon + ' ' + tier.name + ' — ' + tier.range + '</div><span class="td-pct ' + (e.eligible ? 'done' : 'partial') + '">' + e.pct + '% · ' + (e.eligible ? 'Eligible' : 'In Progress') + '</span></div><table class="pr-signal-table"><thead><tr><th>Signal</th><th>Current</th><th>Required</th><th>Status</th><th>Remaining</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }).join('');
 
-const allMissing = [];
-PLACEMENT_ENGINE.tiers.forEach(tier => {
-  getTierEligibility(tier).results.filter(r => r.status !== 'done').forEach(r => {
-    const text = r.boolean
-      ? `Need 1 ${r.name.includes('OSS') ? 'OSS Contribution' : r.name}`
-      : r.name.includes('LeetCode') ? `Need ${r.remaining} LeetCode Problem${r.remaining>1?'s':''}`
-      : r.name.includes('Assessment') ? `Need ${r.remaining} Assessment${r.remaining>1?'s':''}`
-      : r.name.includes('GitHub') ? `Need ${r.remaining} GitHub Repositor${r.remaining>1?'ies':'y'}`
-      : `Need ${r.remaining} ${r.unit}`;
-    if (!allMissing.find(m => m.text === text)) allMissing.push({ text, tier: tier.name });
-  });
-});
-
-document.getElementById('missing-list').innerHTML = allMissing.length
-  ? allMissing.map(m => `<div class="missing-item"><div class="missing-check"></div><span>${m.text}</span><span style="margin-left:auto;font-size:11px;color:var(--tu)">${m.tier}</span></div>`).join('')
-  : '<div style="padding:20px;text-align:center;color:var(--gn);font-weight:700">🎉 All signals complete for all tiers!</div>';
+renderScorePanel();
+renderChecklist();
 
 document.getElementById('recs-list').innerHTML = renderActionCardsHtml();
 
 function switchPrTab(tab, btn) {
-  document.querySelectorAll('.pr-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.pr-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pr-tab').forEach(function (t) { t.classList.remove('active'); });
+  document.querySelectorAll('.pr-panel').forEach(function (p) { p.classList.remove('active'); });
   btn.classList.add('active');
   document.getElementById('panel-' + tab).classList.add('active');
   if (tab === 'actions') {
-    setTimeout(() => {
-      document.querySelectorAll('.action-progress-fill').forEach(b => { b.style.width = b.dataset.w; });
+    setTimeout(function () {
+      document.querySelectorAll('.action-progress-fill').forEach(function (b) { b.style.width = b.dataset.w; });
     }, 80);
   }
 }
 
-const qs = new URLSearchParams(location.search);
+var qs = new URLSearchParams(location.search);
 if (qs.get('tab') === 'actions') {
   switchPrTab('actions', document.querySelector('.pr-tab[data-tab="actions"]'));
 }
 
-setTimeout(() => {
-  document.querySelectorAll('.action-progress-fill').forEach(b => { b.style.width = b.dataset.w; });
+setTimeout(function () {
+  document.querySelectorAll('.action-progress-fill').forEach(function (b) { b.style.width = b.dataset.w; });
 }, 200);
 </script>
 </body>

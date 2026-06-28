@@ -8,35 +8,182 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{--gd:#0D3D2E;--gm:#1B5E45;--ga:#2D8C6A;--mb:#EEF7F3;--td:#0D1F1A;--tu:#7A9E90;--bd:#D4EBE0;--am:#F59E0B}
-  body{font-family:'Inter',sans-serif;background:radial-gradient(ellipse at top left,#1B5E45 0%,#0D3D2E 60%,#08251C 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;color:var(--td)}
-  .card{width:100%;max-width:420px;background:#fff;border-radius:20px;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,0.35)}
-  .brand{font-size:22px;font-weight:800;color:var(--gd);letter-spacing:-0.5px;margin-bottom:4px}
-  .sub{font-size:13px;color:var(--tu);margin-bottom:24px}
-  label{display:block;font-size:12px;font-weight:700;color:var(--gd);margin-bottom:6px;letter-spacing:0.3px}
-  input{width:100%;padding:12px 14px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;font-family:inherit;background:var(--mb);color:var(--td);outline:none;transition:border .15s}
-  input:focus{border-color:var(--ga);background:#fff}
-  .field{margin-bottom:14px}
-  button{width:100%;padding:13px;border:none;border-radius:10px;background:var(--gd);color:#fff;font-weight:700;font-size:14px;cursor:pointer;margin-top:6px;transition:background .15s}
-  button:hover{background:var(--gm)}
-  .err{font-size:12px;color:#EF4444;margin-top:10px;display:none;font-weight:600}
-  .hint{margin-top:18px;padding:12px 14px;background:var(--mb);border:1px dashed var(--bd);border-radius:10px;font-size:11.5px;color:var(--tu);line-height:1.6}
-  .hint b{color:var(--gd)}
-  .back{display:inline-block;margin-top:14px;font-size:12px;color:var(--tu);text-decoration:none}
-  .back:hover{color:var(--gd)}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0e13;
+    --bg-elevated: #0f141c;
+    --bg-card: rgba(15, 20, 28, 0.85);
+    --primary: #14b8a6;
+    --secondary: #a78bfa;
+    --accent-amber: #f59e0b;
+    --light: rgba(20, 184, 166, 0.12);
+    --text: #f1f5f9;
+    --text-bright: #f8fafc;
+    --muted: #94a3b8;
+    --border: rgba(255, 255, 255, 0.08);
+    --radius: 18px;
+    --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.55);
+    --shadow-glow: 0 0 40px rgba(20, 184, 166, 0.12);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 55% 45% at 15% 20%, rgba(20, 184, 166, 0.1), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 85% 80%, rgba(167, 139, 250, 0.08), transparent 50%);
+    animation: glow 12s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    0% { opacity: 0.75; }
+    100% { opacity: 1; }
+  }
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black, transparent);
+  }
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 36px 32px;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    position: relative;
+    z-index: 1;
+    animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .brand {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .brand span { color: var(--primary); }
+  .sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  }
+  input::placeholder { color: rgba(148, 163, 184, 0.6); }
+  input:focus {
+    border-color: rgba(20, 184, 166, 0.45);
+    background: rgba(20, 184, 166, 0.06);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
+  }
+  .field { margin-bottom: 16px; }
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: var(--primary);
+    color: #0a0e13;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: 0 8px 24px rgba(20, 184, 166, 0.25);
+  }
+  button:hover {
+    background: #2dd4bf;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+  button:active { transform: translateY(0); }
+  .err {
+    font-size: 12px;
+    color: #f87171;
+    margin-top: 12px;
+    display: none;
+    font-weight: 600;
+  }
+  .hint {
+    margin-top: 22px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(20, 184, 166, 0.25);
+    border-radius: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .hint b { color: var(--text-bright); }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back:hover { color: var(--primary); }
 </style>
 </head>
 <body>
+<div class="grid-bg" aria-hidden="true"></div>
 <form class="card" onsubmit="return doLogin(event)">
-  <div class="brand">RISE 2027</div>
+  <div class="brand">RISE <span>2027</span></div>
   <div class="sub">Sign in to your student dashboard</div>
   <div class="field">
-    <label>Email</label>
+    <label for="email">Email</label>
     <input id="email" type="text" autocomplete="username" placeholder="student@rise2027.com" required>
   </div>
   <div class="field">
-    <label>Password</label>
+    <label for="pwd">Password</label>
     <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" required>
   </div>
   <button type="submit">Sign in →</button>
@@ -58,15 +205,31 @@
     e.preventDefault();
     var em = document.getElementById('email').value.trim().toLowerCase();
     var pw = document.getElementById('pwd').value;
-    if((em === 'student@rise2027.com' || em === 'ananya') && pw === 'rise2027'){
-      sessionStorage.setItem('rise_user', JSON.stringify({name:'Ananya Rao',email:em,level:3}));
+    if (
+      (em === 'student@rise2027.com' ||
+        em === 'harika' ||
+        em === 'harika.vavilapalli' ||
+        em === 'ananya') &&
+      pw === 'rise2027'
+    ) {
+      sessionStorage.setItem(
+        'rise_user',
+        JSON.stringify({
+          name: 'Harika Vavilapalli',
+          email: em,
+          level: 40,
+          badge: 'YOG',
+          batch: '2027 YOG',
+          eligibleTier: 'Type B',
+          eligibleRange: '8–12 LPA',
+        })
+      );
       window.top.location.replace(getNext());
     } else {
       document.getElementById('err').style.display = 'block';
     }
     return false;
   }
-  // Auto-fill for convenience
   if(!sessionStorage.getItem('rise_user')){
     document.getElementById('email').value = 'student@rise2027.com';
   } else {

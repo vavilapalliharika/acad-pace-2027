@@ -3,8 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "RISE 2027 — Placement Readiness Accelerator" },
-      { name: "description", content: "NxtWave's 180-day structured PRA program for YOG 2027 graduates." },
+      { title: "RISE 2027 — Placement Acceleration & Career Excellence" },
+      { name: "description", content: "Structured placement acceleration for YOG 2027 — cohort-based learning, tracks, and a readiness dashboard." },
     ],
   }),
   component: Landing,

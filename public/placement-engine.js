@@ -1,17 +1,23 @@
 /* Placement Readiness & Eligibility Engine — shared mock data */
 window.PLACEMENT_ENGINE = {
   student: {
-    name: 'Ananya Rao',
-    batch: 'YOG 2027',
-    level: 3,
-    levelName: 'Intermediate',
-    tier: 'Intermediate',
+    name: 'Harika Vavilapalli',
+    batch: '2027 YOG',
+    level: 40,
+    levelName: 'Elite',
+    badge: 'YOG',
+    tier: 'Type B',
+    eligibleTier: 'Type B',
+    eligibleRange: '8–12 LPA',
     squad: 'Squad Alpha-7',
     mentor: 'Ravi Kumar',
-    profileStrength: 78,
-    riseScore: 2140,
+    profileStrength: 82,
+    paceScore: 3840,
+    riseScore: 3840,
     streak: 37,
     rank: 8,
+    leetcode: { solved: 142, target: 200, easy: 48, medium: 72, hard: 22 },
+    placementReadiness: 50,
     problems: { total: 147, easy: 52, medium: 78, hard: 17 },
   },
 
@@ -90,6 +96,100 @@ window.getCurrentEligibleTier = function () {
     if (e.eligible) current = tiers[i];
   }
   return current;
+};
+
+/** Profile / UI display tier (canonical student eligibility) */
+window.getDisplayEligibleTier = function () {
+  const s = PLACEMENT_ENGINE.student;
+  const name = s.eligibleTier || s.tier || 'Type B';
+  return PLACEMENT_ENGINE.tiers.find(function (t) { return t.name === name; }) || PLACEMENT_ENGINE.tiers[1];
+};
+
+const CHECKLIST_SIGNAL_PTS = {
+  lc: 80,
+  gsoc: 200,
+  oss: 150,
+  assess: 100,
+  intern: 250,
+  gh: 60,
+  proj: 180,
+  apt: 120,
+  interviews: 150,
+};
+
+window.getMissingChecklistItems = function () {
+  const items = [];
+  const seen = new Set();
+  PLACEMENT_ENGINE.tiers.forEach(function (tier) {
+    getTierEligibility(tier).results
+      .filter(function (r) { return r.status !== 'done'; })
+      .forEach(function (r) {
+        const text = r.boolean
+          ? 'Need 1 ' + (r.name.includes('OSS') ? 'OSS Contribution' : r.name)
+          : r.name.includes('LeetCode')
+            ? 'Need ' + r.remaining + ' LeetCode Problem' + (r.remaining > 1 ? 's' : '')
+            : r.name.includes('Assessment')
+              ? 'Need ' + r.remaining + ' Assessment' + (r.remaining > 1 ? 's' : '')
+              : r.name.includes('GitHub')
+                ? 'Need ' + r.remaining + ' GitHub Repositor' + (r.remaining > 1 ? 'ies' : 'y')
+                : 'Need ' + r.remaining + ' ' + r.unit;
+        if (seen.has(text)) return;
+        seen.add(text);
+        const unitPts = CHECKLIST_SIGNAL_PTS[r.id] || 100;
+        const pts = r.boolean ? unitPts : unitPts * Math.max(1, r.remaining);
+        items.push({
+          id: tier.key + '-' + r.id,
+          text: text,
+          tier: tier.name,
+          pts: pts,
+        });
+      });
+  });
+  return items;
+};
+
+window.getChecklistStorageKey = function () {
+  return 'pace_pr_checklist_v1';
+};
+
+window.loadChecklistState = function () {
+  try {
+    return JSON.parse(localStorage.getItem(getChecklistStorageKey()) || '{}');
+  } catch (e) {
+    return {};
+  }
+};
+
+window.saveChecklistState = function (state) {
+  try {
+    localStorage.setItem(getChecklistStorageKey(), JSON.stringify(state));
+  } catch (e) {}
+};
+
+window.calcChecklistScore = function (state) {
+  state = state || loadChecklistState();
+  const items = getMissingChecklistItems();
+  let bonusPts = 0;
+  let checked = 0;
+  items.forEach(function (item) {
+    if (state[item.id]) {
+      bonusPts += item.pts;
+      checked++;
+    }
+  });
+  const basePct = getPlacementScore();
+  const bonusPct = Math.min(35, Math.round(bonusPts / 40));
+  const totalPct = Math.min(100, basePct + bonusPct);
+  const paceBase = PLACEMENT_ENGINE.student.paceScore || 3840;
+  return {
+    basePct: basePct,
+    bonusPts: bonusPts,
+    bonusPct: bonusPct,
+    totalPct: totalPct,
+    paceTotal: paceBase + bonusPts,
+    checked: checked,
+    total: items.length,
+  };
 };
 
 window.getPlacementScore = function () {
