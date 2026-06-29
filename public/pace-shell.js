@@ -9,7 +9,7 @@ window.PACE_SHELL_HTML = function () {
     '<div class="pace-profile">' +
     '<div class="pace-profile-name" id="pace-profile-name">Student</div>' +
     '<span class="pace-profile-badge" id="pace-profile-badge">YOG</span></div>' +
-    '<nav class="pace-nav" id="rise-nav" aria-label="Main navigation"></nav>' +
+    '<nav class="pace-nav" id="pace-nav" aria-label="Main navigation"></nav>' +
     '<div class="pace-sb-footer">PACE 2027 · Batch 2027 YOG</div></aside>'
   );
 };

@@ -13,7 +13,6 @@ window.PLACEMENT_ENGINE = {
     mentor: 'Ravi Kumar',
     profileStrength: 82,
     paceScore: 3840,
-    riseScore: 3840,
     streak: 37,
     rank: 8,
     leetcode: { solved: 142, target: 200, easy: 48, medium: 72, hard: 22 },
@@ -89,20 +88,23 @@ window.getTierEligibility = function (tier) {
 };
 
 window.getCurrentEligibleTier = function () {
-  const tiers = PLACEMENT_ENGINE.tiers;
-  let current = tiers[tiers.length - 1];
-  for (let i = 0; i < tiers.length; i++) {
-    const e = getTierEligibility(tiers[i]);
-    if (e.eligible) current = tiers[i];
+  const s = PLACEMENT_ENGINE.student;
+  if (s.eligibleTier) {
+    const matched = PLACEMENT_ENGINE.tiers.find(function (t) {
+      return t.name === s.eligibleTier;
+    });
+    if (matched) return matched;
   }
-  return current;
+  const tiers = PLACEMENT_ENGINE.tiers;
+  for (let i = 0; i < tiers.length; i++) {
+    if (getTierEligibility(tiers[i]).eligible) return tiers[i];
+  }
+  return tiers[tiers.length - 1];
 };
 
 /** Profile / UI display tier (canonical student eligibility) */
 window.getDisplayEligibleTier = function () {
-  const s = PLACEMENT_ENGINE.student;
-  const name = s.eligibleTier || s.tier || 'Type B';
-  return PLACEMENT_ENGINE.tiers.find(function (t) { return t.name === name; }) || PLACEMENT_ENGINE.tiers[1];
+  return getCurrentEligibleTier();
 };
 
 const CHECKLIST_SIGNAL_PTS = {
@@ -117,6 +119,41 @@ const CHECKLIST_SIGNAL_PTS = {
   interviews: 150,
 };
 
+window.getChecklistActionText = function (r) {
+  const n = r.remaining;
+  const actions = {
+    lc: function () {
+      return 'Solve ' + n + ' more LeetCode problem' + (n === 1 ? '' : 's');
+    },
+    gsoc: function () {
+      return 'Participate in GSoC or a similar coding competition';
+    },
+    oss: function () {
+      return 'Get ' + (n === 1 ? '1 approved open-source PR' : n + ' approved open-source PRs');
+    },
+    assess: function () {
+      return 'Clear ' + n + ' more assessment' + (n === 1 ? '' : 's');
+    },
+    intern: function () {
+      return n === 1 ? 'Complete an internship or freelancing experience' : 'Complete ' + n + ' internships';
+    },
+    gh: function () {
+      return 'Add ' + n + ' more GitHub repo' + (n === 1 ? '' : 's');
+    },
+    interviews: function () {
+      return 'Attend ' + n + ' more mock interview' + (n === 1 ? '' : 's');
+    },
+    proj: function () {
+      return 'Ship ' + (n === 1 ? '1 full-stack project' : n + ' full-stack projects');
+    },
+    apt: function () {
+      return 'Complete ' + n + ' aptitude module' + (n === 1 ? '' : 's');
+    },
+  };
+  if (actions[r.id]) return actions[r.id]();
+  return r.name + ' — ' + getSignalRemainingText(r);
+};
+
 window.getMissingChecklistItems = function () {
   const items = [];
   const seen = new Set();
@@ -124,24 +161,20 @@ window.getMissingChecklistItems = function () {
     getTierEligibility(tier).results
       .filter(function (r) { return r.status !== 'done'; })
       .forEach(function (r) {
-        const text = r.boolean
-          ? 'Need 1 ' + (r.name.includes('OSS') ? 'OSS Contribution' : r.name)
-          : r.name.includes('LeetCode')
-            ? 'Need ' + r.remaining + ' LeetCode Problem' + (r.remaining > 1 ? 's' : '')
-            : r.name.includes('Assessment')
-              ? 'Need ' + r.remaining + ' Assessment' + (r.remaining > 1 ? 's' : '')
-              : r.name.includes('GitHub')
-                ? 'Need ' + r.remaining + ' GitHub Repositor' + (r.remaining > 1 ? 'ies' : 'y')
-                : 'Need ' + r.remaining + ' ' + r.unit;
-        if (seen.has(text)) return;
-        seen.add(text);
+        if (seen.has(tier.key + '-' + r.id)) return;
+        seen.add(tier.key + '-' + r.id);
         const unitPts = CHECKLIST_SIGNAL_PTS[r.id] || 100;
         const pts = r.boolean ? unitPts : unitPts * Math.max(1, r.remaining);
         items.push({
           id: tier.key + '-' + r.id,
-          text: text,
+          signalId: r.id,
+          name: r.name,
+          action: getChecklistActionText(r),
+          progress: r.current + '/' + r.required,
           tier: tier.name,
+          tierKey: tier.key,
           pts: pts,
+          href: getSignalActionHref(r.id),
         });
       });
   });
@@ -365,6 +398,63 @@ window.statusLabel = function (status) {
   return { icon: '🔴', label: 'Not Started', cls: 'st-todo' };
 };
 
+/** Dashboard / app links for tier requirement signals */
+window.SIGNAL_ACTION_LINKS = {
+  lc: { href: '/track/dsa', label: 'DSA Track' },
+  gsoc: { href: '/track/oss', label: 'Open Source Track' },
+  oss: { href: '/track/oss', label: 'Open Source Track' },
+  assess: { href: '/track/aptitude', label: 'Quant & Aptitude Track' },
+  intern: { href: '/track/dev', label: 'Development & System Design' },
+  gh: { href: '/connectors', label: 'Connectors' },
+  interviews: { href: '/track/ai', label: 'AI Track' },
+  proj: { href: '/track/dev', label: 'Development & System Design' },
+  apt: { href: '/track/aptitude', label: 'Quant & Aptitude Track' },
+};
+
+window.getSignalActionHref = function (signalId) {
+  const link = SIGNAL_ACTION_LINKS[signalId];
+  return link ? link.href : '/dashboard';
+};
+
+window.formatSignalCurrent = function (r) {
+  return String(r.current);
+};
+
+window.getSignalRemainingText = function (r) {
+  if (r.status === 'done') return '—';
+  const n = r.remaining;
+  const copy = {
+    lc: function () { return n + ' problem' + (n === 1 ? '' : 's') + ' left'; },
+    gsoc: function () { return (n === 1 ? '1 contest entry' : n + ' contest entries') + ' left'; },
+    oss: function () { return (n === 1 ? '1 approved PR' : n + ' approved PRs') + ' left'; },
+    assess: function () { return n + ' assessment' + (n === 1 ? '' : 's') + ' left'; },
+    intern: function () { return (n === 1 ? '1 internship' : n + ' internships') + ' left'; },
+    gh: function () { return n + ' repo' + (n === 1 ? '' : 's') + ' left'; },
+    interviews: function () { return n + ' interview' + (n === 1 ? '' : 's') + ' left'; },
+    proj: function () { return (n === 1 ? '1 project' : n + ' projects') + ' left'; },
+    apt: function () { return n + ' module' + (n === 1 ? '' : 's') + ' left'; },
+  };
+  if (copy[r.id]) return copy[r.id]();
+  const unit = r.unit || 'item';
+  return n + ' ' + unit + (n === 1 ? '' : 's') + ' left';
+};
+
+window.formatSignalRemaining = function (r) {
+  if (r.status === 'done') return '—';
+  const href = getSignalActionHref(r.id);
+  const label = getSignalRemainingText(r);
+  const dest = (SIGNAL_ACTION_LINKS[r.id] && SIGNAL_ACTION_LINKS[r.id].label) || 'Dashboard';
+  return (
+    '<a href="' +
+    href +
+    '" target="_top" class="pr-rem-link" title="Open ' +
+    dest +
+    '">' +
+    label +
+    '</a>'
+  );
+};
+
 window.renderActionCardsHtml = function () {
   return getActionRecommendations()
     .map(
@@ -400,30 +490,27 @@ window.renderDashboardTierCards = function () {
     .map((tier) => {
       const e = getTierEligibility(tier);
       const isCurrent = tier.key === currentTier.key;
-      const fillColor = e.eligible ? 'var(--gn)' : 'var(--am)';
+      const fillColor = e.eligible ? 'var(--accent-green, #9df535)' : 'var(--accent-amber, #b45309)';
+      const barWidth = e.pct + '%';
       const topSignals = e.results
         .slice(0, 3)
         .map((r) => {
           const st = statusLabel(r.status);
-          const need = r.status === 'done' ? '' : `<span class="signal-need">Need ${r.remaining} more</span>`;
-          const val = r.boolean
-            ? r.status === 'done'
-              ? '✔ Done'
-              : 'Not completed'
-            : `${r.current} / ${r.required}`;
+          const need = r.status === 'done' ? '' : `<span class="signal-need">${r.remaining}</span>`;
+          const val = `${r.current}/${r.required}`;
           return `<div class="signal-row">
       <span class="signal-name">${r.name}</span>
       <span class="signal-val ${st.cls}">${val}</span>${need}
     </div>`;
         })
         .join('');
-      return `<div class="tier-card ${e.eligible ? 'eligible' : ''} ${isCurrent ? 'current' : ''}">
+      return `<div class="tier-card tier-card-${tier.key.toLowerCase()} ${e.eligible ? 'eligible' : ''} ${isCurrent ? 'current' : ''}">
     <div class="tc-head">
       <div class="tc-name">${tier.icon} ${tier.name}</div>
       <div class="tc-range">${tier.range}</div>
     </div>
     <div class="tc-pct">${e.pct}% Eligible</div>
-    <div class="tc-bar"><div class="tc-fill" style="width:0%;background:${fillColor}" data-w="${e.pct}%"></div></div>
+    <div class="tc-bar"><div class="tc-fill" style="width:${barWidth};background:${fillColor}" data-w="${barWidth}"></div></div>
     <div class="tc-foot ${e.eligible ? 'eligible' : 'pending'}">${e.eligible ? '✔ Eligible' : `Need ${e.missing} More Signal${e.missing !== 1 ? 's' : ''}`}</div>
     <div class="signal-list">${topSignals}</div>
   </div>`;

@@ -1,5 +1,9 @@
 /* PACE 2027 — shared sidebar navigation */
-window.RISE_NAV_ITEMS = [
+window.PACE_SESSION_KEY = 'pace_user';
+window.PACE_DEMO_EMAIL = 'student@pace2027.com';
+window.PACE_DEMO_PASSWORD = 'pace2027';
+
+window.PACE_NAV_ITEMS = [
   { href: '/dashboard', icon: '◫', label: 'Dashboard', key: 'dashboard' },
   { href: '/placement-readiness', icon: '◎', label: 'Placement Readiness', key: 'placement' },
   { href: '/connectors', icon: '⛓', label: 'Connectors', key: 'connectors' },
@@ -13,11 +17,29 @@ window.RISE_NAV_ITEMS = [
   { href: '/announcements', icon: '📣', label: 'Announcements', key: 'announcements' },
 ];
 
-window.renderRiseNav = function (activeKey, container) {
+window.getPaceSessionRaw = function () {
+  try {
+    return sessionStorage.getItem(PACE_SESSION_KEY) || sessionStorage.getItem('rise_user');
+  } catch (e) {
+    return null;
+  }
+};
+
+window.migratePaceSession = function () {
+  try {
+    var legacy = sessionStorage.getItem('rise_user');
+    if (legacy && !sessionStorage.getItem(PACE_SESSION_KEY)) {
+      sessionStorage.setItem(PACE_SESSION_KEY, legacy);
+    }
+    if (legacy) sessionStorage.removeItem('rise_user');
+  } catch (e) {}
+};
+
+window.renderPaceNav = function (activeKey, container) {
   const el = typeof container === 'string' ? document.getElementById(container) : container;
   if (!el) return;
 
-  const items = RISE_NAV_ITEMS.map(function (item) {
+  const items = PACE_NAV_ITEMS.map(function (item) {
     const act = item.key === activeKey ? ' active' : '';
     const icon = item.icon.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     return (
@@ -41,9 +63,10 @@ window.renderRiseNav = function (activeKey, container) {
     '<span class="pace-nav-icon">⎋</span> Sign Out</a>';
 };
 
-window.riseAuthGate = function () {
+window.paceAuthGate = function () {
   try {
-    if (!sessionStorage.getItem('rise_user')) {
+    migratePaceSession();
+    if (!getPaceSessionRaw()) {
       window.top.location.replace('/login?next=' + encodeURIComponent(window.top.location.pathname));
       return;
     }
@@ -52,6 +75,7 @@ window.riseAuthGate = function () {
 };
 
 window.paceSignOut = function () {
+  sessionStorage.removeItem(PACE_SESSION_KEY);
   sessionStorage.removeItem('rise_user');
   window.top.location.href = '/login';
 };
@@ -63,7 +87,7 @@ window.getPaceStudentProfile = function () {
   var tierRange = s.eligibleRange || '8–12 LPA';
   return {
     name: s.name || 'Harika Vavilapalli',
-    email: 'student@rise2027.com',
+    email: PACE_DEMO_EMAIL,
     level: s.level || 40,
     badge: s.badge || 'YOG',
     batch: s.batch || '2027 YOG',
@@ -79,11 +103,12 @@ window.getPaceTierLabel = function (profile) {
   return profile.eligibleTier + ' · ' + profile.eligibleRange;
 };
 
-/** Keep sessionStorage in sync (fixes stale "Ananya Rao" from older logins) */
+/** Keep sessionStorage in sync (fixes stale profile from older logins) */
 window.syncPaceSession = function () {
   var profile = getPaceStudentProfile();
   try {
-    var raw = sessionStorage.getItem('rise_user');
+    migratePaceSession();
+    var raw = getPaceSessionRaw();
     var user = raw ? JSON.parse(raw) : {};
     var next = {
       name: profile.name,
@@ -101,11 +126,12 @@ window.syncPaceSession = function () {
       user.badge !== next.badge ||
       user.batch !== next.batch
     ) {
-      sessionStorage.setItem('rise_user', JSON.stringify(next));
+      sessionStorage.setItem(PACE_SESSION_KEY, JSON.stringify(next));
     }
+    sessionStorage.removeItem('rise_user');
     return next;
   } catch (e) {
-    sessionStorage.setItem('rise_user', JSON.stringify(profile));
+    sessionStorage.setItem(PACE_SESSION_KEY, JSON.stringify(profile));
     return profile;
   }
 };
@@ -113,7 +139,8 @@ window.syncPaceSession = function () {
 window.getPaceUser = function () {
   var profile = getPaceStudentProfile();
   try {
-    var raw = sessionStorage.getItem('rise_user');
+    migratePaceSession();
+    var raw = getPaceSessionRaw();
     if (!raw) return profile;
     var user = JSON.parse(raw);
     return Object.assign({}, profile, user, {
@@ -178,10 +205,10 @@ window.applyPaceBranding = function () {
 };
 
 window.initPaceShell = function (activeKey) {
-  riseAuthGate();
+  paceAuthGate();
   syncPaceSession();
   applyPaceBranding();
-  renderRiseNav(activeKey, 'rise-nav');
+  renderPaceNav(activeKey, document.getElementById('pace-nav') || document.getElementById('rise-nav'));
   applyPaceProfile();
 
   var menuBtn = document.getElementById('pace-menu-btn');
@@ -233,7 +260,7 @@ window.paceCountUp = function (el, to, dur, suffix) {
 
 window.renderPaceRing = function (pct, size, color, label) {
   size = size || 96;
-  color = color || '#8b5cf6';
+  color = color || '#002EFF';
   var sw = 7;
   var r = (size - sw) / 2;
   var circ = 2 * Math.PI * r;

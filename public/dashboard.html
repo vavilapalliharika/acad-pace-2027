@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard · PACE 2027</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/pace-theme.css">
 </head>
 <body>
@@ -19,7 +16,7 @@
       <div class="pace-profile-name" id="pace-profile-name">Harika Vavilapalli</div>
       <span class="pace-profile-badge" id="pace-profile-badge">Type B · 8–12 LPA</span>
     </div>
-    <nav class="pace-nav" id="rise-nav" aria-label="Main navigation"></nav>
+    <nav class="pace-nav" id="pace-nav" aria-label="Main navigation"></nav>
     <div class="pace-sb-footer">PACE 2027 · Batch 2027 YOG</div>
   </aside>
 
@@ -30,7 +27,7 @@
     </div>
 
     <!-- HERO -->
-    <section class="pace-hero pace-reveal" aria-labelledby="hero-name">
+    <section class="pace-hero pace-dark-panel pace-reveal" aria-labelledby="hero-name">
       <div class="pace-hero-left">
         <div class="pace-avatar" id="hero-avatar" aria-hidden="true">HV</div>
         <div>
@@ -42,10 +39,10 @@
           </div>
         </div>
       </div>
-      <div class="pace-hero-ring">
+      <a href="/placement-readiness" target="_top" class="pace-hero-ring pace-pr-link" aria-label="View placement readiness breakdown">
         <div id="hero-pr-ring"></div>
         <div class="pace-hero-ring-label">Placement Readiness</div>
-      </div>
+      </a>
     </section>
 
     <!-- QUICK STATS -->
@@ -65,35 +62,12 @@
         <div class="pace-stat-value" id="stat-streak">0</div>
         <div class="pace-stat-note">days active</div>
       </div>
-      <div class="pace-stat pace-reveal">
-        <div class="pace-stat-label">LeetCode Progress</div>
-        <div class="pace-stat-value" id="stat-lc" style="font-size:22px">0/0</div>
-        <div class="pace-stat-note" id="stat-lc-note">problems solved</div>
-      </div>
-      <div class="pace-stat highlight pace-reveal">
+      <a href="/placement-readiness" target="_top" class="pace-stat highlight pace-reveal pace-pr-link" aria-label="View placement readiness breakdown">
         <div class="pace-stat-label">Placement Readiness</div>
         <div class="pace-stat-value" id="stat-pr">0%</div>
         <div class="pace-stat-note">Career GPS active</div>
-      </div>
+      </a>
     </div>
-
-    <!-- PLACEMENT JOURNEY -->
-    <section class="pace-card pace-card-static pace-timeline-wrap pace-reveal" aria-labelledby="journey-title">
-      <div class="pace-section-head">
-        <h2 class="pace-section-title" id="journey-title">Placement Journey</h2>
-        <a href="https://nxtwave-placement-roadmap.lovable.app/" target="_blank" rel="noopener noreferrer" class="pace-section-link">View full journey →</a>
-      </div>
-      <div id="pace-timeline-root"></div>
-    </section>
-
-    <!-- ASSESSMENT RESULTS -->
-    <section class="pace-reveal" aria-labelledby="assess-title">
-      <div class="pace-section-head pace-section-head-assess">
-        <h2 class="pace-section-title" id="assess-title">Assessment Results</h2>
-        <div id="assess-stage-dropdown"></div>
-      </div>
-      <div class="pace-analytics-grid" id="pace-assess-root"></div>
-    </section>
 
     <!-- PLACEMENT READINESS -->
     <section class="pace-reveal" aria-labelledby="pr-title">
@@ -133,9 +107,8 @@
 </div>
 
 <script src="/pace-logo.js"></script>
-<script src="/rise-nav.js"></script>
+<script src="/pace-nav.js"></script>
 <script src="/placement-engine.js"></script>
-<script src="/placement-journey.js"></script>
 <script src="/pace-dashboard.js"></script>
 <script>
 initPaceShell('dashboard');
@@ -144,20 +117,15 @@ var S = PLACEMENT_ENGINE.student;
 applyPaceProfile();
 
 var prPct = S.placementReadiness || getPlacementScore();
-document.getElementById('hero-pr-ring').innerHTML = renderPaceRing(prPct, 88, '#8b5cf6');
-
-document.getElementById('pace-timeline-root').innerHTML = renderPaceJourneyStepper();
-document.getElementById('assess-stage-dropdown').innerHTML = renderAssessmentStageDropdown();
-document.getElementById('pace-assess-root').innerHTML = renderPaceAssessments();
-initAssessmentStageSelector();
+document.getElementById('hero-pr-ring').innerHTML = renderPaceRing(prPct, 88, '#9DF535');
 
 document.getElementById('placement-widget').innerHTML = renderDashboardPlacementWidget();
 document.getElementById('tier-cards').innerHTML = renderDashboardTierCards();
 
-document.getElementById('stat-tier').textContent = S.eligibleTier || getCurrentEligibleTier().name;
-document.getElementById('stat-tier-range').textContent = S.eligibleRange || getCurrentEligibleTier().range;
+var displayTier = getDisplayEligibleTier();
+document.getElementById('stat-tier').textContent = displayTier.name;
+document.getElementById('stat-tier-range').textContent = displayTier.range;
 document.getElementById('stat-streak').textContent = S.streak;
-document.getElementById('stat-lc').textContent = S.leetcode.solved + '/' + S.leetcode.target;
 document.getElementById('stat-pr').textContent = prPct + '%';
 document.getElementById('stat-rank').textContent = '#' + S.rank;
 document.getElementById('stat-squad').textContent = S.squad;
@@ -169,7 +137,7 @@ document.getElementById('prob-hard').textContent = S.problems.hard;
 initPaceReveal();
 
 setTimeout(function () {
-  paceCountUp(document.getElementById('stat-pace'), S.paceScore || S.riseScore, 1200);
+  paceCountUp(document.getElementById('stat-pace'), S.paceScore, 1200);
   animatePaceRings();
   document.querySelectorAll('.pace-bar-fill').forEach(function (b) {
     b.style.width = b.dataset.w || b.getAttribute('data-w') || '0%';

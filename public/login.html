@@ -5,37 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sign in · PACE 2027</title>
 <link rel="stylesheet" href="/pace-brand.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #12091f;
-    --bg-elevated: #1a1028;
-    --bg-card: rgba(255, 255, 255, 0.06);
-    --primary: #8b5cf6;
-    --primary-hover: #a78bfa;
-    --secondary: #c4b5fd;
-    --accent-amber: #fbbf24;
-    --light: rgba(139, 92, 246, 0.16);
-    --text: #f1f5f9;
-    --text-bright: #ffffff;
-    --muted: #b8b0c8;
-    --border: rgba(255, 255, 255, 0.1);
-    --radius: 20px;
-    --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.45);
-    --shadow-glow: 0 0 48px rgba(139, 92, 246, 0.22);
-  }
-  html { scroll-behavior: smooth; }
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    font-family: var(--pace-font-body);
+    background: var(--pace-bg-light);
+    color: var(--pace-text-dark);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 24px;
-    overflow: hidden;
   }
   body::before {
     content: '';
@@ -43,36 +23,18 @@
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(ellipse 55% 45% at 15% 20%, rgba(139, 92, 246, 0.12), transparent 55%),
-      radial-gradient(ellipse 50% 40% at 85% 80%, rgba(124, 58, 237, 0.1), transparent 50%),
-      linear-gradient(165deg, #1a0f2e 0%, #12091f 50%, #0f0818 100%);
-    animation: glow 12s ease-in-out infinite alternate;
-  }
-  @keyframes glow {
-    0% { opacity: 0.75; }
-    100% { opacity: 1; }
-  }
-  .grid-bg {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.18;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
-    background-size: 64px 64px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black, transparent);
+      radial-gradient(ellipse 55% 45% at 20% 25%, rgba(0, 46, 255, 0.08), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 80% 75%, rgba(48, 201, 195, 0.06), transparent 50%),
+      var(--pace-bg-light);
   }
   .card {
     width: 100%;
     max-width: 420px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    padding: 36px 32px;
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: var(--pace-bg-white);
+    border: 1px solid var(--pace-border-light);
+    border-radius: 28px;
+    padding: 40px 36px;
+    box-shadow: var(--neu-raised-lg);
     position: relative;
     z-index: 1;
     animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -81,10 +43,17 @@
     from { opacity: 0; transform: translateY(24px) scale(0.98); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .brand-wrap { margin-bottom: 8px; }
+  .login-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--pace-text-dark);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .brand-wrap { margin-bottom: 4px; }
   .sub {
     font-size: 14px;
-    color: var(--muted);
+    color: var(--pace-muted);
     margin-bottom: 28px;
     line-height: 1.5;
   }
@@ -92,89 +61,86 @@
     display: block;
     font-size: 12px;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--pace-muted);
     margin-bottom: 8px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
   input {
     width: 100%;
-    padding: 13px 15px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    font-size: 14px;
-    font-family: inherit;
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
-  }
-  input::placeholder { color: rgba(148, 163, 184, 0.6); }
-  input:focus {
-    border-color: rgba(139, 92, 246, 0.5);
-    background: rgba(139, 92, 246, 0.08);
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-  }
-  .field { margin-bottom: 16px; }
-  button {
-    width: 100%;
-    padding: 14px;
+    padding: 14px 4px;
     border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary), #6d28d9);
+    border-bottom: 2px solid var(--pace-border);
+    border-radius: 0;
+    font-size: 15px;
+    font-family: inherit;
+    background: transparent;
+    color: var(--pace-text-dark);
+    outline: none;
+    transition: border-color 0.25s;
+  }
+  input::placeholder { color: #9ca3af; }
+  input:focus { border-bottom-color: var(--pace-primary); }
+  .field { margin-bottom: 22px; }
+  button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: var(--pace-radius-pill);
+    background: var(--pace-gradient-cta);
     color: #fff;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
+    font-family: inherit;
     cursor: pointer;
-    margin-top: 8px;
+    margin-top: 12px;
+    box-shadow: var(--neu-glow);
     transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35);
   }
-  button:hover {
-    background: linear-gradient(135deg, var(--primary-hover), #7c3aed);
+  button[type="submit"]:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
+    box-shadow: var(--neu-glow-strong);
+    background: var(--pace-primary-hover);
   }
-  button:active { transform: translateY(0); }
   .err {
     font-size: 12px;
-    color: #f87171;
+    color: #ef4444;
     margin-top: 12px;
     display: none;
     font-weight: 600;
   }
   .hint {
-    margin-top: 22px;
-    padding: 14px 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px dashed rgba(139, 92, 246, 0.3);
-    border-radius: 12px;
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--pace-bg-subtle);
+    border: 1px solid var(--pace-border-light);
+    border-radius: var(--pace-radius-sm);
     font-size: 12px;
-    color: var(--muted);
+    color: var(--pace-text-muted);
     line-height: 1.65;
   }
-  .hint b { color: var(--text-bright); }
+  .hint b { color: var(--pace-text-dark); }
   .back {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     margin-top: 18px;
     font-size: 13px;
-    color: var(--muted);
+    color: var(--pace-muted);
     text-decoration: none;
     transition: color 0.2s;
   }
-  .back:hover { color: var(--primary); }
+  .back:hover { color: var(--pace-primary); }
 </style>
 </head>
 <body>
-<div class="grid-bg" aria-hidden="true"></div>
 <form class="card" onsubmit="return doLogin(event)">
   <div class="brand-wrap" id="login-logo"></div>
+  <div class="login-title">Login</div>
   <div class="sub">Sign in to your dashboard</div>
   <div class="field">
     <label for="email">Email</label>
-    <input id="email" type="text" autocomplete="username" placeholder="student@rise2027.com" required>
+    <input id="email" type="text" autocomplete="username" placeholder="student@pace2027.com" required>
   </div>
   <div class="field">
     <label for="pwd">Password</label>
@@ -183,13 +149,14 @@
   <button type="submit">Sign in →</button>
   <div class="err" id="err">Invalid email or password.</div>
   <div class="hint">
-    <b>Demo credentials</b><br>
-    Email: <b>student@rise2027.com</b><br>
-    Password: <b>rise2027</b>
+    <b>PACE 2027 · Demo credentials</b><br>
+    Email: <b>student@pace2027.com</b><br>
+    Password: <b>pace2027</b>
   </div>
   <a href="/" target="_top" class="back">← Back to home</a>
 </form>
 <script src="/pace-logo.js"></script>
+<script src="/pace-nav.js"></script>
 <script>
   if (typeof renderPaceLogo === 'function') {
     document.getElementById('login-logo').innerHTML = renderPaceLogo({ stack: true, href: '/', elaboration: false });
@@ -203,18 +170,20 @@
     e.preventDefault();
     var em = document.getElementById('email').value.trim().toLowerCase();
     var pw = document.getElementById('pwd').value;
+    var demoEmail = (window.PACE_DEMO_EMAIL || 'student@pace2027.com').toLowerCase();
+    var demoPw = window.PACE_DEMO_PASSWORD || 'pace2027';
     if (
-      (em === 'student@rise2027.com' ||
+      (em === demoEmail ||
         em === 'harika' ||
         em === 'harika.vavilapalli' ||
         em === 'ananya') &&
-      pw === 'rise2027'
+      pw === demoPw
     ) {
       sessionStorage.setItem(
-        'rise_user',
+        window.PACE_SESSION_KEY || 'pace_user',
         JSON.stringify({
           name: 'Harika Vavilapalli',
-          email: em,
+          email: demoEmail,
           level: 40,
           badge: 'YOG',
           batch: '2027 YOG',
@@ -222,14 +191,16 @@
           eligibleRange: '8–12 LPA',
         })
       );
+      sessionStorage.removeItem('rise_user');
       window.top.location.replace(getNext());
     } else {
       document.getElementById('err').style.display = 'block';
     }
     return false;
   }
-  if(!sessionStorage.getItem('rise_user')){
-    document.getElementById('email').value = 'student@rise2027.com';
+  if(typeof migratePaceSession === 'function') migratePaceSession();
+  if(!getPaceSessionRaw || !getPaceSessionRaw()){
+    document.getElementById('email').value = window.PACE_DEMO_EMAIL || 'student@pace2027.com';
   } else {
     window.top.location.replace(getNext());
   }

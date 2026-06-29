@@ -4,15 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Levels · PACE 2027</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/pace-theme.css">
 <link rel="stylesheet" href="/pace-legacy-bridge.css">
 <link rel="stylesheet" href="/pace-pages.css">
 </head>
 <body>
 <script src="/pace-logo.js"></script>
-<script src="/rise-nav.js"></script>
+<script src="/pace-nav.js"></script>
 <script src="/placement-engine.js"></script>
 <script src="/pace-shell.js"></script>
 <aside class="sidebar" style="display:none" aria-hidden="true"></aside>
@@ -25,12 +23,6 @@
 
   <div class="pace-section-label">Level Progress</div>
   <div class="lvl-prog-card" id="progress-card"></div>
-
-  <div class="pace-section-label">Level History</div>
-  <div class="lvl-hist-card" id="history-card"></div>
-
-  <div class="pace-section-label">Locked Levels</div>
-  <div class="lvl-locked-card" id="locked-card"></div>
 
   <div class="pace-section-label">All Levels & Package Mapping</div>
   <div class="lvl-grid" id="levels-grid"></div>
@@ -49,6 +41,40 @@ const LEVELS = [
   { n: 5, name: 'Elite',        threshold: 4000, package: '18 LPA+',      unlocks: 'Priority referrals, mock placement drives.' }
 ];
 
+/** Per-level action roadmap — main items left to clear the level */
+const LEVEL_MILESTONES = {
+  1: [
+    { title: 'Complete profile setup', current: 1, required: 1, xp: 100, href: '/dashboard', done: true },
+    { title: 'Finish 5 beginner DSA problems', current: 5, required: 5, xp: 150, href: '/track/dsa', done: true },
+    { title: 'Connect one coding platform', current: 1, required: 1, xp: 120, href: '/connectors', done: true },
+    { title: 'Reach 500 XP threshold', current: 500, required: 500, xp: 130, href: null, done: true }
+  ],
+  2: [
+    { title: 'Maintain 7-day coding streak', current: 7, required: 7, xp: 150, href: '/connectors', done: true },
+    { title: 'Clear aptitude baseline module', current: 1, required: 1, xp: 180, href: '/track/aptitude', done: true },
+    { title: 'Push 2 GitHub repositories', current: 2, required: 2, xp: 140, href: '/track/dev', done: true },
+    { title: 'Reach 1,000 XP threshold', current: 1000, required: 1000, xp: 130, href: null, done: true }
+  ],
+  3: [
+    { title: 'Solve 30 medium DSA problems', current: 30, required: 30, xp: 200, href: '/track/dsa', done: true },
+    { title: 'Complete mock interview round', current: 1, required: 1, xp: 220, href: '/track/ai', done: true },
+    { title: 'Clear 2 placement assessments', current: 2, required: 2, xp: 180, href: '/track/aptitude', done: true },
+    { title: 'Reach 1,800 XP threshold', current: 1800, required: 1800, xp: 200, href: null, done: true }
+  ],
+  4: [
+    { title: 'Maintain 7-day platform streak', current: 5, required: 7, xp: 150, href: '/connectors', done: false },
+    { title: 'Clear technical assessment', current: 2, required: 3, xp: 200, href: '/track/aptitude', done: false },
+    { title: 'Solve 15 advanced DSA problems', current: 8, required: 15, xp: 180, href: '/track/dsa', done: false },
+    { title: 'Complete AI mock interview', current: 1, required: 2, xp: 160, href: '/track/ai', done: false },
+    { title: 'Reach 2,800 XP threshold', current: 2140, required: 2800, xp: 660, href: null, done: false }
+  ],
+  5: [
+    { title: 'Open source contribution merged', current: 0, required: 1, xp: 250, href: '/track/oss', done: false },
+    { title: 'Attend 3 mock placement drives', current: 0, required: 3, xp: 300, href: '/track/ai', done: false },
+    { title: 'Reach 4,000 XP threshold', current: 2140, required: 4000, xp: 1860, href: null, done: false }
+  ]
+};
+
 let prevCleared = true;
 const states = LEVELS.map(l => {
   const s = STUDENT.score >= l.threshold ? 'cleared' : (prevCleared ? 'progress' : 'locked');
@@ -61,7 +87,67 @@ const currentL = LEVELS[currentLevel - 1];
 const prevThresh = currentLevel > 1 ? LEVELS[currentLevel - 2].threshold : 0;
 const needed = Math.max(0, currentL.threshold - STUDENT.score);
 const etaDays = STUDENT.avgPerDay > 0 ? Math.ceil(needed / STUDENT.avgPerDay) : '—';
-const pct = currentLevel <= cleared ? 100 : Math.round(((STUDENT.score - prevThresh) / (currentL.threshold - prevThresh)) * 100);
+const pct = states[currentLevel - 1] === 'cleared' ? 100 : Math.max(0, Math.min(100, Math.round(((STUDENT.score - prevThresh) / (currentL.threshold - prevThresh)) * 100)));
+
+function renderLevelStepper() {
+  return LEVELS.map(function (l, i) {
+    const st = states[i];
+    const conn = i < LEVELS.length - 1
+      ? '<div class="lvl-step-conn' + (st === 'cleared' ? ' done' : '') + '"></div>'
+      : '';
+    return (
+      '<div class="lvl-step-node ' + st + '">' +
+      '<div class="lvl-step-dot">L' + l.n + '</div>' +
+      '<span class="lvl-step-lbl">' + l.name.split(' ')[0] + '</span>' +
+      '</div>' + conn
+    );
+  }).join('');
+}
+
+function milestonePct(m) {
+  if (m.required <= 0) return 0;
+  return Math.min(100, Math.round((m.current / m.required) * 100));
+}
+
+function renderRoadmap(levelNum) {
+  const milestones = LEVEL_MILESTONES[levelNum] || [];
+  let foundCurrent = false;
+  return milestones.map(function (m, idx) {
+    const isDone = m.done || m.current >= m.required;
+    let stepState = 'pending';
+    if (isDone) stepState = 'done';
+    else if (!foundCurrent) { stepState = 'current'; foundCurrent = true; }
+
+    const barPct = milestonePct(m);
+    const prog = m.current.toLocaleString() + '/' + m.required.toLocaleString();
+    const marker = isDone ? '✓' : String(idx + 1);
+    const link = m.href
+      ? '<a href="' + m.href + '" target="_top" class="lvl-road-link">Go →</a>'
+      : '<span class="lvl-road-prog">' + prog + '</span>';
+
+    return (
+      '<div class="lvl-road-step ' + stepState + '">' +
+      '<div class="lvl-road-marker">' + marker + '</div>' +
+      '<div class="lvl-road-body">' +
+      '<div class="lvl-road-top">' +
+      '<span class="lvl-road-name">' + m.title + '</span>' +
+      '<span class="lvl-road-xp pace-reward-pill">+' + m.xp.toLocaleString() + ' XP</span>' +
+      '</div>' +
+      '<div class="lvl-road-meta">' +
+      '<span class="lvl-road-prog">' + (isDone ? 'Complete' : prog) + '</span>' +
+      link +
+      '</div>' +
+      '<div class="lvl-road-bar"><div class="lvl-road-bar-fill" style="width:' + barPct + '%"></div></div>' +
+      '</div></div>'
+    );
+  }).join('');
+}
+
+function countPending(levelNum) {
+  return (LEVEL_MILESTONES[levelNum] || []).filter(function (m) {
+    return !m.done && m.current < m.required;
+  }).length;
+}
 
 document.getElementById('overview-grid').innerHTML = `
   <div class="lvl-ov-card"><div class="lvl-ov-lbl">Current Level</div><div class="lvl-ov-val">L${currentLevel}</div></div>
@@ -69,50 +155,46 @@ document.getElementById('overview-grid').innerHTML = `
   <div class="lvl-ov-card"><div class="lvl-ov-lbl">XP Earned</div><div class="lvl-ov-val">${STUDENT.xpEarned.toLocaleString()}</div></div>
   <div class="lvl-ov-card"><div class="lvl-ov-lbl">Target Package</div><div class="lvl-ov-val" style="font-size:18px">${currentL.package}</div></div>`;
 
+const pendingCount = countPending(currentLevel);
+
 document.getElementById('progress-card').innerHTML = `
+  <div class="lvl-stepper" role="list" aria-label="Level progression">${renderLevelStepper()}</div>
   <div class="lvl-prog-head">
-    <span style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase">Level ${currentLevel} · ${currentL.name}</span>
+    <div>
+      <div class="lvl-prog-title">Current level</div>
+      <div class="lvl-prog-level-name">Level ${currentLevel} · ${currentL.name}</div>
+      <span class="lvl-pkg">${currentL.package}</span>
+    </div>
     <span class="lvl-prog-pct">${pct}%</span>
   </div>
-  <span class="lvl-pkg">${currentL.package}</span>
+  <div class="lvl-prog-xp-row">
+    <span><strong>${STUDENT.score.toLocaleString()}</strong> / ${currentL.threshold.toLocaleString()} XP</span>
+    <span>${needed === 0 ? 'Level cleared' : needed.toLocaleString() + ' XP to go'}</span>
+  </div>
   <div class="lvl-prog-bar"><div class="lvl-prog-fill" id="prog-fill" style="width:0%"></div></div>
-  <div class="lvl-prog-foot">${needed === 0 ? '🏆 Level cleared!' : `~${etaDays} days to next level · ${needed.toLocaleString()} XP remaining · +${STUDENT.avgPerDay} XP/day avg`}</div>`;
-
-document.getElementById('history-card').innerHTML = LEVELS.filter((_, i) => states[i] === 'cleared').map(l => `
-  <div class="lvl-hist-item">
-    <div class="lvl-hist-badge">L${l.n}</div>
-    <div style="flex:1">
-      <div class="lvl-hist-name">Level ${l.n} · ${l.name}</div>
-      <div class="lvl-hist-date">Unlocked ${l.clearedOn} · ${l.package} · ${l.threshold.toLocaleString()} XP</div>
-    </div>
-    <span style="font-size:12px;font-weight:700;color:var(--accent-green)">✔ Cleared</span>
-  </div>`).join('');
-
-document.getElementById('locked-card').innerHTML = LEVELS.filter((_, i) => states[i] === 'locked').map(l => `
-  <div class="lvl-locked-item">
-    <div class="lvl-locked-name">🔒 Level ${l.n} · ${l.name}</div>
-    <div class="lvl-locked-req">
-      <b>Package:</b> ${l.package}<br>
-      <b>Requirements:</b> ${l.threshold.toLocaleString()} XP · Clear Level ${l.n - 1} first<br>
-      <b>Unlocks:</b> ${l.unlocks}
-    </div>
-  </div>`).join('') || '<div style="color:var(--accent-green);font-weight:700;padding:12px">No locked levels — you cleared them all!</div>';
+  <div class="lvl-prog-foot">${needed === 0 ? '🏆 Level cleared — move to next tier perks.' : `~${etaDays} days at +${STUDENT.avgPerDay} XP/day · ${pendingCount} action${pendingCount !== 1 ? 's' : ''} left`}</div>
+  <div class="lvl-roadmap-title">Roadmap — actions to clear this level</div>
+  <div class="lvl-roadmap">${renderRoadmap(currentLevel)}</div>`;
 
 document.getElementById('levels-grid').innerHTML = LEVELS.map((l, i) => {
   const st = states[i];
-  const badge = st === 'cleared' ? 'CLEARED ✅' : (st === 'progress' ? 'IN PROGRESS 🔄' : 'LOCKED 🔒');
+  const badge = st === 'cleared' ? 'Cleared' : (st === 'progress' ? 'In progress' : 'Locked');
   const prevT = i > 0 ? LEVELS[i - 1].threshold : 0;
   const pctW = st === 'cleared' ? 100 : st === 'progress' ? Math.max(2, Math.min(100, ((STUDENT.score - prevT) / (l.threshold - prevT)) * 100)) : 0;
-  const foot = st === 'cleared' ? `✓ Cleared on ${l.clearedOn}` : st === 'progress' ? `⚡ ${(l.threshold - STUDENT.score).toLocaleString()} XP to go` : `🔒 Clear Level ${l.n - 1} to unlock`;
+  const xpCurrent = st === 'cleared' ? l.threshold : (st === 'progress' ? STUDENT.score : 0);
+  const foot = st === 'cleared' ? `Cleared ${l.clearedOn || ''}` : st === 'progress' ? `${(l.threshold - STUDENT.score).toLocaleString()} XP to go` : `Clear Level ${l.n - 1} to unlock`;
   return `<div class="lvl-card ${st}">
     <div class="lvl-head">
-      <div>
+      <div class="lvl-card-main">
         <div class="lvl-name">Level ${l.n} · ${l.name}</div>
         <span class="lvl-pkg">${l.package}</span>
       </div>
       <span class="lvl-badge ${st}">${badge}</span>
     </div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">${STUDENT.score.toLocaleString()} / ${l.threshold.toLocaleString()} XP</div>
+    <div class="lvl-xp-row">
+      <span><strong>${xpCurrent.toLocaleString()}</strong> / ${l.threshold.toLocaleString()} XP</span>
+      <span class="lvl-xp-pct">${Math.round(pctW)}%</span>
+    </div>
     <div class="lvl-bar"><div class="lvl-fill" style="width:0%" data-w="${pctW}"></div></div>
     <div class="lvl-foot">${foot}</div>
   </div>`;

@@ -1,30 +1,189 @@
-/* PACE 2027 — shared brand: logo, fonts, blue/cyan theme */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
+/* PACE 2027 — NxtWave Academy Brand Guidelines 2025 */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap');
 
 :root {
-  --pace-font-display: 'Syne', 'Inter', sans-serif;
-  --pace-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --pace-cyan: #22d3ee;
-  --pace-cyan-dim: #0891b2;
-  --pace-blue: #2563eb;
-  --pace-blue-deep: #0c1a3d;
-  --pace-navy: #020817;
-  --pace-green: #4ade80;
-  /* Shared PACE purple palette (landing + student app) */
-  --pace-bg: #12091f;
-  --pace-bg-elevated: #1a1028;
-  --pace-bg-card: rgba(255, 255, 255, 0.06);
-  --pace-bg-sidebar: #0f0818;
-  --pace-primary: #8b5cf6;
-  --pace-primary-hover: #a78bfa;
-  --pace-secondary: #c4b5fd;
-  --pace-light: rgba(139, 92, 246, 0.16);
-  --pace-muted: #b8b0c8;
-  --pace-border: rgba(255, 255, 255, 0.1);
-  --pace-glow: rgba(139, 92, 246, 0.22);
+  --pace-font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --pace-font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* ── Academy official palette ── */
+  --acad-neo-blue: #002eff;
+  --acad-deep-indigo: #1a1f4b;
+  --acad-black: #000000;
+  --acad-ignite-yellow: #fef100;
+  --acad-evolve-green: #9df535;
+  --acad-sky-teal: #30c9c3;
+  --acad-alert-orange: #ff8c42;
+
+  /* Primary brand gradient: Blue → Green → Yellow (learner journey) */
+  --acad-gradient: linear-gradient(135deg, #002eff 0%, #9df535 52%, #fef100 100%);
+  --acad-gradient-soft: linear-gradient(135deg, rgba(0, 46, 255, 0.22), rgba(157, 245, 53, 0.12));
+  --acad-gradient-cta: linear-gradient(135deg, #002eff 0%, #0038d4 100%);
+
+  /* ── Light app canvas ── */
+  --pace-bg-light: #eef1f8;
+  --pace-bg-white: #ffffff;
+  --pace-bg-subtle: #f7f9fc;
+  --pace-text-dark: #1a1f4b;
+  --pace-text-muted: #5a6488;
+  --pace-border-light: rgba(26, 31, 75, 0.08);
+
+  /* ── Dark accent panels (hero, sidebar, highlights) ── */
+  --pace-bg-deep: #0d1029;
+  --pace-bg: var(--acad-deep-indigo);
+  --pace-bg-elevated: #222861;
+  --pace-bg-card: #28306e;
+  --pace-bg-card-hover: #303878;
+  --pace-bg-highlight: #1c2880;
+  --pace-bg-sidebar: #12152f;
+  --pace-bg-inset: #e8ecf4;
+  --pace-text-on-dark: #ffffff;
+  --pace-muted-on-dark: #a8b4d4;
+
+  --neu-bg: var(--pace-bg-light);
+  --neu-surface: var(--pace-bg-white);
+  --neu-surface-elevated: var(--pace-bg-subtle);
+  --neu-surface-deep: var(--pace-bg-deep);
+
+  /* ── Light elevation (cards on light bg) ── */
+  --neu-raised:
+    0 1px 2px rgba(26, 31, 75, 0.04),
+    0 8px 24px rgba(26, 31, 75, 0.07);
+  --neu-raised-sm:
+    0 1px 2px rgba(26, 31, 75, 0.04),
+    0 4px 14px rgba(26, 31, 75, 0.06);
+  --neu-raised-lg:
+    0 4px 8px rgba(26, 31, 75, 0.04),
+    0 20px 48px rgba(26, 31, 75, 0.12);
+  --neu-pressed:
+    inset 0 2px 6px rgba(26, 31, 75, 0.08);
+  --neu-flat: 0 0 0 1px rgba(26, 31, 75, 0.08);
+  --neu-glow: 0 8px 32px rgba(0, 46, 255, 0.18);
+  --neu-glow-green: 0 8px 28px rgba(157, 245, 53, 0.2);
+  --neu-glow-strong: 0 12px 40px rgba(0, 46, 255, 0.28);
+  --neu-dark-shadow: 0 16px 48px rgba(13, 16, 41, 0.35);
+
+  /* ── Mapped tokens ── */
+  --pace-primary: var(--acad-neo-blue);
+  --pace-neon: #4d6bff;
+  --pace-primary-end: var(--acad-evolve-green);
+  --pace-primary-hover: #1a44ff;
+  --pace-gradient: var(--acad-gradient);
+  --pace-gradient-soft: var(--acad-gradient-soft);
+  --pace-gradient-cta: var(--acad-gradient-cta);
+  --pace-secondary: var(--acad-sky-teal);
+  --pace-accent-yellow: var(--acad-ignite-yellow);
+  /* Reward gold — points & bonuses (readable on light backgrounds) */
+  --pace-reward-gold: #c9a227;
+  --pace-reward-gold-bright: #dbb84a;
+  --pace-reward-gold-text: #8b6914;
+  --pace-reward-gold-deep: #9a7700;
+  --pace-reward-gold-bg: rgba(201, 162, 39, 0.12);
+  --pace-reward-gold-border: rgba(184, 134, 11, 0.32);
+  --pace-points: var(--pace-reward-gold-deep);
+  --pace-points-emphasis: var(--pace-reward-gold);
+  --pace-points-bg: var(--pace-reward-gold-bg);
+  --pace-points-border: var(--pace-reward-gold-border);
+  --pace-accent-green: var(--acad-evolve-green);
+  --pace-accent-orange: var(--acad-alert-orange);
+  --pace-light: rgba(0, 46, 255, 0.08);
+  --pace-glow: rgba(0, 46, 255, 0.2);
+  --pace-green: var(--acad-evolve-green);
+  --pace-muted: var(--pace-text-muted);
+  --pace-text: var(--pace-text-dark);
+  --pace-text-bright: #0a0c18;
+  --pace-border: var(--pace-border-light);
+  --pace-border-strong: rgba(0, 46, 255, 0.22);
+  --pace-radius: 24px;
+  --pace-radius-sm: 16px;
+  --pace-radius-pill: 999px;
 }
 
-/* ── Logo lockup: PACE + NxtWave Academy ── */
+/* ── Unified reward gold (points / XP) ── */
+.pace-reward-text,
+.pace-reward-val {
+  color: var(--pace-reward-gold-deep);
+  font-weight: 800;
+}
+.pace-reward-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--pace-reward-gold-deep);
+  padding: 3px 10px;
+  border-radius: var(--pace-radius-pill);
+  background: var(--pace-reward-gold-bg);
+  border: 1px solid var(--pace-reward-gold-border);
+  white-space: nowrap;
+  line-height: 1.35;
+}
+
+/* ── Neumorphic utilities ── */
+.neu-card {
+  background: var(--neu-surface);
+  border: none;
+  border-radius: var(--pace-radius);
+  box-shadow: var(--neu-raised);
+}
+.neu-card-sm {
+  background: var(--neu-surface);
+  border: none;
+  border-radius: var(--pace-radius-sm);
+  box-shadow: var(--neu-raised-sm);
+}
+.neu-inset {
+  background: var(--neu-surface);
+  border: none;
+  border-radius: var(--pace-radius-sm);
+  box-shadow: var(--neu-pressed);
+}
+.neu-btn-gradient {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--pace-radius-pill);
+  background: var(--pace-gradient-cta);
+  color: #fff;
+  font-family: var(--pace-font-body);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--neu-raised-sm), var(--neu-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.neu-btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--neu-raised), var(--neu-glow-strong);
+}
+.neu-btn-soft {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--pace-radius-pill);
+  background: var(--pace-bg-white);
+  color: var(--pace-text-dark);
+  font-family: var(--pace-font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  box-shadow: var(--neu-raised-sm);
+  border: 1px solid var(--pace-border-light);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.neu-btn-soft:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--neu-raised);
+  border-color: var(--pace-border-strong);
+  color: var(--pace-primary);
+}
+
+/* ── Logo lockup ── */
 .pace-logo-lockup {
   display: inline-flex;
   align-items: center;
@@ -33,7 +192,7 @@
 .pace-logo-divider {
   width: 1px;
   height: 32px;
-  background: linear-gradient(180deg, transparent, rgba(34, 211, 238, 0.5), transparent);
+  background: linear-gradient(180deg, transparent, rgba(0, 46, 255, 0.35), transparent);
   flex-shrink: 0;
 }
 .pace-logo-sm .pace-logo-divider { height: 24px; }
@@ -48,20 +207,20 @@
 }
 .pace-nxtwave-line {
   display: block;
-  font-family: var(--pace-font-body, 'Inter', sans-serif);
-  color: #ffffff;
+  font-family: var(--pace-font-body);
+  color: var(--pace-text-bright);
   white-space: nowrap;
 }
 .pace-nxtwave-line-sm {
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.06em;
-  opacity: 0.92;
+  color: var(--pace-muted);
 }
 .pace-nxtwave-line-lg {
   font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   margin-top: 1px;
 }
 .pace-logo-sm .pace-nxtwave-line-sm { font-size: 9px; }
@@ -76,22 +235,14 @@
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .pace-logo:hover { transform: translateY(-1px); }
-.pace-logo-mark {
-  display: none;
-}
-.pace-logo-mark svg {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 4px 12px rgba(34, 211, 238, 0.4));
-  animation: paceLogoFloat 4s ease-in-out infinite;
-}
+.pace-logo-mark { display: none; }
 .pace-logo-text {
   font-family: var(--pace-font-display);
   font-size: 26px;
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   line-height: 1;
-  background: linear-gradient(135deg, #f8fafc 0%, #a78bfa 55%, #7c3aed 100%);
+  background: var(--pace-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -100,18 +251,17 @@
   font-family: var(--pace-font-body);
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #fbbf24;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.28);
-  align-self: center;
+  color: var(--acad-evolve-green);
+  padding: 4px 10px;
+  border-radius: var(--pace-radius-pill);
+  background: var(--pace-bg-highlight);
+  box-shadow: var(--neu-flat), var(--neu-glow);
+  border: 1px solid var(--pace-border-strong);
 }
-.pace-logo-sm .pace-logo-mark { width: 32px; height: 32px; }
 .pace-logo-sm .pace-logo-text { font-size: 20px; }
-.pace-logo-sm .pace-logo-year { font-size: 9px; padding: 3px 6px; }
+.pace-logo-sm .pace-logo-year { font-size: 9px; padding: 3px 8px; }
 .pace-logo-stack {
   flex-direction: column;
   align-items: center;
@@ -129,34 +279,29 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.95);
+  color: var(--pace-muted);
   text-align: center;
   max-width: 300px;
   line-height: 1.45;
 }
 
-@keyframes paceLogoFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-
-/* ── Landing hero — gradient bg + robot cutout only ── */
+/* ── Landing hero ── */
 .pace-hero-glow {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 55% 45% at 50% 38%, rgba(139, 92, 246, 0.14), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 90% 85%, rgba(167, 139, 250, 0.08), transparent 50%),
-    linear-gradient(165deg, #1a0f2e 0%, #12091f 45%, #0f0818 100%);
+    radial-gradient(ellipse 65% 55% at 50% 35%, rgba(0, 46, 255, 0.2), transparent 58%),
+    radial-gradient(ellipse 45% 40% at 88% 78%, rgba(157, 245, 53, 0.1), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 12% 85%, rgba(48, 201, 195, 0.08), transparent 50%);
 }
 .hero-main-title {
-  font-family: var(--pace-font-body, 'Inter', sans-serif);
+  font-family: var(--pace-font-display);
   font-size: clamp(30px, 5.2vw, 56px);
-  font-weight: 900;
-  letter-spacing: -0.025em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1.12;
-  color: #ffffff;
+  color: var(--pace-text-bright);
   margin-bottom: 22px;
   text-align: center;
   display: flex;
@@ -164,7 +309,6 @@
   align-items: center;
   gap: 8px;
   width: 100%;
-  text-shadow: 0 2px 20px rgba(139, 92, 246, 0.25), 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 .hero-title-line {
   display: block;
@@ -174,8 +318,9 @@
 }
 .hero-title-amp {
   font-size: 1em;
-  font-weight: 800;
-  color: #f3e8ff;
+  font-weight: 700;
+  color: var(--acad-evolve-green);
+  text-shadow: 0 0 24px rgba(157, 245, 53, 0.35);
 }
 @media (max-width: 560px) {
   .hero-title-line {
@@ -190,35 +335,42 @@
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 18px;
-  padding: 10px 22px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.22), rgba(124, 58, 237, 0.12));
-  border: 1px solid rgba(167, 139, 250, 0.45);
-  box-shadow: 0 0 32px rgba(139, 92, 246, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 12px 24px;
+  border-radius: var(--pace-radius-pill);
+  background: var(--pace-bg-highlight);
+  border: 1px solid var(--pace-border-strong);
+  box-shadow: var(--neu-raised-sm), var(--neu-glow);
 }
 .hero-pace-small {
-  font-family: var(--pace-font-display, 'Syne', sans-serif);
+  font-family: var(--pace-font-display);
   font-size: 17px;
   font-weight: 800;
   letter-spacing: 0.06em;
-  color: #e9d5ff;
+  background: var(--pace-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-transform: uppercase;
 }
 .hero-brand-x {
-  font-family: var(--pace-font-body, 'Inter', sans-serif);
+  font-family: var(--pace-font-body);
   font-size: 16px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  color: var(--pace-muted);
   line-height: 1;
 }
 .hero-brand-highlight .pace-nxtwave-line-lg {
   font-size: 14px;
+  background: var(--pace-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .hero-subline {
-  font-family: var(--pace-font-body, 'Inter', sans-serif);
+  font-family: var(--pace-font-body);
   font-size: clamp(15px, 2vw, 17px);
   font-weight: 500;
-  color: var(--muted);
+  color: var(--pace-muted);
   margin-bottom: 28px;
   line-height: 1.55;
   text-align: center;
@@ -227,15 +379,10 @@
   width: 100%;
   height: auto;
   object-fit: contain;
-  image-rendering: -webkit-optimize-contrast;
   transform: translateZ(0);
   mix-blend-mode: screen;
-  filter: contrast(1.1) saturate(1.18) brightness(1.06)
-    drop-shadow(0 4px 16px rgba(34, 211, 238, 0.45))
-    drop-shadow(0 12px 32px rgba(59, 130, 246, 0.2));
+  filter: drop-shadow(0 0 32px rgba(0, 46, 255, 0.4)) drop-shadow(0 12px 28px rgba(157, 245, 53, 0.15));
   animation: robotFloat 5s ease-in-out infinite;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 #hero-brand {
   display: flex;
@@ -248,15 +395,10 @@
 }
 
 @media (max-width: 900px) {
-  .hero-brand-highlight { padding: 8px 16px; }
-  .pace-hero-glow {
-    background:
-      radial-gradient(ellipse 80% 50% at 50% 30%, rgba(139, 92, 246, 0.12), transparent 70%),
-      linear-gradient(180deg, #1a0f2e 0%, #0f0818 100%);
-  }
+  .hero-brand-highlight { padding: 10px 18px; }
 }
 
-/* ── Left feedback tab (robo popup) ── */
+/* ── Feedback tab ── */
 .pace-feedback-tab {
   position: fixed;
   left: 0;
@@ -268,11 +410,10 @@
   align-items: center;
   gap: 10px;
   padding: 16px 10px;
-  background: linear-gradient(180deg, #7c3aed, #6d28d9);
-  border: 1px solid rgba(167, 139, 250, 0.5);
-  border-left: none;
-  border-radius: 0 14px 14px 0;
-  box-shadow: 4px 0 28px rgba(124, 58, 237, 0.4);
+  background: var(--pace-gradient);
+  border: none;
+  border-radius: 0 20px 20px 0;
+  box-shadow: var(--neu-glow-strong), 4px 0 28px rgba(0, 46, 255, 0.35);
   text-decoration: none;
   color: #fff;
   transition: transform 0.25s, box-shadow 0.25s, padding 0.25s;
@@ -280,21 +421,20 @@
 }
 .pace-feedback-tab:hover {
   transform: translateY(-50%) translateX(4px);
-  box-shadow: 6px 0 36px rgba(124, 58, 237, 0.55);
+  box-shadow: var(--neu-glow-strong), 6px 0 36px rgba(157, 245, 53, 0.35);
   padding-right: 14px;
 }
 .pace-feedback-icon {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none'%3E%3Crect x='8' y='12' width='24' height='20' rx='10' fill='%23fff'/%3E%3Crect x='11' y='15' width='18' height='14' rx='7' fill='%234c1d95'/%3E%3Ccircle cx='16' cy='21' r='2.5' fill='%2322d3ee'/%3E%3Ccircle cx='24' cy='21' r='2.5' fill='%2322d3ee'/%3E%3Cpath d='M17 26c1.5 1.2 3.5 1.2 5 0' stroke='%23e9d5ff' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M20 8v4M14 10l2 3M26 10l-2 3' stroke='%23c4b5fd' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='6' r='2.5' fill='%23a78bfa'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none'%3E%3Crect x='8' y='12' width='24' height='20' rx='10' fill='%23fff'/%3E%3Crect x='11' y='15' width='18' height='14' rx='7' fill='%234338ca'/%3E%3Ccircle cx='16' cy='21' r='2.5' fill='%2393c5fd'/%3E%3Ccircle cx='24' cy='21' r='2.5' fill='%2393c5fd'/%3E%3Cpath d='M17 26c1.5 1.2 3.5 1.2 5 0' stroke='%23e0e7ff' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M20 8v4M14 10l2 3M26 10l-2 3' stroke='%23c7d2fe' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='6' r='2.5' fill='%23a5b4fc'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.45));
 }
 .pace-feedback-label {
-  font-family: var(--pace-font-body, 'Inter', sans-serif);
+  font-family: var(--pace-font-body);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.08em;

@@ -18,7 +18,7 @@
       <div class="pace-profile-name" id="pace-profile-name">Student</div>
       <span class="pace-profile-badge" id="pace-profile-badge">YOG</span>
     </div>
-    <nav class="pace-nav" id="rise-nav"></nav>
+    <nav class="pace-nav" id="pace-nav"></nav>
     <div class="pace-sb-footer">PACE 2027 · YOG Batch</div>
   </aside>
   <div class="pace-main">
@@ -26,6 +26,15 @@
       <button type="button" class="pace-menu-btn" id="pace-menu-btn" aria-label="Open menu">☰</button>
       <span class="pace-brand">PACE <span>2027</span></span>
     </div>
+    <a href="/placement-journey" target="_top" class="pace-ach-journey-banner pace-reveal">
+      <div class="pace-ach-journey-copy">
+        <span class="pace-ach-journey-eyebrow">Placement IQ</span>
+        <div class="pace-ach-journey-title">Want to see how they got here?</div>
+        <p class="pace-ach-journey-sub">Explore the full placement journey — assessments, milestones, and what it takes to reach an offer.</p>
+      </div>
+      <span class="pace-ach-journey-cta">View Placement IQ →</span>
+    </a>
+
     <h1 class="pace-page-title pace-reveal">Achievements</h1>
     <p class="pace-page-sub pace-reveal">Placements, badges, and batch news.</p>
 
@@ -44,7 +53,7 @@
   </div>
 </div>
 <script src="/pace-logo.js"></script>
-<script src="/rise-nav.js"></script>
+<script src="/pace-nav.js"></script>
 <script src="/placement-engine.js"></script>
 <script>
 initPaceShell('announcements');
@@ -53,23 +62,52 @@ function achInitials(name) {
   return name.split(/\s+/).map(function(w) { return w[0] || ''; }).join('').slice(0, 2).toUpperCase();
 }
 
+var ACH_REACT_KEY = 'pace_ach_user_reacts';
+var ACH_REACTION_EMOJIS = ['👏', '🎉', '🔥'];
+
 var achievements = [
-  { name: 'Harshawardhan L.', company: 'Amazon', package: '22 LPA', points: 8420, hook: 'Placed · AI Track', date: 'Jun 24' },
-  { name: 'Priya Sharma', company: 'Flipkart', package: '16 LPA', points: 7180, hook: 'Placed · DSA Track', date: 'Jun 22' },
-  { name: 'Arjun Mehta', company: 'Google', package: '28 LPA', points: 9105, hook: 'GSoC → Offer', date: 'Jun 20' },
-  { name: 'Sneha Reddy', company: 'Microsoft', package: '20 LPA', points: 7650, hook: 'Placed · Dev Track', date: 'Jun 18' },
-  { name: 'Rahul K.', company: 'Razorpay', package: '18 LPA', points: 6920, hook: 'Full-stack badge', date: 'Jun 15' },
-  { name: 'Ananya P.', company: 'Goldman Sachs', package: '24 LPA', points: 8010, hook: 'OA cleared', date: 'Jun 12' }
+  { id: 'ach-harshawardhan', name: 'Harshawardhan L.', company: 'Amazon', package: '22 LPA', points: 8420, hook: 'Placed · AI Track', date: 'Jun 24' },
+  { id: 'ach-priya', name: 'Priya Sharma', company: 'Flipkart', package: '16 LPA', points: 7180, hook: 'Placed · DSA Track', date: 'Jun 22' },
+  { id: 'ach-arjun', name: 'Arjun Mehta', company: 'Google', package: '28 LPA', points: 9105, hook: 'GSoC → Offer', date: 'Jun 20' },
+  { id: 'ach-sneha', name: 'Sneha Reddy', company: 'Microsoft', package: '20 LPA', points: 7650, hook: 'Placed · Dev Track', date: 'Jun 18' },
+  { id: 'ach-rahul', name: 'Rahul K.', company: 'Razorpay', package: '18 LPA', points: 6920, hook: 'Full-stack badge', date: 'Jun 15' },
+  { id: 'ach-ananya', name: 'Ananya P.', company: 'Goldman Sachs', package: '24 LPA', points: 8010, hook: 'OA cleared', date: 'Jun 12' }
 ];
 
-function renderReactions(r) {
-  return Object.keys(r).map(function(emoji) {
-    return '<button type="button" class="pace-ach-react" onclick="return false">' + emoji + ' <b>' + r[emoji] + '</b></button>';
+function getAchUserReacts() {
+  try { return JSON.parse(localStorage.getItem(ACH_REACT_KEY) || '{}'); } catch (e) { return {}; }
+}
+
+function saveAchUserReacts(data) {
+  localStorage.setItem(ACH_REACT_KEY, JSON.stringify(data));
+}
+
+function achReactionBases(i) {
+  return { '👏': 40 + i * 8, '🎉': 22 + i * 5, '🔥': 12 + i * 3 };
+}
+
+function renderReactions(achId, i) {
+  var bases = achReactionBases(i);
+  var user = getAchUserReacts()[achId] || {};
+  return ACH_REACTION_EMOJIS.map(function(emoji) {
+    var active = !!user[emoji];
+    var count = bases[emoji] + (active ? 1 : 0);
+    return '<button type="button" class="pace-ach-react' + (active ? ' active' : '') + '" aria-pressed="' + (active ? 'true' : 'false') + '" onclick="toggleAchReaction(\'' + achId + '\',\'' + emoji + '\')">' + emoji + ' <b>' + count + '</b></button>';
   }).join('');
 }
 
+window.toggleAchReaction = function(achId, emoji) {
+  var all = getAchUserReacts();
+  if (!all[achId]) all[achId] = {};
+  all[achId][emoji] = !all[achId][emoji];
+  if (!all[achId][emoji]) delete all[achId][emoji];
+  if (!Object.keys(all[achId]).length) delete all[achId];
+  saveAchUserReacts(all);
+  renderAchFeed();
+};
+
 function renderAchievement(a, i) {
-  var reacts = renderReactions({ '👏': 40 + i * 8, '🎉': 22 + i * 5, '🔥': 12 + i * 3 });
+  var reacts = renderReactions(a.id, i);
   return '<article class="pace-ach-compact pace-reveal" style="transition-delay:' + (i * 0.04) + 's">' +
     '<div class="pace-ach-compact-top">' +
       '<div class="pace-ach-photo" aria-label="Student photo placeholder">' +
@@ -93,7 +131,10 @@ function renderAchievement(a, i) {
   '</article>';
 }
 
-document.getElementById('ach-feed').innerHTML = achievements.map(renderAchievement).join('');
+function renderAchFeed() {
+  document.getElementById('ach-feed').innerHTML = achievements.map(renderAchievement).join('');
+}
+renderAchFeed();
 
 var updates = [
   { tag: 'Placement', title: 'Type B drives open Jun 30', desc: 'TR-2 eligible students can register.', date: 'Jun 22', pri: 'high' },

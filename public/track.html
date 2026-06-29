@@ -14,7 +14,7 @@
 <body>
 
 <script src="/pace-logo.js"></script>
-<script src="/rise-nav.js"></script>
+<script src="/pace-nav.js"></script>
 <script src="/placement-engine.js"></script>
 <script src="/pace-shell.js"></script>
 <aside class="sidebar" style="display:none" aria-hidden="true"></aside>
@@ -45,7 +45,7 @@ const TRACKS = {
   dev: {
     icon:'⚙', title:'Dev & System Design',
     sub:'React · Node · MongoDB — ship full-stack projects + design systems.',
-    tabs:['Overview','Milestones','System Design','Submissions','Eligible Companies']
+    tabs:['Overview','System Design','Submissions','Eligible Companies']
   }
 };
 
@@ -58,7 +58,7 @@ wrapPaceMain();
 initPaceShell(KEY);
 
 // ── persistent submit-link state ──
-const STORE_KEY = 'rise_track_subs_v1';
+const STORE_KEY = 'pace_track_subs_v1';
 let SUBS = {};
 try { SUBS = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e){}
 function saveSubs(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(SUBS)); }catch(e){} }
@@ -112,6 +112,113 @@ function comingSoonHtml(title, desc) {
     '</div>';
 }
 
+function submissionLabel(suffix) {
+  var labels = {
+    project: 'Project submission',
+    'oss-contrib': 'Open source contribution',
+    'cert-badge': 'Certificate or badge',
+    'docs-badge': 'Documentation / README badge'
+  };
+  if (labels[suffix]) return labels[suffix];
+  if (suffix.indexOf('pr|') === 0) return 'Pull request #' + (parseInt(suffix.split('|')[1], 10) + 1);
+  if (suffix === 'github') return 'GitHub profile';
+  return suffix.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+}
+
+function submissionDisplayValue(value) {
+  if (!value) return '';
+  if (value.indexOf('uploaded:') === 0) return value.replace('uploaded:', '');
+  try {
+    var u = new URL(value);
+    return u.hostname + u.pathname.replace(/\/$/, '');
+  } catch (e) {
+    return value.length > 48 ? value.slice(0, 45) + '…' : value;
+  }
+}
+
+function submissionStatusMeta(status) {
+  if (status === 'approved') return { label: 'Approved', cls: 'approved' };
+  if (status === 'rejected') return { label: 'Needs revision', cls: 'rejected' };
+  return { label: 'In review', cls: 'pending' };
+}
+
+var SAMPLE_SUBMISSIONS = {
+  oss: [
+    { suffix: 'oss-contrib', value: 'https://github.com/facebook/react/pull/28100', status: 'approved', date: 'Jun 18' },
+    { suffix: 'project', value: 'https://github.com/sample/dev-cli', status: 'pending', date: 'Jun 22' },
+    { suffix: 'cert-badge', value: 'uploaded:Hacktoberfest-2025.pdf', status: 'approved', date: 'Nov 02' }
+  ],
+  dev: [
+    { suffix: 'project', value: 'https://shop-demo.vercel.app', status: 'approved', date: 'Jun 20' },
+    { suffix: 'project', value: 'https://github.com/sample/task-api', status: 'pending', date: 'Jun 24' }
+  ],
+  aptitude: [
+    { suffix: 'project', value: 'https://learning.ccbp.in/', status: 'approved', date: 'Jun 10' }
+  ]
+};
+
+function allSubmissionsHtml(prefix, opts) {
+  opts = opts || {};
+  var pfx = prefix + '|';
+  var items = [];
+  Object.keys(SUBS).forEach(function (key) {
+    if (key.indexOf(pfx) !== 0) return;
+    items.push({
+      label: submissionLabel(key.slice(pfx.length)),
+      suffix: key.slice(pfx.length),
+      value: SUBS[key],
+      status: 'pending',
+      date: 'Recently',
+      live: true
+    });
+  });
+  var samples = SAMPLE_SUBMISSIONS[prefix] || [];
+  samples.forEach(function (s) {
+    var key = pfx + s.suffix;
+    if (SUBS[key]) return;
+    items.push({
+      label: submissionLabel(s.suffix),
+      suffix: s.suffix,
+      value: s.value,
+      status: s.status,
+      date: s.date,
+      live: false
+    });
+  });
+  var rows;
+  if (!items.length) {
+    rows = '<div class="all-sub-empty">No submissions yet — use the forms above to submit your first entry.</div>';
+  } else {
+    rows = items.map(function (item) {
+      var st = submissionStatusMeta(item.status);
+      var isUpload = item.value.indexOf('uploaded:') === 0;
+      var display = submissionDisplayValue(item.value);
+      var linkHtml = isUpload
+        ? '<span class="all-sub-file">📎 ' + display + '</span>'
+        : '<a class="all-sub-link" href="' + item.value.replace(/"/g, '&quot;') + '" target="_blank" rel="noopener">' + display + ' ↗</a>';
+      return (
+        '<div class="all-sub-row' + (item.live ? ' all-sub-live' : '') + '">' +
+        '<div class="all-sub-main">' +
+        '<div class="all-sub-label">' + item.label + '</div>' +
+        linkHtml +
+        '</div>' +
+        '<div class="all-sub-meta">' +
+        (item.suffix === 'project' && opts.projectPts ? '<span class="all-sub-pts pace-reward-pill">+' + opts.projectPts + ' pts</span>' : '') +
+        '<span class="all-sub-status ' + st.cls + '">' + st.label + '</span>' +
+        '<span class="all-sub-date">' + item.date + '</span>' +
+        '</div></div>'
+      );
+    }).join('');
+  }
+  return (
+    '<div class="card all-submissions-card">' +
+    '<h3>All submissions</h3>' +
+    '<p class="muted">Everything you\'ve submitted on this track — links, PRs, certificates, and project URLs.</p>' +
+    '<div class="all-sub-list">' + rows + '</div>' +
+    '</div>'
+  );
+}
+
 function submissionsHtml(prefix, opts) {
   opts = opts || {};
   return `
@@ -138,7 +245,8 @@ function submissionsHtml(prefix, opts) {
         <div class="proj-head"><div class="proj-name">Documentation / README badge</div><span class="pill">Docs link</span></div>
         ${subCell(prefix + '|docs-badge')}
       </div>
-    </div>`;
+    </div>
+    ${allSubmissionsHtml(prefix, opts)}`;
 }
 
 // ── content renderers per track ──
@@ -212,7 +320,7 @@ const DEV_COMPANIES = [
   { name: 'Uber', logo: 'U', bg: '#000', pkg: '22 – 35 LPA', skills: ['Microservices', 'React', 'Scale'], eligible: true },
   { name: 'Freshworks', logo: 'Fw', bg: '#1DB954', pkg: '12 – 18 LPA', skills: ['React', 'SaaS'], eligible: false },
   { name: 'Zoho', logo: 'Z', bg: '#E42527', pkg: '10 – 14 LPA', skills: ['Full-stack', 'Product'], eligible: false },
-  { name: 'Startups', logo: 'S', bg: '#7c3aed', pkg: '8 – 15 LPA', skills: ['MERN', 'Deploy'], eligible: false }
+  { name: 'Startups', logo: 'S', bg: '#002EFF', pkg: '8 – 15 LPA', skills: ['MERN', 'Deploy'], eligible: false }
 ];
 
 const OSS_OFFICIAL = [
@@ -267,11 +375,15 @@ function aiOverviewRoadmapHtml(){
     const done = s.shipped[i] === 3;
     const unlocked = i <= s.unlockedThrough;
     const cls = done ? 'done' : (unlocked ? 'current' : 'locked');
-    const badge = done ? '✓ Complete' : (unlocked ? s.shipped[i] + '/3 shipped' : '🔒 Locked');
+    const badge = done ? 'Complete' : (unlocked ? s.shipped[i] + '/3 shipped' : 'Locked');
     const projs = t.projects.map(function(p, j){
       const submitted = !!SUBS['ai|' + t.key + '|' + j];
       const pts = aiProjectPts(p);
-      return '<li class="tr-proj' + (submitted ? ' shipped' : '') + '">' + (submitted ? '✓' : '○') + ' ' + aiProjectName(p) + ' <span class="tr-proj-pts">+' + pts + ' pts</span></li>';
+      const mark = submitted ? '✓' : (unlocked ? '○' : '·');
+      return '<li class="tr-proj' + (submitted ? ' shipped' : '') + (unlocked ? '' : ' dim') + '">' +
+        '<span class="tr-proj-mark">' + mark + '</span>' +
+        '<span class="tr-proj-text">' + aiProjectName(p) + '</span>' +
+        '<span class="tr-proj-pts">+' + pts + ' pts</span></li>';
     }).join('');
     const dots = [0,1,2].map(function(j){
       return '<span class="tr-dot' + (j < s.shipped[i] ? ' on' : '') + '"></span>';
@@ -319,7 +431,7 @@ function dsaOverviewRoadmapHtml(){
       '<div class="tr-step-sub">' + p.sub + '</div>' +
       '<span class="tr-step-badge">' + p.stat + '</span>' +
       '<div class="skill-row" style="justify-content:center;margin:0 0 10px">' +
-      p.pills.map(function(x){ return '<span class="pill">' + x + '</span>'; }).join('') +
+      p.pills.map(function(x){ return '<span class="pill' + (/pts/i.test(x) ? ' am' : '') + '">' + x + '</span>'; }).join('') +
       '</div></div>'
     );
   });
@@ -413,12 +525,6 @@ function aiTiersHtml(){
   }).join('');
 }
 
-const DEV_MILESTONES = [
-  { id:'fe', name:'Frontend deploy', hint:'Vercel / Netlify URL' },
-  { id:'be', name:'Backend deploy',  hint:'Render / Railway / Fly URL' },
-  { id:'fs', name:'Full-stack deploy', hint:'Live product URL' }
-];
-
 function panelsFor(key){
   if(key === 'ai'){
     return {
@@ -440,10 +546,13 @@ function panelsFor(key){
     };
   }
   if(key === 'dsa'){
-    const potd = [
-      { platform:'LeetCode', title:'Find the Duplicate Number', diff:'medium', topics:['Array','Binary Search'], url:'https://leetcode.com/problems/find-the-duplicate-number/' },
-      { platform:'CodeChef', title:'Chef and Binary String', diff:'medium', topics:['Strings','Greedy'], url:'#' },
-      { platform:'Codeforces', title:'Watermelon', diff:'easy', topics:['Math'], url:'https://codeforces.com/problemset/problem/4/A' }
+    const portalProblems = [
+      { platform:'NxtWave Portal', title:'Two Sum — Arrays Fundamentals', diff:'easy', topics:['Arrays','Hash Map'], url:'https://learning.ccbp.in/' },
+      { platform:'NxtWave Portal', title:'Reverse a Linked List', diff:'medium', topics:['Linked Lists','Pointers'], url:'https://learning.ccbp.in/' },
+      { platform:'NxtWave Portal', title:'Valid Parentheses', diff:'medium', topics:['Stack','Strings'], url:'https://learning.ccbp.in/' },
+      { platform:'NxtWave Portal', title:'Binary Search — First & Last Position', diff:'medium', topics:['Binary Search','Arrays'], url:'https://learning.ccbp.in/' },
+      { platform:'NxtWave Portal', title:'Maximum Subarray (Kadane\'s Algorithm)', diff:'medium', topics:['DP','Arrays'], url:'https://learning.ccbp.in/' },
+      { platform:'NxtWave Portal', title:'Number of Islands', diff:'hard', topics:['Graphs','BFS','DFS'], url:'https://learning.ccbp.in/' }
     ];
     const aiRec = [
       { title:'Longest Substring Without Repeating Characters', diff:'medium', topics:['Sliding Window'], reason:'Weak topic: Strings' },
@@ -457,19 +566,19 @@ function panelsFor(key){
       { title:'LRU Cache', diff:'hard', date:'Jun 17', solved:false }
     ];
     const topics = ['Arrays','Strings','Linked Lists','Trees','Graphs','DP','Greedy','Binary Search','Backtracking'];
-    const qpCard = (p, showReason) => `<div class="qp-card">
+    const qpCard = (p, showReason, portalLink) => `<div class="qp-card">
       ${showReason ? `<span class="pill am">${p.reason}</span>` : `<span class="pill">${p.platform||p.date}</span>`}
       <div class="qp-title">${p.title}</div>
       <div>${(p.topics||[]).map(t=>`<span class="qp-tag topic">${t}</span>`).join('')}<span class="qp-tag ${p.diff}">${p.diff}</span></div>
-      ${p.url ? `<a class="qp-link" href="${p.url}" target="_blank" rel="noopener">Solve ↗</a>` : `<span class="muted">${p.solved?'✓ Solved':'○ Unsolved'}</span>`}
+      ${p.url ? `<a class="qp-link" href="${p.url}" target="_blank" rel="noopener">${portalLink ? 'Open in Portal ↗' : 'Solve ↗'}</a>` : `<span class="muted">${p.solved?'✓ Solved':'○ Unsolved'}</span>`}
     </div>`;
     return {
       'Overview': dsaOverviewRoadmapHtml(),
       'Question Pool': `
         <div class="card">
-          <h3>Problem of the Day</h3>
-          <p class="muted" style="margin-bottom:14px">LeetCode · CodeChef · Codeforces — today's curated problems.</p>
-          <div class="qp-grid">${potd.map(p=>qpCard(p)).join('')}</div>
+          <h3>Problems from your NxtWave Learning Portal</h3>
+          <p class="muted" style="margin-bottom:14px">Assigned practice from your CCBP courses — open each problem on the learning portal.</p>
+          <div class="qp-grid">${portalProblems.map(p=>qpCard(p, false, true)).join('')}</div>
         </div>
         <div class="card">
           <h3>AI Recommended Questions</h3>
@@ -530,18 +639,68 @@ function panelsFor(key){
     };
   }
   if(key === 'aptitude'){
+    const scheduleSessions = [
+      {
+        icon: '🧮',
+        track: 'Aptitude',
+        cadence: 'Bi-weekly',
+        next: 'Mon · 7:00 PM',
+        duration: '90 min',
+        mode: 'Live + practice set',
+        skills: ['Quantitative', 'Logic', 'Data Interpretation', 'Number Systems', 'Percentages', 'Time & Work']
+      },
+      {
+        icon: '🗣️',
+        track: 'Verbal Ability',
+        cadence: 'Bi-weekly',
+        next: 'Wed · 7:00 PM',
+        duration: '60 min',
+        mode: 'Live + vocab drill',
+        skills: ['Reading Comprehension', 'Vocabulary', 'Grammar', 'Para Jumbles', 'Critical Reasoning']
+      },
+      {
+        icon: '👥',
+        track: 'Group Discussion',
+        cadence: 'Bi-weekly',
+        next: 'Sat · 11:00 AM',
+        duration: '45 min',
+        mode: 'Mock GD round',
+        skills: ['Communication', 'Current Affairs', 'Leadership', 'Teamwork', 'Structured Thinking']
+      }
+    ];
+    const scheduleCardsHtml = scheduleSessions.map(function (s) {
+      const skillTags = s.skills.map(function (sk) {
+        return '<span class="apt-skill-tag">' + sk + '</span>';
+      }).join('');
+      return (
+        '<article class="apt-session-card">' +
+        '<div class="apt-session-top">' +
+        '<div class="apt-session-icon" aria-hidden="true">' + s.icon + '</div>' +
+        '<div class="apt-session-meta">' +
+        '<span class="apt-session-cadence">' + s.cadence + '</span>' +
+        '<h4 class="apt-session-title">' + s.track + '</h4>' +
+        '<p class="apt-session-mode">' + s.mode + '</p>' +
+        '</div></div>' +
+        '<div class="apt-session-when">' +
+        '<div class="apt-when-block"><span class="apt-when-lbl">Next session</span><span class="apt-when-val">' + s.next + '</span></div>' +
+        '<div class="apt-when-block"><span class="apt-when-lbl">Duration</span><span class="apt-when-val">' + s.duration + '</span></div>' +
+        '</div>' +
+        '<div class="apt-skills-wrap"><span class="apt-skills-lbl">Skills covered</span><div class="apt-skill-row">' + skillTags + '</div></div>' +
+        '<a class="apt-session-cta" href="https://learning.ccbp.in/" target="_blank" rel="noopener">Open session on Portal ↗</a>' +
+        '</article>'
+      );
+    }).join('');
     return {
       'Schedule': `
-        <div class="card">
-          <h3>Bi-weekly schedule</h3>
-          <table class="tbl">
-            <thead><tr><th>Track</th><th>Cadence</th><th>Next session</th></tr></thead>
-            <tbody>
-              <tr><td>Aptitude</td><td>Bi-weekly</td><td>Mon · 7:00 PM</td></tr>
-              <tr><td>Verbal</td><td>Bi-weekly</td><td>Wed · 7:00 PM</td></tr>
-              <tr><td>Group Discussion</td><td>Bi-weekly</td><td>Sat · 11:00 AM</td></tr>
-            </tbody>
-          </table>
+        <div class="card apt-schedule-wrap">
+          <div class="apt-schedule-head">
+            <div>
+              <h3>Bi-weekly schedule</h3>
+              <p class="muted" style="margin:8px 0 0;line-height:1.55">Live aptitude, verbal, and GD sessions — every two weeks with focused skill practice.</p>
+            </div>
+            <span class="apt-schedule-pill">3 tracks · Every 2 weeks</span>
+          </div>
+          <div class="apt-schedule-grid">${scheduleCardsHtml}</div>
         </div>`,
       'Mock OA': comingSoonHtml('Mock OA — Coming Soon', 'Aptitude & GD mock online assessments with timed sections, accuracy tracking, and OA-style scoring will launch here soon.'),
       'Submissions': submissionsHtml('aptitude', { projectPts: 100 }),
@@ -557,22 +716,76 @@ function panelsFor(key){
           <div class="skill-row">
             ${['React','Node.js','Express','MongoDB','REST APIs','Deployment'].map(s=>`<span class="pill">${s}</span>`).join('')}
           </div>
-        </div>`,
-      'Milestones': `
-        <div class="card">
-          <h3>Deployment milestones</h3>
-          ${DEV_MILESTONES.map(m => `
-            <div class="proj-row">
-              <div class="proj-head"><div class="proj-name">${m.name}</div><span class="muted">${m.hint}</span></div>
-              ${subCell('dev|'+m.id)}
-            </div>`).join('')}
-        </div>`,
+        </div>
+        ${devProjectsOverviewHtml()}`,
       'System Design': comingSoonHtml('System Design — Coming Soon', 'Weekly design problems, walkthroughs, and peer-reviewed design doc submissions are on the way.'),
       'Submissions': submissionsHtml('dev', { projectPts: 350 }),
       'Eligible Companies': eligibleCompaniesHtml(DEV_COMPANIES)
     };
   }
   return {};
+}
+
+function devProjectsOverviewHtml() {
+  const projects = [
+    {
+      name: 'E-commerce Storefront',
+      desc: 'Full-stack shopping app with cart, auth, and product catalog.',
+      status: 'deployed',
+      statusLabel: 'Deployed',
+      pts: 350,
+      url: 'https://shop-demo.vercel.app',
+      skills: ['React', 'Node.js', 'MongoDB', 'REST APIs']
+    },
+    {
+      name: 'Task Manager API',
+      desc: 'REST backend with JWT auth, CRUD endpoints, and MongoDB.',
+      status: 'review',
+      statusLabel: 'In review',
+      pts: 200,
+      url: 'https://github.com/sample/task-api',
+      skills: ['Express', 'MongoDB', 'REST APIs', 'Auth']
+    },
+    {
+      name: 'Developer Portfolio',
+      desc: 'Personal site with project showcase, blog, and contact form.',
+      status: 'shipped',
+      statusLabel: 'Shipped',
+      pts: 150,
+      url: 'https://harika-dev.netlify.app',
+      skills: ['React', 'Deployment', 'Responsive UI']
+    }
+  ];
+  const cards = projects.map(function (p) {
+    const skillTags = p.skills.map(function (s) {
+      return '<span class="dev-proj-skill">' + s + '</span>';
+    }).join('');
+    return (
+      '<article class="dev-proj-card dev-proj-' + p.status + '">' +
+      '<div class="dev-proj-top">' +
+      '<div><h4 class="dev-proj-name">' + p.name + '</h4><p class="dev-proj-desc">' + p.desc + '</p></div>' +
+      '<span class="dev-proj-status">' + p.statusLabel + '</span></div>' +
+      '<div class="dev-proj-skills">' + skillTags + '</div>' +
+      '<div class="dev-proj-foot">' +
+      '<span class="dev-proj-pts pace-reward-pill">+' + p.pts + ' pts</span>' +
+      '<a class="dev-proj-link" href="' + p.url + '" target="_blank" rel="noopener">View project ↗</a>' +
+      '</div></article>'
+    );
+  }).join('');
+  return (
+    '<div class="card dev-projects-wrap">' +
+    '<div class="dev-projects-head">' +
+    '<div><h3>Projects added</h3>' +
+    '<p class="muted" style="margin:8px 0 0;line-height:1.55">Your shipped full-stack work — each project earns PACE points when reviewed.</p></div>' +
+    '<button type="button" class="dev-add-project-btn" onclick="setTab(\'Submissions\')">+ Add a new project</button>' +
+    '</div>' +
+    '<div class="dev-projects-grid">' + cards +
+    '<button type="button" class="dev-add-project-card" onclick="setTab(\'Submissions\')">' +
+    '<span class="dev-add-icon">+</span>' +
+    '<span class="dev-add-title">Add a new project</span>' +
+    '<span class="dev-add-sub">Submit repo or live URL in Submissions</span>' +
+    '</button></div></div>'
+  );
 }
 
 let activeTab = T.tabs[0];

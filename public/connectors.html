@@ -12,7 +12,7 @@
 </head>
 <body>
 <script src="/pace-logo.js"></script>
-<script src="/rise-nav.js"></script>
+<script src="/pace-nav.js"></script>
 <script src="/placement-engine.js"></script>
 <script src="/pace-shell.js"></script>
 
@@ -23,7 +23,7 @@
   <div class="pace-page-sub">Link coding profiles — scores sync to PACE points and map to eligible company packages.</div>
 
   <div class="conn-importance">
-    <p>When connected, your <strong style="color:var(--text-bright)">coding scores are recorded automatically</strong> and converted into placement points — mapped to companies targeting packages from 8 LPA to 18 LPA+.</p>
+    <p>When connected, your <strong>coding scores are recorded automatically</strong> and converted into placement points — mapped to companies targeting packages from 8 LPA to 18 LPA+.</p>
     <div class="conn-importance-flow">
       <span class="conn-importance-step"><em>Connect</em></span>
       <span class="conn-importance-step">→</span>
@@ -46,7 +46,7 @@
 
     <div class="conn-info-banner">
       <span class="conn-info-icon" aria-hidden="true">📅</span>
-      <p>Activity for each day of the selected month is tracked. Connect a platform to sync your streak calendar and earn <strong style="color:var(--text-bright)">PACE points</strong> — one-time connect bonus plus daily streak rewards.</p>
+      <p>Activity for each day of the selected month is tracked. Connect a platform to sync your streak calendar and earn <strong>PACE points</strong> — one-time connect bonus plus daily streak rewards.</p>
     </div>
 
     <div class="conn-points-panel" id="points-distribution"></div>
@@ -258,18 +258,22 @@ function calendarHtml(p) {
   );
 }
 
-function pointsBadgeHtml(p) {
+function offerStatsHtml(p) {
   const score = scoringFor(p.name);
+  return (
+    '<div class="conn-offer-stats">' +
+    '<div class="conn-offer-stat">' +
+    '<span class="conn-offer-stat-val">+' + score.connect + '</span>' +
+    '<span class="conn-offer-stat-lbl">connect bonus</span></div>' +
+    '<div class="conn-offer-stat">' +
+    '<span class="conn-offer-stat-val">+' + score.streakPerDay + '</span>' +
+    '<span class="conn-offer-stat-lbl">per active day</span></div>' +
+    '</div>'
+  );
+}
+
+function pointsBadgeHtml(p) {
   const pts = platformPoints(p);
-  if (!p.connected) {
-    return (
-      '<div class="conn-points-offer">' +
-      '<span class="conn-points-offer-num">+' + score.connect + '</span>' +
-      '<span class="conn-points-offer-label">pts on connect</span>' +
-      '<span class="conn-points-offer-sub">+' + score.streakPerDay + ' pts per active day</span>' +
-      '</div>'
-    );
-  }
   return (
     '<div class="conn-points-earned">' +
     '<span class="conn-points-total">+' + pts.total.toLocaleString() + ' pts</span>' +
@@ -281,8 +285,8 @@ function pointsBadgeHtml(p) {
 function disconnectedHtml(p) {
   return (
     '<div class="conn-disconnected">' +
-    pointsBadgeHtml(p) +
     '<div class="conn-disconnected-label">not connected</div>' +
+    offerStatsHtml(p) +
     '</div>'
   );
 }
@@ -355,11 +359,9 @@ function renderPlatforms() {
     const btnCls = p.connected ? 'conn-btn done' : 'conn-btn';
     const btnLabel = p.connected ? '✓ Connected' : 'Connect';
     const btnAttr = p.connected ? ' disabled' : ' onclick="openConnectModal(' + i + ')"';
-    const score = scoringFor(p.name);
     return (
       '<div class="conn-card' + (p.connected ? ' connected' : '') + '">' +
-      '<div class="conn-card-brand">' + logoHtml(p.name) + '<div class="conn-name">' + p.name + '</div>' +
-      '<span class="conn-card-pts-pill">+' + score.connect + ' pts</span></div>' +
+      '<div class="conn-card-brand">' + logoHtml(p.name) + '<div class="conn-name">' + p.name + '</div></div>' +
       body +
       '<button type="button" class="' + btnCls + '"' + btnAttr + '>' + btnLabel + '</button>' +
       '</div>'

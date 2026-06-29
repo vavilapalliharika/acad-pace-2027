@@ -12,7 +12,7 @@
 </head>
 <body>
 <script src="/pace-logo.js"></script>
-<script src="/rise-nav.js"></script>
+<script src="/pace-nav.js"></script>
 <script src="/placement-engine.js"></script>
 <script src="/pace-shell.js"></script>
 <aside class="sidebar" style="display:none" aria-hidden="true"></aside>
@@ -75,8 +75,8 @@ function renderScorePanel() {
     '<div class="pr-score-sub">Base ' + s.basePct + '% + bonus ' + s.bonusPct + '%</div></div>' +
     '<div class="pr-score-block">' +
     '<div class="pr-score-lbl">PACE Points</div>' +
-    '<div class="pr-score-val" id="pr-pace-total">' + s.paceTotal.toLocaleString() + '</div>' +
-    '<div class="pr-score-sub">+' + s.bonusPts.toLocaleString() + ' pts from checklist</div></div>' +
+    '<div class="pr-score-val pace-reward-val" id="pr-pace-total">' + s.paceTotal.toLocaleString() + '</div>' +
+    '<div class="pr-score-sub">+<span class="pace-reward-text">' + s.bonusPts.toLocaleString() + ' pts</span> from checklist</div></div>' +
     '<div class="pr-score-block">' +
     '<div class="pr-score-lbl">Checklist</div>' +
     '<div class="pr-score-val">' + s.checked + '<span>/' + s.total + '</span></div>' +
@@ -102,12 +102,22 @@ function renderChecklist() {
 
   el.innerHTML = items.map(function (item) {
     var done = !!checklistState[item.id];
+    var dest = (window.SIGNAL_ACTION_LINKS && window.SIGNAL_ACTION_LINKS[item.signalId])
+      ? window.SIGNAL_ACTION_LINKS[item.signalId].label
+      : 'Open section';
     return (
-      '<label class="missing-item' + (done ? ' done' : '') + '">' +
-      '<input type="checkbox" class="missing-check" data-id="' + item.id + '"' + (done ? ' checked' : '') + ' onchange="toggleChecklistItem(this)">' +
-      '<span class="missing-label">' + item.text + '</span>' +
-      '<span class="missing-pts">+' + item.pts + ' pts</span>' +
-      '<span class="missing-tier">' + item.tier + '</span></label>'
+      '<label class="pr-check-item' + (done ? ' done' : '') + '">' +
+      '<span class="pr-check-toggle">' +
+      '<input type="checkbox" class="pr-check-box" data-id="' + item.id + '"' + (done ? ' checked' : '') + ' onchange="toggleChecklistItem(this)" aria-label="Mark complete: ' + item.action + '">' +
+      '<span class="pr-check-mark" aria-hidden="true"></span></span>' +
+      '<span class="pr-check-body">' +
+      '<span class="pr-check-action">' + item.action + '</span>' +
+      '<span class="pr-check-meta">' + item.name + ' · ' + item.tier + '</span>' +
+      '</span>' +
+      '<span class="pr-check-progress">' + item.progress + '</span>' +
+      '<span class="pr-check-pts">+' + item.pts + ' pts</span>' +
+      '<a href="' + item.href + '" target="_top" class="pr-check-go" title="Open ' + dest + '" onclick="event.stopPropagation()">→</a>' +
+      '</label>'
     );
   }).join('');
 }
@@ -128,9 +138,9 @@ document.getElementById('tier-details').innerHTML = PLACEMENT_ENGINE.tiers.map(f
   var e = getTierEligibility(tier);
   var rows = e.results.map(function (r) {
     var st = statusLabel(r.status);
-    var cur = r.boolean ? (r.status === 'done' ? '✔ Yes' : '✗ No') : r.current;
+    var cur = formatSignalCurrent(r);
     var req = r.boolean ? (r.alt || r.unit) : r.required;
-    var rem = r.status === 'done' ? '—' : 'Need ' + r.remaining + ' more';
+    var rem = formatSignalRemaining(r);
     return '<tr><td>' + r.name + '</td><td><b>' + cur + '</b></td><td>' + req + '</td><td class="' + st.cls + '">' + st.icon + ' ' + st.label + '</td><td>' + rem + '</td></tr>';
   }).join('');
   return '<div class="pr-tier-card"><div class="td-head"><div class="td-name">' + tier.icon + ' ' + tier.name + ' — ' + tier.range + '</div><span class="td-pct ' + (e.eligible ? 'done' : 'partial') + '">' + e.pct + '% · ' + (e.eligible ? 'Eligible' : 'In Progress') + '</span></div><table class="pr-signal-table"><thead><tr><th>Signal</th><th>Current</th><th>Required</th><th>Status</th><th>Remaining</th></tr></thead><tbody>' + rows + '</tbody></table></div>';

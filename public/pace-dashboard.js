@@ -10,7 +10,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 35,
-          color: '#8b5cf6',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '42 / 120' },
             { label: 'Progress', value: '35%' },
@@ -21,7 +21,7 @@ window.PACE_JOURNEY = {
           key: 'aptitude',
           title: 'Aptitude & Reasoning',
           pct: 60,
-          color: '#a78bfa',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '18 / 30' },
             { label: 'Accuracy', value: '60%' },
@@ -32,7 +32,7 @@ window.PACE_JOURNEY = {
           key: 'mcq',
           title: 'Technical MCQs',
           pct: 45,
-          color: '#f59e0b',
+          color: '#FEF100',
           meta: [
             { label: 'Score', value: '14 / 30' },
             { label: 'Attempts', value: '1' },
@@ -50,7 +50,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 42,
-          color: '#8b5cf6',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '50 / 120' },
             { label: 'Progress', value: '42%' },
@@ -61,7 +61,7 @@ window.PACE_JOURNEY = {
           key: 'aptitude',
           title: 'Aptitude & Reasoning',
           pct: 70,
-          color: '#a78bfa',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '21 / 30' },
             { label: 'Accuracy', value: '70%' },
@@ -72,7 +72,7 @@ window.PACE_JOURNEY = {
           key: 'mcq',
           title: 'Technical MCQs',
           pct: 53,
-          color: '#f59e0b',
+          color: '#FEF100',
           meta: [
             { label: 'Score', value: '16 / 30' },
             { label: 'Attempts', value: '1' },
@@ -90,7 +90,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 55,
-          color: '#8b5cf6',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '66 / 120' },
             { label: 'Progress', value: '55%' },
@@ -101,7 +101,7 @@ window.PACE_JOURNEY = {
           key: 'aptitude',
           title: 'Aptitude & Reasoning',
           pct: 75,
-          color: '#a78bfa',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '23 / 30' },
             { label: 'Accuracy', value: '75%' },
@@ -112,7 +112,7 @@ window.PACE_JOURNEY = {
           key: 'mcq',
           title: 'Technical MCQs',
           pct: 58,
-          color: '#f59e0b',
+          color: '#FEF100',
           meta: [
             { label: 'Score', value: '17 / 30' },
             { label: 'Attempts', value: '2' },
@@ -130,7 +130,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 48,
-          color: '#8b5cf6',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '58 / 120' },
             { label: 'Progress', value: '48%' },
@@ -141,7 +141,7 @@ window.PACE_JOURNEY = {
           key: 'aptitude',
           title: 'Aptitude & Reasoning',
           pct: 77,
-          color: '#a78bfa',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '23 / 30' },
             { label: 'Accuracy', value: '77%' },
@@ -152,7 +152,7 @@ window.PACE_JOURNEY = {
           key: 'mcq',
           title: 'Technical MCQs',
           pct: 57,
-          color: '#f59e0b',
+          color: '#FEF100',
           meta: [
             { label: 'Score', value: '17 / 30' },
             { label: 'Attempts', value: '2' },
@@ -170,7 +170,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 50,
-          color: '#8b5cf6',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '60 / 120' },
             { label: 'Progress', value: '50%' },
@@ -181,7 +181,7 @@ window.PACE_JOURNEY = {
           key: 'aptitude',
           title: 'Aptitude & Reasoning',
           pct: 80,
-          color: '#a78bfa',
+          color: '#002EFF',
           meta: [
             { label: 'Score', value: '24 / 30' },
             { label: 'Accuracy', value: '80%' },
@@ -192,7 +192,7 @@ window.PACE_JOURNEY = {
           key: 'mcq',
           title: 'Technical MCQs',
           pct: 60,
-          color: '#f59e0b',
+          color: '#FEF100',
           meta: [
             { label: 'Score', value: '18 / 30' },
             { label: 'Attempts', value: '2' },
