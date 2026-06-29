@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in · RISE 2027" }] }),
+  head: () => ({ meta: [{ title: "Sign in · PACE 2027" }] }),
   component: LoginRoute,
 });
 

@@ -168,9 +168,19 @@ window.applyPaceProfile = function (profile) {
   if (badgeTag) badgeTag.style.display = 'none';
 };
 
+window.applyPaceBranding = function () {
+  if (typeof renderPaceLogo !== 'function') return;
+  document.querySelectorAll('.pace-brand[data-logo], .pace-brand:not(:has(.pace-logo))').forEach(function (el) {
+    if (el.querySelector('.pace-logo')) return;
+    var compact = el.closest('.pace-topbar') != null;
+    el.innerHTML = renderPaceLogo({ compact: compact, href: '/' });
+  });
+};
+
 window.initPaceShell = function (activeKey) {
   riseAuthGate();
   syncPaceSession();
+  applyPaceBranding();
   renderRiseNav(activeKey, 'rise-nav');
   applyPaceProfile();
 
@@ -223,7 +233,7 @@ window.paceCountUp = function (el, to, dur, suffix) {
 
 window.renderPaceRing = function (pct, size, color, label) {
   size = size || 96;
-  color = color || '#14b8a6';
+  color = color || '#8b5cf6';
   var sw = 7;
   var r = (size - sw) / 2;
   var circ = 2 * Math.PI * r;

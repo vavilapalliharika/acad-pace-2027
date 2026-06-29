@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/track/oss")({
-  head: () => ({ meta: [{ title: "Open Source · RISE 2027" }] }),
+  head: () => ({ meta: [{ title: "Open Source · PACE 2027" }] }),
   component: () => (
     <iframe
       src="/track.html?t=oss"

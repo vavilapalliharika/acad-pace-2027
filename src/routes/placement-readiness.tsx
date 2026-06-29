@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/placement-readiness")({
-  head: () => ({ meta: [{ title: "Placement Readiness · RISE 2027" }] }),
+  head: () => ({ meta: [{ title: "Placement Readiness · PACE 2027" }] }),
   component: PlacementReadinessRoute,
 });
 

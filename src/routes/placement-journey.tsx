@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/placement-journey")({
-  head: () => ({ meta: [{ title: "Placement Journey · RISE 2027" }] }),
+  head: () => ({ meta: [{ title: "Placement Journey · PACE 2027" }] }),
   component: () => (
     <iframe
       src="/placement-journey.html"

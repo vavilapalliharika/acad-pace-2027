@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/pace-pages.css">
 </head>
 <body>
+<script src="/pace-logo.js"></script>
 <script src="/rise-nav.js"></script>
 <script src="/placement-engine.js"></script>
 <script src="/pace-shell.js"></script>
@@ -45,8 +46,10 @@
 
     <div class="conn-info-banner">
       <span class="conn-info-icon" aria-hidden="true">📅</span>
-      <p>Activity for each day of the selected month is tracked. Connect a platform to sync your streak calendar and boost your PACE score.</p>
+      <p>Activity for each day of the selected month is tracked. Connect a platform to sync your streak calendar and earn <strong style="color:var(--text-bright)">PACE points</strong> — one-time connect bonus plus daily streak rewards.</p>
     </div>
+
+    <div class="conn-points-panel" id="points-distribution"></div>
 
     <div class="conn-cards-row" id="platforms-grid"></div>
   </div>
@@ -95,6 +98,22 @@ const LOGOS = {
   AtCoder: { bg: '#222', text: 'AC', color: '#fff' },
   Kaggle: { bg: '#20beff', text: 'K', color: '#fff' }
 };
+
+/** Connect bonus + daily streak pts per active day (selected month) */
+const CONNECTOR_SCORING = {
+  CodeChef: { connect: 100, streakPerDay: 5 },
+  LeetCode: { connect: 120, streakPerDay: 8 },
+  Codeforces: { connect: 110, streakPerDay: 7 },
+  GitHub: { connect: 80, streakPerDay: 4 },
+  HackerRank: { connect: 75, streakPerDay: 5 },
+  AtCoder: { connect: 90, streakPerDay: 6 },
+  GeeksForGeeks: { connect: 85, streakPerDay: 5 },
+  Kaggle: { connect: 95, streakPerDay: 6 }
+};
+
+function scoringFor(name) {
+  return CONNECTOR_SCORING[name] || { connect: 70, streakPerDay: 4 };
+}
 
 const ALL_PLATFORMS = ['CodeChef', 'LeetCode', 'Codeforces', 'GitHub', 'HackerRank', 'AtCoder', 'GeeksForGeeks', 'Kaggle'];
 
@@ -171,6 +190,25 @@ function computeStreak(activity) {
   return streak;
 }
 
+function ensureActivity(p) {
+  const days = daysInMonth(selMonth, selYear);
+  if (!p.activity.length || p.activity.length !== days) {
+    p.activity = genActivity(p.name.length + selMonth + selYear, days);
+  }
+  return p.activity;
+}
+
+function platformPoints(p) {
+  const score = scoringFor(p.name);
+  if (!p.connected) {
+    return { connect: score.connect, streak: 0, total: 0, activeDays: 0 };
+  }
+  const activity = ensureActivity(p);
+  const activeDays = activity.filter(function (d) { return d.active; }).length;
+  const streak = activeDays * score.streakPerDay;
+  return { connect: score.connect, streak: streak, total: score.connect + streak, activeDays: activeDays };
+}
+
 function streakStartDay(activity) {
   for (let i = 0; i < activity.length; i++) {
     if (activity[i].active) return i + 1;
@@ -220,25 +258,108 @@ function calendarHtml(p) {
   );
 }
 
-function disconnectedHtml() {
+function pointsBadgeHtml(p) {
+  const score = scoringFor(p.name);
+  const pts = platformPoints(p);
+  if (!p.connected) {
+    return (
+      '<div class="conn-points-offer">' +
+      '<span class="conn-points-offer-num">+' + score.connect + '</span>' +
+      '<span class="conn-points-offer-label">pts on connect</span>' +
+      '<span class="conn-points-offer-sub">+' + score.streakPerDay + ' pts per active day</span>' +
+      '</div>'
+    );
+  }
+  return (
+    '<div class="conn-points-earned">' +
+    '<span class="conn-points-total">+' + pts.total.toLocaleString() + ' pts</span>' +
+    '<span class="conn-points-breakdown">' + pts.connect + ' connect · ' + pts.streak + ' streak (' + pts.activeDays + ' days)</span>' +
+    '</div>'
+  );
+}
+
+function disconnectedHtml(p) {
   return (
     '<div class="conn-disconnected">' +
-    '<div class="conn-dash">—</div>' +
+    pointsBadgeHtml(p) +
     '<div class="conn-disconnected-label">not connected</div>' +
     '</div>'
   );
 }
 
+function renderPointsDistribution() {
+  const el = document.getElementById('points-distribution');
+  const connected = platforms.filter(function (p) { return p.connected; });
+  const rows = connected.map(function (p) {
+    const pts = platformPoints(p);
+    return { name: p.name, connect: pts.connect, streak: pts.streak, total: pts.total };
+  }).sort(function (a, b) { return b.total - a.total; });
+
+  const grandTotal = rows.reduce(function (sum, r) { return sum + r.total; }, 0);
+  const maxTotal = rows.length ? rows[0].total : 1;
+
+  const bars = rows.length
+    ? rows.map(function (r) {
+        const pct = Math.round((r.total / maxTotal) * 100);
+        const share = grandTotal ? Math.round((r.total / grandTotal) * 100) : 0;
+        return (
+          '<div class="conn-dist-row">' +
+          '<div class="conn-dist-meta">' +
+          logoHtml(r.name, 'sm') +
+          '<span class="conn-dist-name">' + r.name + '</span>' +
+          '<span class="conn-dist-pts">+' + r.total.toLocaleString() + ' pts</span>' +
+          '<span class="conn-dist-share">' + share + '%</span>' +
+          '</div>' +
+          '<div class="conn-dist-bar"><div class="conn-dist-bar-fill" style="width:' + pct + '%"></div></div>' +
+          '<div class="conn-dist-split">' +
+          '<span>+' + r.connect + ' connect</span>' +
+          '<span>+' + r.streak + ' streak</span>' +
+          '</div></div>'
+        );
+      }).join('')
+    : '<p class="conn-dist-empty">Connect a platform to start earning PACE points. Each connector adds a one-time bonus plus streak rewards for active days this month.</p>';
+
+  const refRows = ALL_PLATFORMS.map(function (name) {
+    const s = scoringFor(name);
+    const added = platforms.some(function (p) { return p.name === name; });
+    return (
+      '<tr' + (added ? '' : ' class="conn-ref-muted"') + '>' +
+      '<td>' + name + '</td>' +
+      '<td>+' + s.connect + ' pts</td>' +
+      '<td>+' + s.streakPerDay + ' / day</td>' +
+      '</tr>'
+    );
+  }).join('');
+
+  el.innerHTML =
+    '<div class="conn-points-panel-head">' +
+    '<div><h2 class="conn-section-title">PACE Points Distribution</h2>' +
+    '<p class="conn-points-panel-sub">' + MONTHS[selMonth] + ' ' + selYear + ' — connect bonus + streak rewards across linked platforms</p></div>' +
+    '<div class="conn-dist-grand">' +
+    '<span class="conn-dist-grand-label">Total earned</span>' +
+    '<span class="conn-dist-grand-val">+' + grandTotal.toLocaleString() + ' pts</span>' +
+    '</div></div>' +
+    '<div class="conn-dist-bars">' + bars + '</div>' +
+    '<details class="conn-points-ref">' +
+    '<summary>Connector point scores (all platforms)</summary>' +
+    '<table class="conn-points-table"><thead><tr><th>Platform</th><th>Connect bonus</th><th>Streak rate</th></tr></thead><tbody>' +
+    refRows +
+    '</tbody></table></details>';
+}
+
 function renderPlatforms() {
   const grid = document.getElementById('platforms-grid');
   grid.innerHTML = platforms.map(function (p, i) {
-    const body = p.connected ? calendarHtml(p) : disconnectedHtml();
+    const pointsTop = p.connected ? pointsBadgeHtml(p) : '';
+    const body = p.connected ? pointsTop + calendarHtml(p) : disconnectedHtml(p);
     const btnCls = p.connected ? 'conn-btn done' : 'conn-btn';
     const btnLabel = p.connected ? '✓ Connected' : 'Connect';
     const btnAttr = p.connected ? ' disabled' : ' onclick="openConnectModal(' + i + ')"';
+    const score = scoringFor(p.name);
     return (
       '<div class="conn-card' + (p.connected ? ' connected' : '') + '">' +
-      '<div class="conn-card-brand">' + logoHtml(p.name) + '<div class="conn-name">' + p.name + '</div></div>' +
+      '<div class="conn-card-brand">' + logoHtml(p.name) + '<div class="conn-name">' + p.name + '</div>' +
+      '<span class="conn-card-pts-pill">+' + score.connect + ' pts</span></div>' +
       body +
       '<button type="button" class="' + btnCls + '"' + btnAttr + '>' + btnLabel + '</button>' +
       '</div>'
@@ -250,12 +371,17 @@ function renderPlatforms() {
     '<span class="conn-add-icon">+</span>' +
     '<span style="font-size:13px;font-weight:700">Add platform</span>' +
     '</button>';
+
+  renderPointsDistribution();
 }
 
 function openConnectModal(i) {
   connectIdx = i;
+  const score = scoringFor(platforms[i].name);
   document.getElementById('connect-modal-title').textContent = 'Connect ' + platforms[i].name;
-  document.getElementById('connect-modal-sub').textContent = 'Enter your ' + platforms[i].name + ' username to sync activity for ' + MONTHS[selMonth] + ' ' + selYear + '.';
+  document.getElementById('connect-modal-sub').textContent =
+    'Enter your ' + platforms[i].name + ' username to sync activity for ' + MONTHS[selMonth] + ' ' + selYear +
+    '. You will earn +' + score.connect + ' pts on connect and +' + score.streakPerDay + ' pts per active day.';
   document.getElementById('connect-username').value = platforms[i].username || '';
   document.getElementById('connect-confirm').disabled = true;
   document.getElementById('connect-modal').classList.add('show');
@@ -290,9 +416,11 @@ function openAddModal() {
   const names = platforms.map(function (p) { return p.name; });
   document.getElementById('add-plat-options').innerHTML = ALL_PLATFORMS.map(function (n) {
     const added = names.indexOf(n) >= 0;
+    const score = scoringFor(n);
     return (
       '<div class="conn-plat-opt' + (added ? ' disabled' : '') + '" data-name="' + n + '" onclick="' + (added ? '' : "selAddPlat(this,'" + n + "')") + '">' +
-      logoHtml(n, 'sm') + '<span>' + n + '</span></div>'
+      logoHtml(n, 'sm') + '<span>' + n + '</span>' +
+      '<span class="conn-plat-opt-pts">+' + score.connect + ' pts</span></div>'
     );
   }).join('');
   document.getElementById('add-modal').classList.add('show');

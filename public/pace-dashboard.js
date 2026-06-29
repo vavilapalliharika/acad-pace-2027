@@ -10,7 +10,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 35,
-          color: '#14b8a6',
+          color: '#8b5cf6',
           meta: [
             { label: 'Score', value: '42 / 120' },
             { label: 'Progress', value: '35%' },
@@ -50,7 +50,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 42,
-          color: '#14b8a6',
+          color: '#8b5cf6',
           meta: [
             { label: 'Score', value: '50 / 120' },
             { label: 'Progress', value: '42%' },
@@ -90,7 +90,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 55,
-          color: '#14b8a6',
+          color: '#8b5cf6',
           meta: [
             { label: 'Score', value: '66 / 120' },
             { label: 'Progress', value: '55%' },
@@ -130,7 +130,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 48,
-          color: '#14b8a6',
+          color: '#8b5cf6',
           meta: [
             { label: 'Score', value: '58 / 120' },
             { label: 'Progress', value: '48%' },
@@ -170,7 +170,7 @@ window.PACE_JOURNEY = {
           key: 'coding',
           title: 'Coding',
           pct: 50,
-          color: '#14b8a6',
+          color: '#8b5cf6',
           meta: [
             { label: 'Score', value: '60 / 120' },
             { label: 'Progress', value: '50%' },

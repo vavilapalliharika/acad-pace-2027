@@ -1,20 +1,20 @@
-/* Maps legacy green-theme page styles to PACE dark theme */
+/* Maps legacy green-theme page styles to PACE purple theme (matches landing) */
 :root {
-  --gd: #f8fafc;
-  --gm: #0f141c;
-  --ga: #14b8a6;
-  --gl: #2dd4bf;
-  --mb: #0a0e13;
-  --wh: rgba(15, 20, 28, 0.88);
+  --gd: #ffffff;
+  --gm: #1a1028;
+  --ga: #8b5cf6;
+  --gl: #a78bfa;
+  --mb: #12091f;
+  --wh: rgba(255, 255, 255, 0.06);
   --td: #f1f5f9;
-  --tm: #cbd5e1;
-  --tu: #94a3b8;
-  --bd: rgba(255, 255, 255, 0.08);
+  --tm: #e2e8f0;
+  --tu: #b8b0c8;
+  --bd: rgba(255, 255, 255, 0.1);
   --am: #f59e0b;
   --gn: #34d399;
   --rd: #f87171;
-  --pu: #a78bfa;
-  --gtint: rgba(20, 184, 166, 0.08);
+  --pu: #c4b5fd;
+  --gtint: rgba(139, 92, 246, 0.1);
 }
 
 body { background: var(--mb) !important; color: var(--td) !important; }
@@ -33,20 +33,20 @@ body { background: var(--mb) !important; color: var(--td) !important; }
   border-color: var(--bd) !important;
   color: var(--td);
 }
-.platform-card:hover, .card:hover, .qp-card:hover { border-color: rgba(20, 184, 166, 0.25) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.35) !important; }
+.platform-card:hover, .card:hover, .qp-card:hover { border-color: rgba(139, 92, 246, 0.3) !important; box-shadow: 0 8px 32px rgba(91, 33, 182, 0.2) !important; }
 
 .platform-name, .ov-val, .prog-pct, .card h3, .tc-name, .pr-tab.active,
 .tier-name, .qp-title, .stat-box .v, .pj-widget-header { color: var(--gd) !important; }
 .filter-select { background: var(--gm) !important; border: 1px solid var(--bd); }
-.filter-select option { color: var(--td); background: #0f141c; }
+.filter-select option { color: var(--td); background: #1a1028; }
 
 .tabs, .pr-tabs { border-color: var(--bd) !important; }
 .tab, .pr-tab { color: var(--tu) !important; }
 .tab.active, .pr-tab.active { color: var(--ga) !important; border-bottom-color: var(--ga) !important; }
 
 .overview, .pr-overview, .placement-widget, .pw-main, .pj-summary {
-  background: linear-gradient(135deg, rgba(20, 184, 166, 0.12), rgba(167, 139, 250, 0.08)) !important;
-  border: 1px solid rgba(20, 184, 166, 0.2) !important;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.14), rgba(124, 58, 237, 0.08)) !important;
+  border: 1px solid rgba(139, 92, 246, 0.22) !important;
   color: var(--td) !important;
 }
 .ov-lbl, .pr-ov-lbl { color: var(--tu) !important; }
@@ -70,9 +70,9 @@ body { background: var(--mb) !important; color: var(--td) !important; }
 .sub-input, .topic-btn { background: rgba(255,255,255,0.04) !important; color: var(--td) !important; border-color: var(--bd) !important; }
 .sub-link { background: rgba(52, 211, 153, 0.1) !important; color: var(--gn) !important; border-color: rgba(52, 211, 153, 0.3) !important; }
 .sub-placeholder { background: rgba(255,255,255,0.03) !important; border-color: var(--bd) !important; }
-.quote { background: rgba(20, 184, 166, 0.06) !important; color: var(--tu) !important; }
-.btn-primary { background: transparent !important; color: var(--ga) !important; border-color: rgba(20, 184, 166, 0.4) !important; }
-.btn-primary:hover { background: var(--ga) !important; color: #0a0e13 !important; }
+.quote { background: rgba(139, 92, 246, 0.08) !important; color: var(--tu) !important; }
+.btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9) !important; color: #fff !important; border-color: transparent !important; }
+.btn-primary:hover { background: #a78bfa !important; color: #fff !important; }
 
 table.tbl th, table.tbl td, .pr-signal-table th, .pr-signal-table td { border-color: var(--bd) !important; }
 

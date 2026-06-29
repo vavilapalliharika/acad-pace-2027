@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/track/dsa")({
-  head: () => ({ meta: [{ title: "DSA Track · RISE 2027" }] }),
+  head: () => ({ meta: [{ title: "DSA Track · PACE 2027" }] }),
   component: () => (
     <iframe
       src="/track.html?t=dsa"

@@ -132,6 +132,7 @@
   </div>
 </div>
 
+<script src="/pace-logo.js"></script>
 <script src="/rise-nav.js"></script>
 <script src="/placement-engine.js"></script>
 <script src="/placement-journey.js"></script>
@@ -143,7 +144,7 @@ var S = PLACEMENT_ENGINE.student;
 applyPaceProfile();
 
 var prPct = S.placementReadiness || getPlacementScore();
-document.getElementById('hero-pr-ring').innerHTML = renderPaceRing(prPct, 88, '#14b8a6');
+document.getElementById('hero-pr-ring').innerHTML = renderPaceRing(prPct, 88, '#8b5cf6');
 
 document.getElementById('pace-timeline-root').innerHTML = renderPaceJourneyStepper();
 document.getElementById('assess-stage-dropdown').innerHTML = renderAssessmentStageDropdown();

@@ -11,6 +11,6 @@ function TrackFrame({ k }: { k: string }) {
 }
 
 export const Route = createFileRoute("/track/ai")({
-  head: () => ({ meta: [{ title: "AI Track · RISE 2027" }] }),
+  head: () => ({ meta: [{ title: "AI Track · PACE 2027" }] }),
   component: () => <TrackFrame k="ai" />,
 });
