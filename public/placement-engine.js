@@ -6,8 +6,8 @@ window.PLACEMENT_ENGINE = {
     level: 40,
     levelName: 'Elite',
     badge: 'YOG',
-    tier: 'Type B',
-    eligibleTier: 'Type B',
+    tier: 'Pro',
+    eligibleTier: 'Pro',
     eligibleRange: '8–12 LPA',
     squad: 'Squad Alpha-7',
     mentor: 'Ravi Kumar',
@@ -23,8 +23,8 @@ window.PLACEMENT_ENGINE = {
   tiers: [
     {
       key: 'A',
-      icon: '🏆',
-      name: 'Type A',
+      icon: '👑',
+      name: 'Legend',
       range: '12+ LPA',
       color: '#7C3AED',
       signals: [
@@ -39,8 +39,8 @@ window.PLACEMENT_ENGINE = {
     },
     {
       key: 'B',
-      icon: '🚀',
-      name: 'Type B',
+      icon: '⚡',
+      name: 'Pro',
       range: '8–12 LPA',
       color: '#2D8C6A',
       signals: [
@@ -53,8 +53,8 @@ window.PLACEMENT_ENGINE = {
     },
     {
       key: 'C',
-      icon: '📚',
-      name: 'Type C',
+      icon: '🌱',
+      name: 'Rookie',
       range: 'Below 8 LPA',
       color: '#3B82F6',
       signals: [
@@ -87,11 +87,22 @@ window.getTierEligibility = function (tier) {
   return { results, pct, missing, eligible: pct === 100 };
 };
 
+window.PACE_TIER_LEGACY = {
+  'Type A': 'Legend',
+  'Type B': 'Pro',
+  'Type C': 'Rookie',
+};
+
+window.normalizeTierName = function (name) {
+  return PACE_TIER_LEGACY[name] || name;
+};
+
 window.getCurrentEligibleTier = function () {
   const s = PLACEMENT_ENGINE.student;
   if (s.eligibleTier) {
+    const normalized = normalizeTierName(s.eligibleTier);
     const matched = PLACEMENT_ENGINE.tiers.find(function (t) {
-      return t.name === s.eligibleTier;
+      return t.name === normalized;
     });
     if (matched) return matched;
   }
@@ -253,7 +264,7 @@ window.getActionRecommendations = function () {
       title: 'Internship Readiness',
       icon: '💼',
       desc: (s) =>
-        `Complete internship preparation milestones to satisfy Type A experience requirements.`,
+        `Complete internship preparation milestones to satisfy Legend tier experience requirements.`,
       progressLabel: (s) => `${s.current} / ${s.required} Experience Signal`,
       impact: 20,
       cta: 'Apply Internships',
@@ -276,7 +287,7 @@ window.getActionRecommendations = function () {
       title: 'GitHub Projects',
       icon: '🐙',
       desc: (s) =>
-        `Need ${s.remaining} more repositor${s.remaining > 1 ? 'ies' : 'y'} to satisfy Type A eligibility requirements.`,
+        `Need ${s.remaining} more repositor${s.remaining > 1 ? 'ies' : 'y'} to satisfy Legend tier eligibility requirements.`,
       progressLabel: (s) => `${s.current} / ${s.required} Repositories`,
       impact: 12,
       cta: 'View Projects',
@@ -524,7 +535,7 @@ window.renderDashboardPlacementWidget = function () {
   const tierAElig = getTierEligibility(PLACEMENT_ENGINE.tiers[0]);
   const nextTier = PLACEMENT_ENGINE.tiers[0];
   return `<div class="pw-main">
-    <div class="pw-eyebrow">🚀 Current Eligible Tier</div>
+    <div class="pw-eyebrow">🚀 Your Rank</div>
     <div class="pw-tier">${currentTier.icon} ${currentTier.name} (${currentTier.range})</div>
     <div class="pw-score">Eligibility Score: ${placementScore}% · Need ${tierAElig.missing} more signal${tierAElig.missing !== 1 ? 's' : ''} to unlock ${nextTier.name}</div>
   </div>

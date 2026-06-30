@@ -3,6 +3,11 @@ window.PACE_SESSION_KEY = 'pace_user';
 window.PACE_DEMO_EMAIL = 'student@pace2027.com';
 window.PACE_DEMO_PASSWORD = 'pace2027';
 
+window.normalizeTierName = window.normalizeTierName || function (name) {
+  var legacy = { 'Type A': 'Legend', 'Type B': 'Pro', 'Type C': 'Rookie' };
+  return legacy[name] || name;
+};
+
 window.PACE_NAV_ITEMS = [
   { href: '/dashboard', icon: '◫', label: 'Dashboard', key: 'dashboard' },
   { href: '/placement-readiness', icon: '◎', label: 'Placement Readiness', key: 'placement' },
@@ -83,7 +88,7 @@ window.paceSignOut = function () {
 /** Canonical demo student — single source of truth for the portal */
 window.getPaceStudentProfile = function () {
   var s = (window.PLACEMENT_ENGINE && PLACEMENT_ENGINE.student) || {};
-  var tierName = s.eligibleTier || s.tier || 'Type B';
+  var tierName = normalizeTierName(s.eligibleTier || s.tier || 'Pro');
   var tierRange = s.eligibleRange || '8–12 LPA';
   return {
     name: s.name || 'Harika Vavilapalli',
@@ -124,7 +129,8 @@ window.syncPaceSession = function () {
       user.name !== next.name ||
       user.level !== next.level ||
       user.badge !== next.badge ||
-      user.batch !== next.batch
+      user.batch !== next.batch ||
+      normalizeTierName(user.eligibleTier) !== next.eligibleTier
     ) {
       sessionStorage.setItem(PACE_SESSION_KEY, JSON.stringify(next));
     }
@@ -145,7 +151,7 @@ window.getPaceUser = function () {
     var user = JSON.parse(raw);
     return Object.assign({}, profile, user, {
       batch: user.batch || profile.batch,
-      eligibleTier: user.eligibleTier || profile.eligibleTier,
+      eligibleTier: normalizeTierName(user.eligibleTier || profile.eligibleTier),
       eligibleRange: user.eligibleRange || profile.eligibleRange,
     });
   } catch (e) {
